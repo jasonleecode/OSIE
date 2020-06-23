@@ -41,23 +41,20 @@ root@a20-olinuxino:~# apt update
 root@a20-olinuxino:~# apt upgrade
 root@a20-olinuxino:~# reboot now
 
-# XXX: had to set DNS in /etc/resolv.conf to 8.8.8.8 instead of 127.0.0.57
-
 # install python
 olimex@a20-olinuxino:~$ sudo bash
 root@a20-olinuxino:~# apt install python3
 root@a20-olinuxino:~# apt install python3-venv python3-pip
-root@a20-olinuxino:~# python3 -m pip install --upgrade pip setuptools wheel 
+root@a20-olinuxino:~# python3 -m pip install --upgrade pip setuptools wheel
 root@a20-olinuxino:~# pip3 install pyA20Lime2
 
-# enable i2c-1 by running and selecting it (temporary step until fixed by Olimex)
-root@a20-olinuxino:~# olinuxino-overlay 
+# enable i2c-1 by running and selecting it (temporary step until fixed by Olimex but not needed for debian 10!)
+root@a20-olinuxino:~# olinuxino-overlay
 
 # prove it's enabled by
 root@a20-olinuxino:~# i2cdetect -r 1  # should show  0х58 is available
 
 # connect MOD-IO through UEXT cable to UEXT2 at LIME2-SHIELD and power it (12V adapter)
-
 
 II. finally run this script as root, you should see RELAY1's led showing green color.
 

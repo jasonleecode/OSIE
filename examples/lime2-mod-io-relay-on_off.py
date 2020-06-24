@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# -*- coding: utf-8 -*-
 """
 This is an example of connecting LIME2 + LIME2-SHIELD + MOD-IO (over UEXT) and controlling a relay (on / off).
 It's mixed with slapos / re6stnet install.
@@ -77,12 +78,18 @@ III. Integration with Nexedi's toolset for Wendelin
 """
 
 from pyA20Lime2 import i2c
+import time
+
 i2c.init("/dev/i2c-1")
 i2c.open(0x58)
 
-# switch ON RELAY1
-i2c.write([0x10, 0x01])
 
-# switch OFF RELAY1
-i2c.write([0x10, 0x00])
+for i in range(0, 25):
+  # switch ON RELAY1
+  i2c.write([0x10, 0x01])
+  print("On")
+  time.sleep(2)
+  print("Off")
+  # switch OFF RELAY1
+  i2c.write([0x10, 0x00])
 

@@ -83,13 +83,17 @@ import time
 i2c.init("/dev/i2c-1")
 i2c.open(0x58)
 
+# switch ON RELAY1
+i2c.write([0x10, 0x01])
 
-for i in range(0, 25):
-  # switch ON RELAY1
-  i2c.write([0x10, 0x01])
-  print("On")
-  time.sleep(2)
-  print("Off")
+for i in range(0, 30*60*24):
   # switch OFF RELAY1
   i2c.write([0x10, 0x00])
+  time.sleep(2)
+  # switch ON RELAY1
+  i2c.write([0x10, 0x01])
+  time.sleep(1)
+
+
+
 

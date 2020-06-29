@@ -44,6 +44,7 @@ root@a20-olinuxino:~# reboot now
 
 # install python
 olimex@a20-olinuxino:~$ sudo bash
+root@a20-olinuxino:~# apt install htop tig git etckeeper vim curl
 root@a20-olinuxino:~# apt install python3
 root@a20-olinuxino:~# apt install python3-venv python3-pip
 root@a20-olinuxino:~# python3 -m pip install --upgrade pip setuptools wheel
@@ -62,7 +63,6 @@ II. finally run this script as root, you should see RELAY1's led showing green c
 III. Integration with Nexedi's toolset for Wendelin 
 
     # re6snet
-    root@a20-olinuxino:~# apt install htop tig git etckeeper vim
     root@a20-olinuxino:~# wget https://deploy.erp5.net/gnet/re6st && bash re6st # get re6stnet token from slapos.vifib.com 
     root@a20-olinuxino:~# echo "default" >> /etc/re6stnet/re6stnet.conf
     root@a20-olinuxino:~# /etc/init.d/re6stnet restart

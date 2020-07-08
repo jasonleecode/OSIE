@@ -29,7 +29,7 @@ ivan@t470:~/tmp$ ./balenaEtcher-1.5.95-x64.AppImage
 # connect USB cable to USB1 on lime2 board and a laptop
 
 # wait till you see a green light at the board
-ivan@t470:~/tmp$ minicom -D /dev/ttyACM0
+root@t470:~$ minicom -D /dev/ttyACM0
 
 # username and password are olimex / olimex 
 
@@ -44,9 +44,7 @@ root@a20-olinuxino:~# reboot now
 
 # install python
 olimex@a20-olinuxino:~$ sudo bash
-root@a20-olinuxino:~# apt install htop tig git etckeeper vim curl
-root@a20-olinuxino:~# apt install python3
-root@a20-olinuxino:~# apt install python3-venv python3-pip
+root@a20-olinuxino:~# apt install htop tig git etckeeper vim curl python3 python3-venv python3-pip
 root@a20-olinuxino:~# python3 -m pip install --upgrade pip setuptools wheel
 root@a20-olinuxino:~# pip3 install pyA20Lime2
 

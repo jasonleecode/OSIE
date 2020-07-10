@@ -47,6 +47,7 @@ olimex@a20-olinuxino:~$ sudo bash
 root@a20-olinuxino:~# apt install htop tig git etckeeper vim curl python3 python3-venv python3-pip
 root@a20-olinuxino:~# python3 -m pip install --upgrade pip setuptools wheel
 root@a20-olinuxino:~# pip3 install pyA20Lime2
+root@a20-olinuxino:~# pip3 install  -U pymodbus
 
 # enable i2c-1 by running and selecting it (temporary step until fixed by Olimex but not needed for debian 10!)
 root@a20-olinuxino:~# olinuxino-overlay
@@ -82,14 +83,14 @@ i2c.init("/dev/i2c-1")
 i2c.open(0x58)
 
 # switch ON RELAY1
-i2c.write([0x10, 0x01])
+i2c.write([0x10, 0x0F])
 
 for i in range(0, 30*60*24):
   # switch OFF RELAY1
   i2c.write([0x10, 0x00])
   time.sleep(2)
   # switch ON RELAY1
-  i2c.write([0x10, 0x01])
+  i2c.write([0x10, 0x0F])
   time.sleep(1)
 
 

@@ -47,7 +47,7 @@ olimex@a20-olinuxino:~$ sudo bash
 root@a20-olinuxino:~# apt install htop tig git etckeeper vim curl python3 python3-venv python3-pip
 root@a20-olinuxino:~# python3 -m pip install --upgrade pip setuptools wheel
 root@a20-olinuxino:~# pip3 install pyA20Lime2
-root@a20-olinuxino:~# pip3 install  -U pymodbus
+root@a20-olinuxino:~# pip3 install  -U pymodbus[twisted]
 
 # enable i2c-1 by running and selecting it (temporary step until fixed by Olimex but not needed for debian 10!)
 root@a20-olinuxino:~# olinuxino-overlay

@@ -89,11 +89,12 @@ def sendI2Ccommand(code):
     # init I2C
     i2c.init("/dev/i2c-1")
     i2c.open(0x58)
-
-    try:
-        i2c.write([0x10, code])
-    except:
-        print("Failed co sent command.")
+    while 1:
+        try:
+            i2c.write([0x10, code])
+            break
+        except:
+            print("Failed co sent command.")
 
     i2c.close()
 

@@ -86,17 +86,19 @@ RELAY_MAP = {0: 0x00,
              4: 0x128}
 
 def sendI2Ccommand(code):
+    # init I2C
+    i2c.init("/dev/i2c-1")
+    i2c.open(0x58)
+
     try:
         i2c.write([0x10, code])
     except:
         print("Failed co sent command.")
 
+    i2c.close()
+
 motor_on = False
 valve_on = False
-
-# init I2C
-i2c.init("/dev/i2c-1")
-i2c.open(0x58)
 
 # stop all
 sendI2Ccommand(0x00)
@@ -113,8 +115,8 @@ while 1:
         print("Invalid input")
     
     if command == 1:
-        # startmotor relay
-        sendI2Ccommand(0x0001)
+        # start motor relay
+        sendI2Ccommand(0x01)
 
     elif command == 2:
         #  toggle air valve relay

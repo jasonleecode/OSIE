@@ -79,20 +79,45 @@ III. Integration with Nexedi's toolset for Wendelin
 from pyA20Lime2 import i2c
 import time
 
+RELAY_MAP = {0: 0x00,
+             1: 0x01,
+             2: 0x32,
+             3: 0x64,
+             4: 0x128}
+
+
+motor_on = False
+valve_on = False
+
+# init I2C
 i2c.init("/dev/i2c-1")
 i2c.open(0x58)
+# stop al
+i2c.write([0x10, 0x00])
 
-# switch ON RELAY1
-i2c.write([0x10, 0x0F])
+while 1:
+    command = input("Enter 1 to start motor and 2 to toggle (on/off) air valve. Enter 'q' to quit: ")
+    if command == "q":
+        break
 
-for i in range(0, 30*60*24):
-  # switch OFF RELAY1
-  i2c.write([0x10, 0x00])
-  time.sleep(2)
-  # switch ON RELAY1
-  i2c.write([0x10, 0x0F])
-  time.sleep(1)
+    try:
+        command = int(command)
+    except:
+        print("Invalid input")
+    
+    if command == 1:
+        # startmotor relay
+        i2c.write([0x10, 0x0001])
 
+    elif command == 2:
+        #  toggle air valve relay
+        if valve_on:
+            i2c.write([0x10, 0x01])
+            valve_on = False
+        else:
+            i2c.write([0x10, 0x03])
+            valve_on = True
 
-
-
+# stop all
+i2c.write([0x10, 0x00])
+print("Bye!")

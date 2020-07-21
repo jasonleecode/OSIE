@@ -86,7 +86,6 @@ class CustomModbusRequest(ModbusRequest):
         self.address, self.count = struct.unpack('>HH', data)
 
     def execute(self, context):
-        print1("da"*80)
         if not (1 <= self.count <= 0x7d0):
             return self.doException(ModbusExceptions.IllegalValue)
         if not context.validate(self.function_code, self.address, self.count):

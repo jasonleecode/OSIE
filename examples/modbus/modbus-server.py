@@ -21,6 +21,21 @@ from pymodbus.transaction import (ModbusRtuFramer,
                                   ModbusAsciiFramer,
                                   ModbusBinaryFramer)
 from custom_message import CustomModbusRequest
+from pyA20Lime2 import i2c
+
+def sendI2Ccommand(code):
+    # init I2C
+    i2c.init("/dev/i2c-1")
+    i2c.open(0x58)
+    while 1:
+        try:
+            i2c.write([0x10, code])
+            break
+        except:
+            print("Failed co sent command.")
+
+    i2c.close()
+
 
 # --------------------------------------------------------------------------- # 
 # configure the service logging
@@ -32,9 +47,25 @@ logging.basicConfig(format=FORMAT)
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)
 
+sendI2Ccommand(0x00) # all relays off
+
+
+class IvanModbusSlaveContext(ModbusSlaveContext):
+    """
+    XXX:
+    """
+
+    def setValues(self, fx, address, values):
+        if not self.zero_mode:
+            address = address + 1
+        log.debug("setValues1111[%d] %d:%d" % (fx, address, len(values)))
+        self.store[self.decode(fx)].setValues(address, values)
+
+        # XXX:
+        sendI2Ccommand(0x01)
 
 def run_async_server():
-    store = ModbusSlaveContext(
+    store = IvanModbusSlaveContext(
         di=ModbusSequentialDataBlock(0, [0]*10),
         co=ModbusSequentialDataBlock(0, [0]*10),
         hr=ModbusSequentialDataBlock(0, [0]*10),
@@ -62,4 +93,7 @@ def run_async_server():
 
 if __name__ == "__main__":
     run_async_server()
+
+    # switch off all
+    sendI2Ccommand(0x00)
 

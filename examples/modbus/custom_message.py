@@ -86,6 +86,7 @@ class CustomModbusRequest(ModbusRequest):
         self.address, self.count = struct.unpack('>HH', data)
 
     def execute(self, context):
+        print1("da"*80)
         if not (1 <= self.count <= 0x7d0):
             return self.doException(ModbusExceptions.IllegalValue)
         if not context.validate(self.function_code, self.address, self.count):
@@ -93,33 +94,4 @@ class CustomModbusRequest(ModbusRequest):
         values = context.getValues(self.function_code, self.address,
                                    self.count)
         return CustomModbusResponse(values)
-
-# --------------------------------------------------------------------------- #
-# This could also have been defined as
-# --------------------------------------------------------------------------- #
-
-
-class Read16CoilsRequest(ReadCoilsRequest):
-
-    def __init__(self, address, **kwargs):
-        """ Initializes a new instance
-
-        :param address: The address to start reading from
-        """
-        ReadCoilsRequest.__init__(self, address, 16, **kwargs)
-
-# --------------------------------------------------------------------------- #
-# execute the request with your client
-# --------------------------------------------------------------------------- #
-# using the with context, the client will automatically be connected
-# and closed when it leaves the current scope.
-# --------------------------------------------------------------------------- #
-
-
-if __name__ == "__main__":
-    with ModbusClient(host='localhost', port=5020) as client:
-        client.register(CustomModbusResponse)
-        request = CustomModbusRequest(1, unit=1)
-        result = client.execute(request)
-        print(result.values)
 

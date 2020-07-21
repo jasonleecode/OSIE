@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 """
-Pymodbus Asynchronous Server Example
---------------------------------------------------------------------------
+Modbus implementation for Lime2 -> MOD-IO which controls relays.
 
-The asynchronous server is a high performance implementation using the
-twisted library as its backend.  This allows it to scale to many thousands
-of nodes which can be helpful for testing monitoring software.
+root@a20:~/osie/examples/modbus# pymodbus.console tcp --host localhost --port 502
+
+To switch on relay 1:
+
+    > client.write_registers address=0 values=1 unit=1
+
+To switch OFF:
+
+    > client.write_registers address=0 values=0 unit=1
+
 """
-# --------------------------------------------------------------------------- # 
-# import the various server implementations
-# --------------------------------------------------------------------------- # 
 from pymodbus.server.asynchronous import StartTcpServer
 from pymodbus.server.asynchronous import StartUdpServer
 from pymodbus.server.asynchronous import StartSerialServer
@@ -23,6 +26,7 @@ from pymodbus.transaction import (ModbusRtuFramer,
 from custom_message import CustomModbusRequest
 from pyA20Lime2 import i2c
 
+# XXX: create Lime2MODIOCommunicator class that encapcuslates I2C com
 def sendI2Ccommand(code):
     # init I2C
     i2c.init("/dev/i2c-1")
@@ -50,26 +54,35 @@ log.setLevel(logging.DEBUG)
 sendI2Ccommand(0x00) # all relays off
 
 
-class IvanModbusSlaveContext(ModbusSlaveContext):
+class LimeModbusSlaveContext(ModbusSlaveContext):
     """
-    XXX:
+    XXX: Control Lime2 -> Mod-io ->relay {1..4}
     """
 
     def setValues(self, fx, address, values):
         if not self.zero_mode:
             address = address + 1
-        log.debug("setValues1111[%d] %d:%d" % (fx, address, len(values)))
+        log.debug("setValues[%d] %d:%s" % (fx, address, values))
         self.store[self.decode(fx)].setValues(address, values)
 
-        # XXX:
-        sendI2Ccommand(0x01)
+        # control relays
+        value = int(values[0])
+        log.debug(address)
+        log.debug(value)
+        if int(address) == 0 :
+            # relay1
+            if value == 1:
+                # on
+                sendI2Ccommand(0x01)
+            elif value == 0:
+                sendI2Ccommand(0x00)
 
 def run_async_server():
-    store = IvanModbusSlaveContext(
+    store = LimeModbusSlaveContext(
         di=ModbusSequentialDataBlock(0, [0]*10),
         co=ModbusSequentialDataBlock(0, [0]*10),
         hr=ModbusSequentialDataBlock(0, [0]*10),
-        ir=ModbusSequentialDataBlock(0, [0]*10))
+        ir=ModbusSequentialDataBlock(0, [0]*10), zero_mode = True)
     store.register(CustomModbusRequest.function_code, 'cm',
                    ModbusSequentialDataBlock(0, [17] * 100))
     context = ModbusServerContext(slaves=store, single=True)

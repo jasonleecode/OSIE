@@ -101,7 +101,7 @@ def run_async_server():
     identity.MajorMinorRevision = '0.0.1'
     
     # TCP Server
-    StartTcpServer(context, identity=identity, address=("localhost", 502),
+    StartTcpServer(context, identity=identity, address=("0.0.0.0", 502),
                    custom_functions=[CustomModbusRequest])
 
 if __name__ == "__main__":

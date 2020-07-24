@@ -69,13 +69,23 @@ class LimeModbusSlaveContext(ModbusSlaveContext):
         value = int(values[0])
         log.debug(address)
         log.debug(value)
-        if int(address) == 0 :
-            # relay1
+
+        # relay 1
+        if int(address) == 0:
             if value == 1:
-                # on
                 sendI2Ccommand(0x01)
             elif value == 0:
                 sendI2Ccommand(0x00)
+
+        # relay 2
+        if int(address) == 1:
+            # relay1
+            if value == 1:
+                # on
+                sendI2Ccommand(0x03)
+            elif value == 0:
+                sendI2Ccommand(0x00)
+
 
 def run_async_server():
     store = LimeModbusSlaveContext(

@@ -24,18 +24,28 @@ from pymodbus.transaction import (ModbusRtuFramer,
                                   ModbusAsciiFramer,
                                   ModbusBinaryFramer)
 from custom_message import CustomModbusRequest
-from pyA20Lime2 import i2c
 
+from pyA20Lime2 import i2c
+import bitarray
+from bitarray.util import ba2int
 
 # name fo device within Lime2
 DEFAULT_MOD_IO_DEVICE_NAME = "/dev/i2c-1"
+
 class Lime2MODIOI2c:
     """
     Class to communication from Lime2 -> MOD-IO (over I2c)
 
     XXX: keep relay state internally as take into account to preserver relay state!
+    ba = bitarray.bitarray([0, 0, 0, 0, 1, 1, 0, 1])
+    mod_io.write(ba2int(ba)) # all relays off
 
     """
+
+    # state of 4 relays of mod-io, by default OFF
+    # added 8 as their format is 8 bit and maybe they extend mod-io
+    # only last 4 bits are used
+    relay_state_list = [0, 0, 0, 0, 0, 0, 0, 0]
 
     def __init__(self, mod_io_device_name = DEFAULT_MOD_IO_DEVICE_NAME):
         self.mod_io_device_name = mod_io_device_name
@@ -64,9 +74,27 @@ class Lime2MODIOI2c:
                 i2c.write([0x10, code])
                 break
             except:
-                print("Failed co sent command.")
+                print("Failed to sent command.: %s" %code)
         # be a good citizen and close
         self.close()
+
+    def setRelayState(relay_number, state):
+        """
+            Set relay state.
+            relay_number: 0 - 3
+            state: 0 (off), 1 (on)
+        """
+        if relay_state not in (0, 1):
+            raise ValueError("Incorect relay state!")
+        if state not in (0,1,2,3):
+            raise ValueError("Incorrect relay number!")
+        self.relay_state_list[relay_number + 4] = state
+
+        # generate proper relay state command of all 4 relays
+        # which doesn't override any other relays' state
+        # which itself is kept in this app's RAM
+        ba = bitarray.bitarray(self.relay_state_list)
+        self.write(ba2int(ba)) 
 
 
 # --------------------------------------------------------------------------- # 
@@ -81,8 +109,6 @@ log.setLevel(logging.DEBUG)
 
 
 mod_io = Lime2MODIOI2c()
-mod_io.write(0x00) # all relays off
-
 
 class LimeModbusSlaveContext(ModbusSlaveContext):
     """
@@ -99,6 +125,8 @@ class LimeModbusSlaveContext(ModbusSlaveContext):
         value = int(values[0])
         log.debug(address)
         log.debug(value)
+
+        # XXX: use setRelayState
 
         # relay 1
         if int(address) == 0:
@@ -145,6 +173,11 @@ def run_async_server():
                    custom_functions=[CustomModbusRequest])
 
 if __name__ == "__main__":
+
+    # switch OFF all relays 
+    ba = bitarray.bitarray([0, 0, 0, 0, 0, 0, 0, 0])
+    mod_io.write(ba2int(ba))
+
     run_async_server()
 
     # switch off all

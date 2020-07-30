@@ -26,19 +26,47 @@ from pymodbus.transaction import (ModbusRtuFramer,
 from custom_message import CustomModbusRequest
 from pyA20Lime2 import i2c
 
-# XXX: create Lime2MODIOCommunicator class that encapcuslates I2C com
-def sendI2Ccommand(code):
-    # init I2C
-    i2c.init("/dev/i2c-1")
-    i2c.open(0x58)
-    while 1:
-        try:
-            i2c.write([0x10, code])
-            break
-        except:
-            print("Failed co sent command.")
 
-    i2c.close()
+# name fo device within Lime2
+DEFAULT_MOD_IO_DEVICE_NAME = "/dev/i2c-1"
+class Lime2MODIOI2c:
+    """
+    Class to communication from Lime2 -> MOD-IO (over I2c)
+
+    XXX: keep relay state internally as take into account to preserver relay state!
+
+    """
+
+    def __init__(self, mod_io_device_name = DEFAULT_MOD_IO_DEVICE_NAME):
+        self.mod_io_device_name = mod_io_device_name
+
+    def open(self):
+        """
+            Open connection to MOD-IO.
+        """
+        i2c.init(self.mod_io_device_name)
+        i2c.open(0x58)
+
+    def close(self):
+        """
+           Close connection to MOD-IO.
+        """
+        i2c.close()
+
+ 
+    def write(self, code):
+        """
+            Write / send frommnad to device.
+        """
+        self.open()
+        while 1:
+            try:
+                i2c.write([0x10, code])
+                break
+            except:
+                print("Failed co sent command.")
+        # be a good citizen and close
+        self.close()
 
 
 # --------------------------------------------------------------------------- # 
@@ -51,7 +79,9 @@ logging.basicConfig(format=FORMAT)
 log = logging.getLogger()
 log.setLevel(logging.DEBUG)
 
-sendI2Ccommand(0x00) # all relays off
+
+mod_io = Lime2MODIOI2c()
+mod_io.write(0x00) # all relays off
 
 
 class LimeModbusSlaveContext(ModbusSlaveContext):
@@ -73,18 +103,18 @@ class LimeModbusSlaveContext(ModbusSlaveContext):
         # relay 1
         if int(address) == 0:
             if value == 1:
-                sendI2Ccommand(0x01)
+                mod_io.write(0x01)
             elif value == 0:
-                sendI2Ccommand(0x00)
+                mod_io.write(0x00)
 
         # relay 2
         if int(address) == 1:
             # relay1
             if value == 1:
                 # on
-                sendI2Ccommand(0x03)
+                mod_io.write(0x03)
             elif value == 0:
-                sendI2Ccommand(0x00)
+                mod_io.write(0x00)
 
 
 def run_async_server():
@@ -118,5 +148,5 @@ if __name__ == "__main__":
     run_async_server()
 
     # switch off all
-    sendI2Ccommand(0x00)
+    mod_io.write(0x00)
 

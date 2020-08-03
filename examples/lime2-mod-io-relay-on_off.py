@@ -69,10 +69,11 @@ III. Integration with Nexedi's toolset for Wendelin
     # slapos
     root@a20-olinuxino:~# wget https://deploy.erp5.net/slapos && bash slapos # get slapos token from slapos.vifib.com
     
-    # fluentd 
+    # OSIE-PLC daemon setup
     ivan@t470:~$ slapos console
-    >>> release="https://lab.nexedi.com/nexedi/slapos/raw/master/software/fluentd/software.cfg"
+    >>> release="https://gitlab+deploy-token-4:pLwtBu8TbusqZDKPUpZA@lab.nexedi.com/nexedi/osie/raw/master/slapos/software/osie-plc/software.cfg"
     >>> supply(release, "COMP-3217")
+    
 
 """
 

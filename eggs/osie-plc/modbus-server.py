@@ -172,8 +172,10 @@ def run_async_server():
     StartTcpServer(context, identity=identity, address=("0.0.0.0", 502),
                    custom_functions=[CustomModbusRequest])
 
-if __name__ == "__main__":
-
+def main():
+    """
+    Main OSIE-PLC entry point.
+    """
     # switch OFF all relays
     mod_io.setRelayStateAllOff()
 
@@ -182,3 +184,7 @@ if __name__ == "__main__":
 
     # switch off all
     mod_io.setRelayStateAllOff()
+
+if __name__ == "__main__":
+    main()
+

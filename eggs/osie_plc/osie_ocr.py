@@ -7,8 +7,11 @@ import cv2
 import numpy as np
 import pymodbus
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
-UNIT = 0x1
+from time import sleep
 
+UNIT = 0x1
+OSIE_PLC_ADDRESS = "localhost" # "192.168.0.48" for real machine
+OSIE_PLC_PORT = 502
 def nothing(x):
     # any operation
     pass
@@ -17,12 +20,13 @@ def sendModbusCommand():
     """
     XXX: Pure example.
     """
-    client = ModbusClient('localhost', port=502)
+    client = ModbusClient(OSIE_PLC_ADDRESS, port=OSIE_PLC_PORT)
     client.connect()
-    rr = client.read_coils(1, 1, unit=UNIT)
-    client.write_coils(1, [not rr.bits[0]], unit=UNIT)
+    #rr = client.read_coils(1, 1, unit=UNIT)
+    client.write_coils(1, [True], unit=UNIT)
+    sleep(0.05)
+    client.write_coils(1, [False], unit=UNIT)
     client.close()
-#sendModbusCommand()
 
 cap = cv2.VideoCapture(1)
 cv2.namedWindow("Trackbars")

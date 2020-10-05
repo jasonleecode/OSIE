@@ -6,14 +6,25 @@ based on number of countours control a modbus server remotely.
 import cv2
 import numpy as np
 import pymodbus
+from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+UNIT = 0x1
 
 def nothing(x):
     # any operation
     pass
 
+def sendModbusCommand():
+    """
+    XXX: Pure example.
+    """
+    client = ModbusClient('localhost', port=502)
+    client.connect()
+    rr = client.read_coils(1, 1, unit=UNIT)
+    client.write_coils(1, [not rr.bits[0]], unit=UNIT)
+    client.close()
+#sendModbusCommand()
 
 cap = cv2.VideoCapture(1)
-
 cv2.namedWindow("Trackbars")
 cv2.createTrackbar("L-H", "Trackbars", 0, 180, nothing)
 cv2.createTrackbar("L-S", "Trackbars", 66, 255, nothing)
@@ -64,7 +75,8 @@ while True:
             elif len(approx) == 4:
                 cv2.putText(frame, "Rectangle", (x, y), font, 1, (0, 0, 0))
             elif 10 < len(approx) < 20:
-                cv2.putText(frame, "Circle", (x, y), font, 1, (0, 0, 0))
+                cv2.putText(frame, "Circle-fire!", (x, y), font, 1, (0, 0, 0))
+                sendModbusCommand()
 
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)

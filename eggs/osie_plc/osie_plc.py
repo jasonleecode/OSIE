@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
-Modbus implementation for Lime2 -> MOD-IO which controls relays.
+Modbus server implementation for Lime2 -> MOD-IO which controls relays.
 
 root@a20:~/osie/examples/modbus# pymodbus.console tcp --host localhost --port 502
 

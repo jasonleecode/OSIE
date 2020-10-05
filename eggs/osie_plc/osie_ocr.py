@@ -1,11 +1,16 @@
+"""
+Implement a basic OCR app that can find countour sin image and
+based on number of countours control a modbus server remotely.
+"""
+
 import cv2
 import numpy as np
-
-
+import pymodbus
 
 def nothing(x):
     # any operation
     pass
+
 
 cap = cv2.VideoCapture(1)
 
@@ -60,7 +65,6 @@ while True:
                 cv2.putText(frame, "Rectangle", (x, y), font, 1, (0, 0, 0))
             elif 10 < len(approx) < 20:
                 cv2.putText(frame, "Circle", (x, y), font, 1, (0, 0, 0))
-
 
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)

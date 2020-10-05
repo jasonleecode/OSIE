@@ -1,0 +1,3 @@
+[console_scripts]
+pymodbus_server = osie_plc.modbus_server:main
+

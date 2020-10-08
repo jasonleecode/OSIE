@@ -11,7 +11,9 @@ from time import sleep
 
 UNIT = 0x1
 OSIE_PLC_ADDRESS = "localhost" # "192.168.0.48" for real machine
+#OSIE_PLC_ADDRESS = "192.168.0.48"
 OSIE_PLC_PORT = 502
+
 def nothing(x):
     # any operation
     pass
@@ -76,8 +78,12 @@ while True:
 
             if len(approx) == 3:
                 cv2.putText(frame, "Triangle", (x, y), font, 1, (0, 0, 0))
+                sendModbusCommand()
+
             elif len(approx) == 4:
                 cv2.putText(frame, "Rectangle", (x, y), font, 1, (0, 0, 0))
+                sendModbusCommand()
+
             elif 10 < len(approx) < 20:
                 cv2.putText(frame, "Circle-fire!", (x, y), font, 1, (0, 0, 0))
                 sendModbusCommand()

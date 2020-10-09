@@ -18,17 +18,32 @@ def nothing(x):
     # any operation
     pass
 
-def sendModbusCommand():
+def setConveyorState(state):
     """
-    XXX: Pure example.
+    Send to modbus server command to start (state 1)
+    or stop (state 0) conveyor.
+    """
+    client = ModbusClient(OSIE_PLC_ADDRESS, port=OSIE_PLC_PORT)
+    client.connect()
+    client.write_coils(0, [state], unit=UNIT)
+    client.close()
+
+
+def openAndCloseAirValve(seconds=0.05):
+    """
+    Send to modbus server command to open and close the air valve for
+    a specified amount of time in seconds.
     """
     client = ModbusClient(OSIE_PLC_ADDRESS, port=OSIE_PLC_PORT)
     client.connect()
     #rr = client.read_coils(1, 1, unit=UNIT)
     client.write_coils(1, [True], unit=UNIT)
-    sleep(0.05)
+    sleep(seconds)
     client.write_coils(1, [False], unit=UNIT)
     client.close()
+
+# start conveyor
+setConveyorState(1)
 
 cap = cv2.VideoCapture(1)
 cv2.namedWindow("Trackbars")
@@ -78,15 +93,15 @@ while True:
 
             if len(approx) == 3:
                 cv2.putText(frame, "Triangle", (x, y), font, 1, (0, 0, 0))
-                sendModbusCommand()
+                openAndCloseAirValve()
 
             elif len(approx) == 4:
                 cv2.putText(frame, "Rectangle", (x, y), font, 1, (0, 0, 0))
-                sendModbusCommand()
+                openAndCloseAirValve()
 
             elif 10 < len(approx) < 20:
                 cv2.putText(frame, "Circle-fire!", (x, y), font, 1, (0, 0, 0))
-                sendModbusCommand()
+                openAndCloseAirValve()
 
     cv2.imshow("Frame", frame)
     cv2.imshow("Mask", mask)
@@ -97,3 +112,8 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
+
+# stop conveyor
+setConveyorState(0)
+
+

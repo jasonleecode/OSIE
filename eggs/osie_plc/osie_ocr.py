@@ -8,11 +8,14 @@ import numpy as np
 import pymodbus
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 from time import sleep
+from datetime import datetime
+import os
+import time
 
 UNIT = 0x1
 OSIE_PLC_ADDRESS = "localhost" # "192.168.0.48" for real machine
-#OSIE_PLC_ADDRESS = "192.168.0.48"
 OSIE_PLC_PORT = 502
+ROOT_FOLDER_PATH = "/mnt/flash"
 
 def nothing(x):
     # any operation
@@ -41,6 +44,22 @@ def openAndCloseAirValve(seconds=0.05):
     sleep(seconds)
     client.write_coils(1, [False], unit=UNIT)
     client.close()
+
+def storeFrame(frame):
+    """
+    Store a video frame in locally.
+    """
+    folder_path = "%s/%s" %(ROOT_FOLDER_PATH, datetime.today().strftime('%Y-%m-%d'))
+    if not os.path.isdir(folder_path):
+        os.mkdir(folder_path)
+    millis = int(round(time.time() * 1000))
+    file_path = "%s/%s.jpg" %(folder_path, millis)
+    cv2.imwrite(file_path, frame)
+    #f = open(file_path, "w")
+    #f.write(file_content)
+    #f.close()
+
+
 
 # start conveyor
 setConveyorState(1)
@@ -93,14 +112,17 @@ while True:
 
             if len(approx) == 3:
                 cv2.putText(frame, "Triangle", (x, y), font, 1, (0, 0, 0))
+                storeFrame(frame)
                 openAndCloseAirValve()
 
             elif len(approx) == 4:
                 cv2.putText(frame, "Rectangle", (x, y), font, 1, (0, 0, 0))
+                storeFrame(frame)
                 openAndCloseAirValve()
 
             elif 10 < len(approx) < 20:
                 cv2.putText(frame, "Circle-fire!", (x, y), font, 1, (0, 0, 0))
+                storeFrame(frame)
                 openAndCloseAirValve()
 
     cv2.imshow("Frame", frame)

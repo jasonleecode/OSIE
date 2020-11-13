@@ -1,12 +1,12 @@
 """
-Simple OPCUa server with one paremeter (temp).
+Simple OPC UA server with one paremeter (temp).
 """
 from opcua import Server
 from random import randint
 import time
 
 server = Server()
-url = "opc.tcp://localhost:4840"
+url = "opc.tcp://0.0.0.0:4840"
 server.set_endpoint(url)
 
 name = "OPCUA_SIMULATION_SERVER"

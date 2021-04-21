@@ -1,7 +1,0 @@
-setup.py
-osie_plc.egg-info/PKG-INFO
-osie_plc.egg-info/SOURCES.txt
-osie_plc.egg-info/dependency_links.txt
-osie_plc.egg-info/entry_points.txt
-osie_plc.egg-info/requires.txt
-osie_plc.egg-info/top_level.txt

@@ -1,9 +1,0 @@
-bitarray
-click
-cython
-numpy
-pandas
-prompt_toolkit
-pyA20Lime2
-pygments
-pymodbus[twisted]

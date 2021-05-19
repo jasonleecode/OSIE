@@ -112,6 +112,7 @@ typedef struct {
   // FB private variables - TEMP, private and located variables
   __DECLARE_VAR(INT,CNT)
   __DECLARE_EXTERNAL(INT,RESETCOUNTERVALUE)
+  __DECLARE_EXTERNAL(BOOL,RELAY0VALUE)
 
 } COUNTERST;
 
@@ -124,13 +125,10 @@ typedef struct {
   // PROGRAM Interface - IN, OUT, IN_OUT variables
   __DECLARE_VAR(BOOL,RESET)
   __DECLARE_VAR(INT,CNT0)
-  __DECLARE_VAR(INT,CNT1)
-  __DECLARE_VAR(INT,CNT2)
-  __DECLARE_VAR(INT,CNT3)
-  __DECLARE_VAR(INT,CNT4)
 
   // PROGRAM private variables - TEMP, private and located variables
   COUNTERST COUNTERST0;
+  __DECLARE_LOCATED(BOOL,RELAY0VALUE)
 
 } PLC_PRG;
 

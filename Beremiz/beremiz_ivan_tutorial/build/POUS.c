@@ -207,6 +207,7 @@ void COUNTERST_init__(COUNTERST *data__, BOOL retain) {
   __INIT_VAR(data__->OUT,0,retain)
   __INIT_VAR(data__->CNT,0,retain)
   __INIT_EXTERNAL(INT,RESETCOUNTERVALUE,data__->RESETCOUNTERVALUE,retain)
+  __INIT_EXTERNAL(BOOL,RELAY0VALUE,data__->RELAY0VALUE,retain)
 }
 
 // Code part
@@ -241,11 +242,9 @@ __end:
 void PLC_PRG_init__(PLC_PRG *data__, BOOL retain) {
   __INIT_VAR(data__->RESET,__BOOL_LITERAL(FALSE),retain)
   __INIT_VAR(data__->CNT0,0,retain)
-  __INIT_VAR(data__->CNT1,0,retain)
-  __INIT_VAR(data__->CNT2,0,retain)
-  __INIT_VAR(data__->CNT3,0,retain)
-  __INIT_VAR(data__->CNT4,0,retain)
   COUNTERST_init__(&data__->COUNTERST0,retain);
+  __INIT_LOCATED(BOOL,__QX0_0_0_0,data__->RELAY0VALUE,retain)
+  __INIT_LOCATED_VALUE(data__->RELAY0VALUE,__BOOL_LITERAL(FALSE))
 }
 
 // Code part

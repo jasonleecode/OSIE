@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-05-17T11:58:28">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-05-19T14:06:39">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -32,26 +32,6 @@
                 <INT/>
               </type>
             </variable>
-            <variable name="Cnt1">
-              <type>
-                <INT/>
-              </type>
-            </variable>
-            <variable name="Cnt2">
-              <type>
-                <INT/>
-              </type>
-            </variable>
-            <variable name="Cnt3">
-              <type>
-                <INT/>
-              </type>
-            </variable>
-            <variable name="Cnt4">
-              <type>
-                <INT/>
-              </type>
-            </variable>
           </outputVars>
           <localVars>
             <variable name="CounterST0">
@@ -60,24 +40,34 @@
               </type>
             </variable>
           </localVars>
+          <localVars>
+            <variable name="Relay0Value" address="%QX0.0.0.0">
+              <type>
+                <BOOL/>
+              </type>
+              <documentation>
+                <xhtml:p><![CDATA[Relay 0 Status]]></xhtml:p>
+              </documentation>
+            </variable>
+          </localVars>
         </interface>
         <body>
           <FBD>
             <comment localId="1" height="143" width="201">
-              <position x="378" y="162"/>
+              <position x="566" y="75"/>
               <content>
                 <xhtml:p><![CDATA[Test Ivan: this PLC will run an increasing counter unless a Reset is switched On (then counter will be reset).]]></xhtml:p>
               </content>
             </comment>
             <block localId="2" typeName="CounterST" instanceName="CounterST0" executionOrderId="0" height="109" width="99">
-              <position x="122" y="192"/>
+              <position x="288" y="192"/>
               <inputVariables>
                 <variable formalParameter="Reset">
                   <connectionPointIn>
                     <relPosition x="0" y="64"/>
                     <connection refLocalId="3">
-                      <position x="122" y="256"/>
-                      <position x="51" y="256"/>
+                      <position x="288" y="256"/>
+                      <position x="229" y="256"/>
                     </connection>
                   </connectionPointIn>
                 </variable>
@@ -92,19 +82,19 @@
               </outputVariables>
             </block>
             <inVariable localId="3" executionOrderId="0" height="24" width="50" negated="false">
-              <position x="1" y="244"/>
+              <position x="179" y="244"/>
               <connectionPointOut>
                 <relPosition x="50" y="12"/>
               </connectionPointOut>
               <expression>Reset</expression>
             </inVariable>
             <outVariable localId="4" executionOrderId="0" height="24" width="42" negated="false">
-              <position x="284" y="244"/>
+              <position x="450" y="244"/>
               <connectionPointIn>
                 <relPosition x="0" y="12"/>
                 <connection refLocalId="2" formalParameter="Out">
-                  <position x="284" y="256"/>
-                  <position x="221" y="256"/>
+                  <position x="450" y="256"/>
+                  <position x="387" y="256"/>
                 </connection>
               </connectionPointIn>
               <expression>Cnt0</expression>
@@ -141,6 +131,11 @@
                 <INT/>
               </type>
             </variable>
+            <variable name="Relay0Value">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
           </externalVars>
         </interface>
         <body>
@@ -171,8 +166,52 @@ Out := Cnt;]]></xhtml:p>
               <INT/>
             </type>
             <initialValue>
-              <simpleValue value="1000"/>
+              <simpleValue value="0"/>
             </initialValue>
+          </variable>
+          <variable name="Relay0Value" address="%QX0.0.0.0">
+            <type>
+              <BOOL/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[The status of the Lime's relay0 (read over modbus)]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Relay1Value" address="%QX0.0.1.1">
+            <type>
+              <BOOL/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[The status of the Lime's relay1 (read over modbus)]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Relay2Value" address="%QX0.0.2.2">
+            <type>
+              <BOOL/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[The status of the Lime's relay2 (read over modbus)]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Relay3Value" address="%QX0.0.3.3">
+            <type>
+              <BOOL/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[The status of the Lime's relay3 (read over modbus)]]></xhtml:p>
+            </documentation>
           </variable>
         </globalVars>
       </configuration>

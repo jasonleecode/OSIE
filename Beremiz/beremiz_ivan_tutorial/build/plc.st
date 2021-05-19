@@ -104,6 +104,7 @@ FUNCTION_BLOCK CounterST
   END_VAR
   VAR_EXTERNAL
     ResetCounterValue : INT;
+    Relay0Value : BOOL;
   END_VAR
 
   IF Reset THEN
@@ -121,13 +122,12 @@ PROGRAM plc_prg
   END_VAR
   VAR_OUTPUT
     Cnt0 : INT;
-    Cnt1 : INT;
-    Cnt2 : INT;
-    Cnt3 : INT;
-    Cnt4 : INT;
   END_VAR
   VAR
     CounterST0 : CounterST;
+  END_VAR
+  VAR
+    Relay0Value AT %QX0.0.0.0 : BOOL;
   END_VAR
 
   CounterST0(Reset := Reset);
@@ -137,7 +137,11 @@ END_PROGRAM
 
 CONFIGURATION config
   VAR_GLOBAL
-    ResetCounterValue : INT := 1000;
+    ResetCounterValue : INT := 0;
+    Relay0Value AT %QX0.0.0.0 : BOOL := 0;
+    Relay1Value AT %QX0.0.1.1 : BOOL := 0;
+    Relay2Value AT %QX0.0.2.2 : BOOL := 0;
+    Relay3Value AT %QX0.0.3.3 : BOOL := 0;
   END_VAR
 
   RESOURCE resource1 ON PLC

@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-05-19T14:06:39">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-05-21T15:25:57">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -32,6 +32,11 @@
                 <INT/>
               </type>
             </variable>
+            <variable name="Cnt1">
+              <type>
+                <INT/>
+              </type>
+            </variable>
           </outputVars>
           <localVars>
             <variable name="CounterST0">
@@ -40,23 +45,13 @@
               </type>
             </variable>
           </localVars>
-          <localVars>
-            <variable name="Relay0Value" address="%QX0.0.0.0">
-              <type>
-                <BOOL/>
-              </type>
-              <documentation>
-                <xhtml:p><![CDATA[Relay 0 Status]]></xhtml:p>
-              </documentation>
-            </variable>
-          </localVars>
         </interface>
         <body>
           <FBD>
             <comment localId="1" height="143" width="201">
               <position x="566" y="75"/>
               <content>
-                <xhtml:p><![CDATA[Test Ivan: this PLC will run an increasing counter unless a Reset is switched On (then counter will be reset).]]></xhtml:p>
+                <xhtml:p><![CDATA[Test Ivan: this PLC will switch ON / OFF attached over modbus relays {0..3} of a Lime2 coupler.]]></xhtml:p>
               </content>
             </comment>
             <block localId="2" typeName="CounterST" instanceName="CounterST0" executionOrderId="0" height="109" width="99">
@@ -64,40 +59,58 @@
               <inputVariables>
                 <variable formalParameter="Reset">
                   <connectionPointIn>
-                    <relPosition x="0" y="64"/>
+                    <relPosition x="0" y="42"/>
                     <connection refLocalId="3">
-                      <position x="288" y="256"/>
-                      <position x="229" y="256"/>
+                      <position x="288" y="234"/>
+                      <position x="258" y="234"/>
+                      <position x="258" y="218"/>
+                      <position x="231" y="218"/>
                     </connection>
                   </connectionPointIn>
                 </variable>
               </inputVariables>
               <inOutVariables/>
               <outputVariables>
-                <variable formalParameter="Out">
+                <variable formalParameter="Out1">
                   <connectionPointOut>
-                    <relPosition x="99" y="64"/>
+                    <relPosition x="99" y="42"/>
+                  </connectionPointOut>
+                </variable>
+                <variable formalParameter="Out0">
+                  <connectionPointOut>
+                    <relPosition x="99" y="86"/>
                   </connectionPointOut>
                 </variable>
               </outputVariables>
             </block>
             <inVariable localId="3" executionOrderId="0" height="24" width="50" negated="false">
-              <position x="179" y="244"/>
+              <position x="181" y="206"/>
               <connectionPointOut>
                 <relPosition x="50" y="12"/>
               </connectionPointOut>
               <expression>Reset</expression>
             </inVariable>
             <outVariable localId="4" executionOrderId="0" height="24" width="42" negated="false">
-              <position x="450" y="244"/>
+              <position x="433" y="266"/>
               <connectionPointIn>
                 <relPosition x="0" y="12"/>
-                <connection refLocalId="2" formalParameter="Out">
-                  <position x="450" y="256"/>
-                  <position x="387" y="256"/>
+                <connection refLocalId="2" formalParameter="Out0">
+                  <position x="433" y="278"/>
+                  <position x="387" y="278"/>
                 </connection>
               </connectionPointIn>
               <expression>Cnt0</expression>
+            </outVariable>
+            <outVariable localId="6" executionOrderId="0" height="24" width="42" negated="false">
+              <position x="435" y="222"/>
+              <connectionPointIn>
+                <relPosition x="0" y="12"/>
+                <connection refLocalId="2" formalParameter="Out1">
+                  <position x="435" y="234"/>
+                  <position x="387" y="234"/>
+                </connection>
+              </connectionPointIn>
+              <expression>Cnt1</expression>
             </outVariable>
           </FBD>
         </body>
@@ -112,14 +125,24 @@
             </variable>
           </inputVars>
           <outputVars>
-            <variable name="Out">
+            <variable name="Out1">
+              <type>
+                <INT/>
+              </type>
+            </variable>
+            <variable name="Out0">
               <type>
                 <INT/>
               </type>
             </variable>
           </outputVars>
           <localVars>
-            <variable name="Cnt">
+            <variable name="Cnt1">
+              <type>
+                <INT/>
+              </type>
+            </variable>
+            <variable name="Cnt0">
               <type>
                 <INT/>
               </type>
@@ -136,17 +159,52 @@
                 <BOOL/>
               </type>
             </variable>
+            <variable name="Relay1Value">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Relay2Value">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
+            <variable name="Relay3Value">
+              <type>
+                <BOOL/>
+              </type>
+            </variable>
           </externalVars>
         </interface>
         <body>
           <ST>
             <xhtml:p><![CDATA[IF Reset THEN
-  Cnt := ResetCounterValue;
+  Cnt0 := ResetCounterValue;
+  Cnt1 := ResetCounterValue;
+  Reset := False;
 ELSE
-  Cnt := Cnt + 1;
+  Cnt0 := Cnt0 + 1;
+  Cnt1 := Cnt1 + 1;
+  IF Cnt1 > 100 THEN
+    Relay0Value := False;
+    Relay1Value := True;
+    Relay2Value := False;
+    Relay3Value := True;
+  ELSE
+    Relay0Value := True;
+    Relay1Value := False;
+    Relay2Value := True;
+    Relay3Value := False;
+  END_IF;
+  
+  IF Cnt1>200 THEN
+    Cnt1 :=0;
+  END_IF;
+  
 END_IF;
 
-Out := Cnt;]]></xhtml:p>
+Out1 := Cnt1;
+Out0 := Cnt0;]]></xhtml:p>
           </ST>
         </body>
       </pou>

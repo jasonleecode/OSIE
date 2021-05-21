@@ -263,22 +263,22 @@ static client_node_t		client_nodes[NUMBER_OF_CLIENT_NODES] = {
 static client_request_t	client_requests[NUMBER_OF_CLIENT_REQTS] = {
 /*request 0_0_0*/
 {"0_0_0", 0, 0, req_output, 5, 0 , 1,
-DEF_REQ_SEND_RETRIES, 0 /* mb_error_code */, 0 /* tn_error_code */, 0 /* prev_code */, {0, 10000000} /* timeout */, 0 /* write_on_change */, 
+DEF_REQ_SEND_RETRIES, 0 /* mb_error_code */, 0 /* tn_error_code */, 0 /* prev_code */, {0, 30000000} /* timeout */, 0 /* write_on_change */, 
 {0}, {0}},
 
 /*request 0_0_1*/
 {"0_0_1", 0, 0, req_output, 5, 1 , 1,
-DEF_REQ_SEND_RETRIES, 0 /* mb_error_code */, 0 /* tn_error_code */, 0 /* prev_code */, {0, 10000000} /* timeout */, 0 /* write_on_change */, 
+DEF_REQ_SEND_RETRIES, 0 /* mb_error_code */, 0 /* tn_error_code */, 0 /* prev_code */, {0, 30000000} /* timeout */, 0 /* write_on_change */, 
 {0}, {0}},
 
 /*request 0_0_2*/
 {"0_0_2", 0, 0, req_output, 5, 2 , 1,
-DEF_REQ_SEND_RETRIES, 0 /* mb_error_code */, 0 /* tn_error_code */, 0 /* prev_code */, {0, 10000000} /* timeout */, 0 /* write_on_change */, 
+DEF_REQ_SEND_RETRIES, 0 /* mb_error_code */, 0 /* tn_error_code */, 0 /* prev_code */, {0, 30000000} /* timeout */, 0 /* write_on_change */, 
 {0}, {0}},
 
 /*request 0_0_3*/
 {"0_0_3", 0, 0, req_output, 5, 3 , 1,
-DEF_REQ_SEND_RETRIES, 0 /* mb_error_code */, 0 /* tn_error_code */, 0 /* prev_code */, {0, 10000000} /* timeout */, 0 /* write_on_change */, 
+DEF_REQ_SEND_RETRIES, 0 /* mb_error_code */, 0 /* tn_error_code */, 0 /* prev_code */, {0, 30000000} /* timeout */, 0 /* write_on_change */, 
 {0}, {0}}
 };
 

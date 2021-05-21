@@ -3,23 +3,48 @@ FUNCTION_BLOCK CounterST
     Reset : BOOL;
   END_VAR
   VAR_OUTPUT
-    Out : INT;
+    Out1 : INT;
+    Out0 : INT;
   END_VAR
   VAR
-    Cnt : INT;
+    Cnt1 : INT;
+    Cnt0 : INT;
   END_VAR
   VAR_EXTERNAL
     ResetCounterValue : INT;
     Relay0Value : BOOL;
+    Relay1Value : BOOL;
+    Relay2Value : BOOL;
+    Relay3Value : BOOL;
   END_VAR
 
   IF Reset THEN
-    Cnt := ResetCounterValue;
+    Cnt0 := ResetCounterValue;
+    Cnt1 := ResetCounterValue;
+    Reset := False;
   ELSE
-    Cnt := Cnt + 1;
+    Cnt0 := Cnt0 + 1;
+    Cnt1 := Cnt1 + 1;
+    IF Cnt1 > 100 THEN
+      Relay0Value := False;
+      Relay1Value := True;
+      Relay2Value := False;
+      Relay3Value := True;
+    ELSE
+      Relay0Value := True;
+      Relay1Value := False;
+      Relay2Value := True;
+      Relay3Value := False;
+    END_IF;
+    
+    IF Cnt1>200 THEN
+      Cnt1 :=0;
+    END_IF;
+    
   END_IF;
 
-  Out := Cnt;
+  Out1 := Cnt1;
+  Out0 := Cnt0;
 END_FUNCTION_BLOCK
 
 PROGRAM plc_prg
@@ -28,16 +53,15 @@ PROGRAM plc_prg
   END_VAR
   VAR_OUTPUT
     Cnt0 : INT;
+    Cnt1 : INT;
   END_VAR
   VAR
     CounterST0 : CounterST;
   END_VAR
-  VAR
-    Relay0Value AT %QX0.0.0.0 : BOOL;
-  END_VAR
 
   CounterST0(Reset := Reset);
-  Cnt0 := CounterST0.Out;
+  Cnt1 := CounterST0.Out1;
+  Cnt0 := CounterST0.Out0;
 END_PROGRAM
 
 

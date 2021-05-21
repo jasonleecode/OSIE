@@ -204,10 +204,15 @@ void COUNTERST_init__(COUNTERST *data__, BOOL retain) {
   __INIT_VAR(data__->EN,__BOOL_LITERAL(TRUE),retain)
   __INIT_VAR(data__->ENO,__BOOL_LITERAL(TRUE),retain)
   __INIT_VAR(data__->RESET,__BOOL_LITERAL(FALSE),retain)
-  __INIT_VAR(data__->OUT,0,retain)
-  __INIT_VAR(data__->CNT,0,retain)
+  __INIT_VAR(data__->OUT1,0,retain)
+  __INIT_VAR(data__->OUT0,0,retain)
+  __INIT_VAR(data__->CNT1,0,retain)
+  __INIT_VAR(data__->CNT0,0,retain)
   __INIT_EXTERNAL(INT,RESETCOUNTERVALUE,data__->RESETCOUNTERVALUE,retain)
   __INIT_EXTERNAL(BOOL,RELAY0VALUE,data__->RELAY0VALUE,retain)
+  __INIT_EXTERNAL(BOOL,RELAY1VALUE,data__->RELAY1VALUE,retain)
+  __INIT_EXTERNAL(BOOL,RELAY2VALUE,data__->RELAY2VALUE,retain)
+  __INIT_EXTERNAL(BOOL,RELAY3VALUE,data__->RELAY3VALUE,retain)
 }
 
 // Code part
@@ -223,11 +228,29 @@ void COUNTERST_body__(COUNTERST *data__) {
   // Initialise TEMP variables
 
   if (__GET_VAR(data__->RESET,)) {
-    __SET_VAR(data__->,CNT,,__GET_EXTERNAL(data__->RESETCOUNTERVALUE,));
+    __SET_VAR(data__->,CNT0,,__GET_EXTERNAL(data__->RESETCOUNTERVALUE,));
+    __SET_VAR(data__->,CNT1,,__GET_EXTERNAL(data__->RESETCOUNTERVALUE,));
+    __SET_VAR(data__->,RESET,,__BOOL_LITERAL(FALSE));
   } else {
-    __SET_VAR(data__->,CNT,,(__GET_VAR(data__->CNT,) + 1));
+    __SET_VAR(data__->,CNT0,,(__GET_VAR(data__->CNT0,) + 1));
+    __SET_VAR(data__->,CNT1,,(__GET_VAR(data__->CNT1,) + 1));
+    if ((__GET_VAR(data__->CNT1,) > 100)) {
+      __SET_EXTERNAL(data__->,RELAY0VALUE,,__BOOL_LITERAL(FALSE));
+      __SET_EXTERNAL(data__->,RELAY1VALUE,,__BOOL_LITERAL(TRUE));
+      __SET_EXTERNAL(data__->,RELAY2VALUE,,__BOOL_LITERAL(FALSE));
+      __SET_EXTERNAL(data__->,RELAY3VALUE,,__BOOL_LITERAL(TRUE));
+    } else {
+      __SET_EXTERNAL(data__->,RELAY0VALUE,,__BOOL_LITERAL(TRUE));
+      __SET_EXTERNAL(data__->,RELAY1VALUE,,__BOOL_LITERAL(FALSE));
+      __SET_EXTERNAL(data__->,RELAY2VALUE,,__BOOL_LITERAL(TRUE));
+      __SET_EXTERNAL(data__->,RELAY3VALUE,,__BOOL_LITERAL(FALSE));
+    };
+    if ((__GET_VAR(data__->CNT1,) > 200)) {
+      __SET_VAR(data__->,CNT1,,0);
+    };
   };
-  __SET_VAR(data__->,OUT,,__GET_VAR(data__->CNT,));
+  __SET_VAR(data__->,OUT1,,__GET_VAR(data__->CNT1,));
+  __SET_VAR(data__->,OUT0,,__GET_VAR(data__->CNT0,));
 
   goto __end;
 
@@ -242,9 +265,8 @@ __end:
 void PLC_PRG_init__(PLC_PRG *data__, BOOL retain) {
   __INIT_VAR(data__->RESET,__BOOL_LITERAL(FALSE),retain)
   __INIT_VAR(data__->CNT0,0,retain)
+  __INIT_VAR(data__->CNT1,0,retain)
   COUNTERST_init__(&data__->COUNTERST0,retain);
-  __INIT_LOCATED(BOOL,__QX0_0_0_0,data__->RELAY0VALUE,retain)
-  __INIT_LOCATED_VALUE(data__->RELAY0VALUE,__BOOL_LITERAL(FALSE))
 }
 
 // Code part
@@ -253,7 +275,8 @@ void PLC_PRG_body__(PLC_PRG *data__) {
 
   __SET_VAR(data__->COUNTERST0.,RESET,,__GET_VAR(data__->RESET,));
   COUNTERST_body__(&data__->COUNTERST0);
-  __SET_VAR(data__->,CNT0,,__GET_VAR(data__->COUNTERST0.OUT,));
+  __SET_VAR(data__->,CNT1,,__GET_VAR(data__->COUNTERST0.OUT1,));
+  __SET_VAR(data__->,CNT0,,__GET_VAR(data__->COUNTERST0.OUT0,));
 
   goto __end;
 

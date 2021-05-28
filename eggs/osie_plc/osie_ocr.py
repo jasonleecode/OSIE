@@ -1,6 +1,8 @@
 """
-Implement a basic OCR app that can find countour sin image and
+Implement a basic OCR app that can find countours in image and
 based on number of countours control a modbus server remotely.
+
+This is a POC.
 """
 
 import cv2

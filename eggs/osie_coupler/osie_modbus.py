@@ -13,6 +13,8 @@ To switch OFF:
     > client.write_registers address=0 values=0 unit=1
 
 """
+import os
+import sys
 from pymodbus.server.asynchronous import StartTcpServer
 from pymodbus.server.asynchronous import StartUdpServer
 from pymodbus.server.asynchronous import StartSerialServer
@@ -176,6 +178,11 @@ def main():
     """
     Main OSIE-PLC entry point.
     """
+
+    # check if we actually are running on proper platform
+    if os.uname().machine != "armv7l":
+      log.error("Not supported platform and / or CPU type.")
+      sys.exit(1)    
     # switch OFF all relays
     mod_io.setRelayStateAllOff()
 

@@ -25,19 +25,16 @@ FUNCTION_BLOCK CounterST
   ELSE
     Cnt0 := Cnt0 + 1;
     Cnt1 := Cnt1 + 1;
-    IF Cnt1 > 100 THEN
-      Relay0Value := False;
+    IF Cnt1 > 5 THEN
+      Relay0Value := True;
       Relay1Value := True;
-      Relay2Value := False;
-      Relay3Value := True;
     ELSE
       Relay0Value := True;
       Relay1Value := False;
-      Relay2Value := True;
-      Relay3Value := False;
     END_IF;
     
-    IF Cnt1>200 THEN
+    IF Cnt1 > 7 THEN
+      Relay1Value := False;
       Cnt1 :=0;
     END_IF;
     

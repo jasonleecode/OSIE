@@ -25,12 +25,15 @@ from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 from pymodbus.transaction import (ModbusRtuFramer,
                                   ModbusAsciiFramer,
                                   ModbusBinaryFramer)
-from custom_message import CustomModbusRequest
+#from .custom_message import CustomModbusRequest
+from pymodbus.pdu import ModbusRequest
 
 from pyA20Lime2 import i2c
 import bitarray
 from bitarray.util import ba2int
 
+
+ModbusRequest.function_code = 55
 # name fo device within Lime2
 DEFAULT_MOD_IO_DEVICE_NAME = "/dev/i2c-1"
 
@@ -153,7 +156,7 @@ def run_async_server():
         co=ModbusSequentialDataBlock(0, [0]*10),
         hr=ModbusSequentialDataBlock(0, [0]*10),
         ir=ModbusSequentialDataBlock(0, [0]*10), zero_mode = True)
-    store.register(CustomModbusRequest.function_code, 'cm',
+    store.register(ModbusRequest.function_code, 'cm',
                    ModbusSequentialDataBlock(0, [17] * 100))
     context = ModbusServerContext(slaves=store, single=True)
     
@@ -172,7 +175,7 @@ def run_async_server():
     
     # TCP Server
     StartTcpServer(context, identity=identity, address=("0.0.0.0", 502),
-                   custom_functions=[CustomModbusRequest])
+                   custom_functions=[ModbusRequest])
 
 def main():
     """

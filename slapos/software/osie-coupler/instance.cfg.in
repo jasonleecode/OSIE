@@ -1,6 +1,6 @@
 #############################
 #
-# Deploy hello-world instance
+# Deploy  OSIE coupler instance
 #
 #############################
 [buildout]
@@ -76,8 +76,7 @@ logfile = ${directory:log}/helloweb-${:kind}.log
 # This recipe will try to "exec" the command-line after separating parameters.
 recipe = slapos.cookbook:wrapper
 command-line =
-    {{ buildout['bin-directory'] }}/helloweb-${:kind} --logfile ${:logfile}
-        ${:ipv6} ${:port} ${instance-parameter:configuration.name}
+    {{ buildout['bin-directory'] }}/pythonwitheggs {{ buildout['parts-directory'] }}/osie/eggs/osie_coupler/osie_modbus.py
 # Put this shell script in the "etc/service" directory. Each executable of this
 # repository will be started and monitored by supervisord. If a service
 # exits/crashes, it will trigger a "bang" and cause a re-run of the instance.
@@ -108,8 +107,6 @@ config-port    = {{ port }}
 
 # services instantiation
 {{ hellowebsrv('python', 7777) }}
-{{ hellowebsrv('ruby',   7778) }}
-{{ hellowebsrv('go',     7779) }}
 
 
 # register all services/promises to buildout parts

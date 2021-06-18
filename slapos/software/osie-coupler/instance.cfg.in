@@ -36,6 +36,7 @@ cert = ${slap-connection:cert-file}
 # specify it.
 # All possible parameters should have a default.
 # In our use case, we are expecting from the user to specify one (optional) parameter: "name". We put the default value here if he doesn't specify it, so that it doesn't crash.
+configuration.interface = 0.0.0.0
 configuration.port = 1502
 # If our use case requires that the user can specify a mail address so that his instance can mail to him (for example), we can do:
 # configuration.mail-address =
@@ -101,8 +102,8 @@ port    = {{ port }}
 [helloweb-{{ kind }}-promise]
 <= helloweb-promise
 kind    = {{ kind }}
-config-hostname= ${helloweb-{{ kind }}:ipv6}
-config-port    = {{ port }}
+config-hostname= ${instance-parameter:configuration.interface}
+config-port    = ${instance-parameter:configuration.port}
 {% endmacro %}
 
 # services instantiation
@@ -124,3 +125,4 @@ parts +=
 [publish-connection-parameter]
 recipe = slapos.cookbook:publish
 port = ${instance-parameter:configuration.port}
+interface = ${instance-parameter:configuration.interface}

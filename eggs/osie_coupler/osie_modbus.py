@@ -25,15 +25,16 @@ from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 from pymodbus.transaction import (ModbusRtuFramer,
                                   ModbusAsciiFramer,
                                   ModbusBinaryFramer)
-#from .custom_message import CustomModbusRequest
 from pymodbus.pdu import ModbusRequest
-
 from pyA20Lime2 import i2c
 import bitarray
 from bitarray.util import ba2int
+from argparse import ArgumentParser
 
 
+# XXX: is it needed actually, examine
 ModbusRequest.function_code = 55
+
 # name fo device within Lime2
 DEFAULT_MOD_IO_DEVICE_NAME = "/dev/i2c-1"
 
@@ -128,6 +129,22 @@ log = logging.getLogger()
 log.setLevel(logging.DEBUG)
 
 
+# argument parsing
+parser = ArgumentParser()
+parser.add_argument("-p", "--port", dest="port",
+                    default = 502,
+                    type = int,
+                    help="The port modbus server will listen to.", metavar="PORT")
+parser.add_argument("-i", "--interface", dest="interface",
+                    default = "0.0.0.0",
+                    type = str,
+                    help="The interface modbus server will bind to.", metavar="INTERFACE")
+
+
+args = parser.parse_args()
+PORT = args.port
+INTERFACE = args.interface
+
 # main class to communicate with  MOD-IO
 mod_io = Lime2MODIOI2c()
 
@@ -150,7 +167,7 @@ class LimeModbusSlaveContext(ModbusSlaveContext):
         # switch relays at MOD-IO
         mod_io.setRelayState(address, value)
 
-def run_async_server():
+def run_async_server(port = 502, interface = "0.0.0.0"):
     store = LimeModbusSlaveContext(
         di=ModbusSequentialDataBlock(0, [0]*10),
         co=ModbusSequentialDataBlock(0, [0]*10),
@@ -174,7 +191,7 @@ def run_async_server():
     identity.MajorMinorRevision = '0.0.1'
     
     # TCP Server
-    StartTcpServer(context, identity=identity, address=("0.0.0.0", 502),
+    StartTcpServer(context, identity=identity, address=(interface, port),
                    custom_functions=[ModbusRequest])
 
 def main():
@@ -190,7 +207,7 @@ def main():
     mod_io.setRelayStateAllOff()
 
     # run modbus "server"
-    run_async_server()
+    run_async_server(interface = INTERFACE, port = PORT)
 
     # switch off all
     mod_io.setRelayStateAllOff()

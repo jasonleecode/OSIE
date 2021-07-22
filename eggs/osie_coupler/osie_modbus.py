@@ -32,9 +32,6 @@ from bitarray.util import ba2int
 from argparse import ArgumentParser
 
 
-# XXX: is it needed actually, examine
-ModbusRequest.function_code = 55
-
 # name fo device within Lime2
 DEFAULT_MOD_IO_DEVICE_NAME = "/dev/i2c-1"
 
@@ -173,7 +170,7 @@ def run_async_server(port = 502, interface = "0.0.0.0"):
         co=ModbusSequentialDataBlock(0, [0]*10),
         hr=ModbusSequentialDataBlock(0, [0]*10),
         ir=ModbusSequentialDataBlock(0, [0]*10), zero_mode = True)
-    store.register(ModbusRequest.function_code, 'cm',
+    store.register(55, 'cm',
                    ModbusSequentialDataBlock(0, [17] * 100))
     context = ModbusServerContext(slaves=store, single=True)
     

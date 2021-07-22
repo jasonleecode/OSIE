@@ -181,8 +181,8 @@ def run_async_server(port = 502, interface = "0.0.0.0"):
     # ----------------------------------------------------------------------- # 
     identity = ModbusDeviceIdentification()
     identity.VendorName = 'Nexedi'
-    identity.ProductCode = 'Lime2.PLC'
-    identity.VendorUrl = 'http://github.com/bashwork/pymodbus/'
+    identity.ProductCode = 'OSIE-coupler'
+    identity.VendorUrl = 'https://lab.nexedi.com/nexedi/osie/'
     identity.ProductName = 'Pymodbus Server'
     identity.ModelName = 'Pymodbus Server'
     identity.MajorMinorRevision = '0.0.1'
@@ -192,14 +192,11 @@ def run_async_server(port = 502, interface = "0.0.0.0"):
                    custom_functions=[ModbusRequest])
 
 def main():
-    """
-    Main OSIE-PLC entry point.
-    """
-
     # check if we actually are running on proper platform
     if os.uname().machine != "armv7l":
       log.error("Not supported platform and / or CPU type.")
       sys.exit(1)    
+    
     # switch OFF all relays
     mod_io.setRelayStateAllOff()
 

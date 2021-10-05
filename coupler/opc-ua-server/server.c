@@ -87,35 +87,6 @@ addVariable(UA_Server *server) {
                               UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr, NULL, NULL);
 }
 
-static void
-addMatrixVariable(UA_Server *server) {
-    UA_VariableAttributes attr = UA_VariableAttributes_default;
-    attr.displayName = UA_LOCALIZEDTEXT("en-US", "Double Matrix");
-    attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-
-    /* Set the variable value constraints */
-    attr.dataType = UA_TYPES[UA_TYPES_DOUBLE].typeId;
-    attr.valueRank = UA_VALUERANK_TWO_DIMENSIONS;
-    UA_UInt32 arrayDims[2] = {2,2};
-    attr.arrayDimensions = arrayDims;
-    attr.arrayDimensionsSize = 2;
-
-    /* Set the value. The array dimensions need to be the same for the value. */
-    UA_Double zero[4] = {0.0, 0.0, 0.0, 0.0};
-    UA_Variant_setArray(&attr.value, zero, 4, &UA_TYPES[UA_TYPES_DOUBLE]);
-    attr.value.arrayDimensions = arrayDims;
-    attr.value.arrayDimensionsSize = 2;
-
-    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "double.matrix");
-    UA_QualifiedName myIntegerName = UA_QUALIFIEDNAME(1, "double matrix");
-    UA_NodeId parentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
-    UA_NodeId parentReferenceNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES);
-    UA_Server_addVariableNode(server, myIntegerNodeId, parentNodeId,
-                              parentReferenceNodeId, myIntegerName,
-                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
-                              attr, NULL, NULL);
-}
-
 /**
  * Now we change the value with the write service. This uses the same service
  * implementation that can also be reached over the network by an OPC UA client.
@@ -151,26 +122,6 @@ writeVariable(UA_Server *server) {
     UA_Server_write(server, &wv);
 }
 
-/**
- * Note how we initially set the DataType attribute of the variable node to the
- * NodeId of the Int32 data type. This forbids writing values that are not an
- * Int32. The following code shows how this consistency check is performed for
- * every write.
- */
-
-static void
-writeWrongVariable(UA_Server *server) {
-    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "the.answer");
-
-    /* Write a string */
-    UA_String myString = UA_STRING("test");
-    UA_Variant myVar;
-    UA_Variant_init(&myVar);
-    UA_Variant_setScalar(&myVar, &myString, &UA_TYPES[UA_TYPES_STRING]);
-    UA_StatusCode retval = UA_Server_writeValue(server, myIntegerNodeId, myVar);
-    printf("Writing a string returned statuscode %s\n", UA_StatusCode_name(retval));
-}
-
 /** It follows the main server code, making use of the above definitions. */
 
 static volatile UA_Boolean running = true;
@@ -204,9 +155,8 @@ int main(void) {
 #endif
 
     addVariable(server);
-    addMatrixVariable(server);
     writeVariable(server);
-    writeWrongVariable(server);
+    //writeWrongVariable(server);
 
     UA_StatusCode retval = UA_Server_run(server, &running);
 

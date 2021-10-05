@@ -86,6 +86,42 @@ static void addVariable(UA_Server *server) {
                               UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr, NULL, NULL);
 }
 
+/* Connecto to physcal relays
+ *
+ */
+static void beforeReadTime(UA_Server *server,
+               const UA_NodeId *sessionId, void *sessionContext,
+               const UA_NodeId *nodeid, void *nodeContext,
+               const UA_NumericRange *range, const UA_DataValue *data) {
+    //printf("Before read.");
+}
+
+static void afterWriteTime(UA_Server *server,
+               const UA_NodeId *sessionId, void *sessionContext,
+               const UA_NodeId *nodeId, void *nodeContext,
+               const UA_NumericRange *range, const UA_DataValue *data) {
+    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,
+                "The variable was updated");
+    setRelayState(0x0F);
+    printf("Relays ON.\n");
+
+    // wait 1s 
+    sleep(1);
+
+    // switch off all relays
+    setRelayState(0x00);
+
+}
+
+static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {
+    UA_NodeId currentNodeId = UA_NODEID_STRING(1, "relay0");
+    UA_ValueCallback callback ;
+    callback.onRead = beforeReadTime;
+    callback.onWrite = afterWriteTime;
+    UA_Server_setVariableNode_valueCallback(server, currentNodeId, callback);
+}
+
+
 /**
  * Now we change the value with the write service. This uses the same service
  * implementation that can also be reached over the network by an OPC UA client.
@@ -154,6 +190,7 @@ int main(void) {
 
     addVariable(server);
     writeVariable(server);
+    addValueCallbackToCurrentTimeVariable(server);
 
     UA_StatusCode retval = UA_Server_run(server, &running);
 

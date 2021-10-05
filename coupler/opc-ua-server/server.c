@@ -1,21 +1,10 @@
-/* This work is licensed under a Creative Commons CCZero 1.0 Universal License.
- * See http://creativecommons.org/publicdomain/zero/1.0/ for more information. */
-
-/**
- * Adding Variables to a Server
- * ----------------------------
- *
- * This tutorial shows how to work with data types and how to add variable nodes
- * to a server. First, we add a new variable to the server. Take a look at the
- * definition of the ``UA_VariableAttributes`` structure to see the list of all
- * attributes defined for VariableNodes.
- *
- * Note that the default settings have the AccessLevel of the variable value as
- * read only. See below for making the variable writable.
+/* 
+ * Example controling MOD-IO's relays' state over OPC-UA protocol
+ * Based on 
+ *   https://www.kernel.org/doc/Documentation/i2c/dev-interface
+ *   https://github.com/open62541/open62541/blob/master/examples/tutorial_server_variable.c
  */
 
-// Example controling MOD-IO's relays' state 
-// Based on https://www.kernel.org/doc/Documentation/i2c/dev-interface
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -24,14 +13,14 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <signal.h>
-
 #include <open62541/plugin/log_stdout.h>
 #include <open62541/server.h>
 #include <open62541/server_config_default.h>
 
-// relays
 static int setRelayState(int command) {
-    // Set relays' state over I2C
+    /*
+     *  Set relays' state over I2C
+     */
     int file;
     int adapter_nr = 1; /* probably dynamically determined */
     char filename[20];
@@ -86,7 +75,7 @@ static void addVariable(UA_Server *server) {
                               UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr, NULL, NULL);
 }
 
-/* Connecto to physcal relays
+/* Connecto to variables to physical relays
  *
  */
 static void beforeReadTime(UA_Server *server,
@@ -156,9 +145,9 @@ static void writeVariable(UA_Server *server) {
     UA_Server_write(server, &wv);
 }
 
-/** It follows the main server code, making use of the above definitions. */
 
 static volatile UA_Boolean running = true;
+
 static void stopHandler(int sign) {
     UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, "received ctrl-c");
     running = false;
@@ -166,17 +155,6 @@ static void stopHandler(int sign) {
 
 int main(void) {
     
-    // switch on all relays 
-    setRelayState(0x0F);
-    printf("Relays ON.\n");
-
-    // wait 1s 
-    sleep(1);
-
-    // switch off all relays
-    setRelayState(0x00);
-    printf("Relays OFF.\n");
-
     signal(SIGINT, stopHandler);
     signal(SIGTERM, stopHandler);
 

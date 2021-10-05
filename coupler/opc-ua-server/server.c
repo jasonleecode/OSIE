@@ -66,20 +66,19 @@ static int setRelayState(int command) {
     }
 }
 
-static void
-addVariable(UA_Server *server) {
+static void addVariable(UA_Server *server) {
     /* Define the attribute of the myInteger variable node */
     UA_VariableAttributes attr = UA_VariableAttributes_default;
-    UA_Int32 myInteger = 42;
+    UA_Int32 myInteger = 0;
     UA_Variant_setScalar(&attr.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    attr.description = UA_LOCALIZEDTEXT("en-US","the answer");
-    attr.displayName = UA_LOCALIZEDTEXT("en-US","the answer");
+    attr.description = UA_LOCALIZEDTEXT("en-US","Relay 0");
+    attr.displayName = UA_LOCALIZEDTEXT("en-US", "Relay 0");
     attr.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
     attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
 
     /* Add the variable node to the information model */
-    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "the.answer");
-    UA_QualifiedName myIntegerName = UA_QUALIFIEDNAME(1, "the answer");
+    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "relay0");
+    UA_QualifiedName myIntegerName = UA_QUALIFIEDNAME(1, "Relay 0");
     UA_NodeId parentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
     UA_NodeId parentReferenceNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES);
     UA_Server_addVariableNode(server, myIntegerNodeId, parentNodeId,
@@ -92,12 +91,11 @@ addVariable(UA_Server *server) {
  * implementation that can also be reached over the network by an OPC UA client.
  */
 
-static void
-writeVariable(UA_Server *server) {
-    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "the.answer");
+static void writeVariable(UA_Server *server) {
+    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "relay0");
 
     /* Write a different integer value */
-    UA_Int32 myInteger = 43;
+    UA_Int32 myInteger = 0;
     UA_Variant myVar;
     UA_Variant_init(&myVar);
     UA_Variant_setScalar(&myVar, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
@@ -156,7 +154,6 @@ int main(void) {
 
     addVariable(server);
     writeVariable(server);
-    //writeWrongVariable(server);
 
     UA_StatusCode retval = UA_Server_run(server, &running);
 

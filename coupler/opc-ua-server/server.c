@@ -120,7 +120,7 @@ static void addVariable(UA_Server *server) {
 
 }
 
-/* Connec to to variables to physical relays
+/* Connect to variables to physical relays
  *
  */
 static void beforeReadTime(UA_Server *server,
@@ -149,11 +149,33 @@ static void afterWriteTime(UA_Server *server,
 }
 
 static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {
-    UA_NodeId currentNodeId = UA_NODEID_STRING(1, "relay0");
-    UA_ValueCallback callback ;
-    callback.onRead = beforeReadTime;
-    callback.onWrite = afterWriteTime;
-    UA_Server_setVariableNode_valueCallback(server, currentNodeId, callback);
+    // relay 0
+    UA_NodeId currentNodeId0 = UA_NODEID_STRING(1, "relay0");
+    UA_ValueCallback callback0 ;
+    callback0.onRead = beforeReadTime;
+    callback0.onWrite = afterWriteTime;
+    UA_Server_setVariableNode_valueCallback(server, currentNodeId0, callback0);
+    
+    // relay 1
+    UA_NodeId currentNodeId1 = UA_NODEID_STRING(1, "relay1");
+    UA_ValueCallback callback1 ;
+    callback1.onRead = beforeReadTime;
+    callback1.onWrite = afterWriteTime;
+    UA_Server_setVariableNode_valueCallback(server, currentNodeId1, callback1);
+    
+    // relay 2
+    UA_NodeId currentNodeId2 = UA_NODEID_STRING(1, "relay2");
+    UA_ValueCallback callback2 ;
+    callback2.onRead = beforeReadTime;
+    callback2.onWrite = afterWriteTime;
+    UA_Server_setVariableNode_valueCallback(server, currentNodeId2, callback2);
+    
+    // relay 3
+    UA_NodeId currentNodeId3 = UA_NODEID_STRING(1, "relay3");
+    UA_ValueCallback callback3 ;
+    callback3.onRead = beforeReadTime;
+    callback3.onWrite = afterWriteTime;
+    UA_Server_setVariableNode_valueCallback(server, currentNodeId3, callback3);
 }
 
 

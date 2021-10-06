@@ -56,26 +56,71 @@ static int setRelayState(int command) {
 }
 
 static void addVariable(UA_Server *server) {
-    /* Define the attribute of the myInteger variable node */
-    UA_VariableAttributes attr = UA_VariableAttributes_default;
+    /* 
+     * Create all variables representing MOD-IO's relays
+     */
     UA_Int32 myInteger = 0;
-    UA_Variant_setScalar(&attr.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    attr.description = UA_LOCALIZEDTEXT("en-US","Relay 0");
-    attr.displayName = UA_LOCALIZEDTEXT("en-US", "Relay 0");
-    attr.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
-    attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-
-    /* Add the variable node to the information model */
-    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "relay0");
-    UA_QualifiedName myIntegerName = UA_QUALIFIEDNAME(1, "Relay 0");
     UA_NodeId parentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
     UA_NodeId parentReferenceNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES);
-    UA_Server_addVariableNode(server, myIntegerNodeId, parentNodeId,
-                              parentReferenceNodeId, myIntegerName,
-                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr, NULL, NULL);
+    
+    // relay 0
+    UA_VariableAttributes attr0 = UA_VariableAttributes_default;
+    UA_Variant_setScalar(&attr0.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
+    attr0.description = UA_LOCALIZEDTEXT("en-US","Relay 0");
+    attr0.displayName = UA_LOCALIZEDTEXT("en-US", "Relay 0");
+    attr0.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
+    attr0.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+
+    UA_NodeId myIntegerNodeId0 = UA_NODEID_STRING(1, "relay0");
+    UA_QualifiedName myIntegerName0 = UA_QUALIFIEDNAME(1, "Relay 0");
+    UA_Server_addVariableNode(server, myIntegerNodeId0, parentNodeId,
+                              parentReferenceNodeId, myIntegerName0,
+                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr0, NULL, NULL);
+    // relay 1
+    UA_VariableAttributes attr1 = UA_VariableAttributes_default;
+    UA_Variant_setScalar(&attr1.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
+    attr1.description = UA_LOCALIZEDTEXT("en-US","Relay 1");
+    attr1.displayName = UA_LOCALIZEDTEXT("en-US", "Relay 1");
+    attr1.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
+    attr1.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+
+    UA_NodeId myIntegerNodeId1 = UA_NODEID_STRING(1, "relay1");
+    UA_QualifiedName myIntegerName1 = UA_QUALIFIEDNAME(1, "Relay 1");
+    UA_Server_addVariableNode(server, myIntegerNodeId1, parentNodeId,
+                              parentReferenceNodeId, myIntegerName1,
+                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr1, NULL, NULL);
+
+    // relay 2
+    UA_VariableAttributes attr2 = UA_VariableAttributes_default;
+    UA_Variant_setScalar(&attr2.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
+    attr2.description = UA_LOCALIZEDTEXT("en-US","Relay 2");
+    attr2.displayName = UA_LOCALIZEDTEXT("en-US", "Relay 2");
+    attr2.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
+    attr2.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+
+    UA_NodeId myIntegerNodeId2 = UA_NODEID_STRING(1, "relay2");
+    UA_QualifiedName myIntegerName2 = UA_QUALIFIEDNAME(1, "Relay 2");
+    UA_Server_addVariableNode(server, myIntegerNodeId2, parentNodeId,
+                              parentReferenceNodeId, myIntegerName2,
+                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr2, NULL, NULL);
+
+    // relay 3
+    UA_VariableAttributes attr3 = UA_VariableAttributes_default;
+    UA_Variant_setScalar(&attr3.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
+    attr3.description = UA_LOCALIZEDTEXT("en-US","Relay 3");
+    attr3.displayName = UA_LOCALIZEDTEXT("en-US", "Relay 3");
+    attr3.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
+    attr3.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+
+    UA_NodeId myIntegerNodeId3 = UA_NODEID_STRING(1, "relay3");
+    UA_QualifiedName myIntegerName3 = UA_QUALIFIEDNAME(1, "Relay 3");
+    UA_Server_addVariableNode(server, myIntegerNodeId3, parentNodeId,
+                              parentReferenceNodeId, myIntegerName3,
+                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr3, NULL, NULL);
+
 }
 
-/* Connecto to variables to physical relays
+/* Connec to to variables to physical relays
  *
  */
 static void beforeReadTime(UA_Server *server,

@@ -89,17 +89,18 @@ static void afterWriteTime(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
-    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,
-                "The variable was updated");
-    setRelayState(0x0F);
-    printf("Relays ON.\n");
+    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
 
-    // wait 1s 
-    sleep(1);
-
-    // switch off all relays
-    setRelayState(0x00);
-
+    if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
+        UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+        printf("int32Value %u\n", hrValue);
+	if (hrValue > 0){
+            setRelayState(0x0F);
+	}
+	else {
+            setRelayState(0x00);
+	}
+    }
 }
 
 static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {

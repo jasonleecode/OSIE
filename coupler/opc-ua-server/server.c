@@ -17,6 +17,9 @@
 #include <open62541/server.h>
 #include <open62541/server_config_default.h>
 
+// global relay state
+uint8_t myrelay = 0;
+
 static int setRelayState(int command) {
     /*
      *  Set relays' state over I2C
@@ -127,7 +130,7 @@ static void beforeReadTime(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeid, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
-    //printf("Before read.");
+    // nothing to do as not yet needed.
 }
 
 static void afterWriteTime(UA_Server *server,
@@ -138,12 +141,19 @@ static void afterWriteTime(UA_Server *server,
 
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
-        //printf("int32Value %u\n", hrValue);
+        //printf("value %u\n", hrValue);
 	if (hrValue > 0){
-            setRelayState(0x0F);
+	    //printf("relaystate=%d", (int) myrelay);
+            myrelay |= 1UL << 0; // relay0
+            myrelay |= 1UL << 1;
+            myrelay |= 1UL << 2;
+            myrelay |= 1UL << 3; // relay3
+	    setRelayState(myrelay);
 	}
 	else {
-            setRelayState(0x00);
+            myrelay &= ~(1UL << 0); // relay0
+            myrelay &= ~(1UL << 3); // relay3
+            setRelayState(myrelay);
 	}
     }
 }

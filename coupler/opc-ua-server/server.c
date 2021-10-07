@@ -138,7 +138,7 @@ static void afterWriteTime(UA_Server *server,
 
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
-        printf("int32Value %u\n", hrValue);
+        //printf("int32Value %u\n", hrValue);
 	if (hrValue > 0){
             setRelayState(0x0F);
 	}
@@ -222,7 +222,9 @@ static void stopHandler(int sign) {
 }
 
 int main(void) {
-    
+    // set all relays to OFF at startup
+    setRelayState(0x00);
+
     signal(SIGINT, stopHandler);
     signal(SIGTERM, stopHandler);
 
@@ -241,5 +243,9 @@ int main(void) {
     UA_StatusCode retval = UA_Server_run(server, &running);
 
     UA_Server_delete(server);
+
+    // set all relays to OFF at startup
+    setRelayState(0x00);
+
     return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
 }

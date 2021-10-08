@@ -133,26 +133,75 @@ static void beforeReadTime(UA_Server *server,
     // nothing to do as not yet needed.
 }
 
-static void afterWriteTime(UA_Server *server,
+// XXX: having afterWriteTime{0..3} is not needed and maybe with introspection of context we can
+// write only one callback function
+static void afterWriteTime0(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
     UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
-
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
-        //printf("value %u\n", hrValue);
 	if (hrValue > 0){
-	    //printf("relaystate=%d", (int) myrelay);
             myrelay |= 1UL << 0; // relay0
-            myrelay |= 1UL << 1;
-            myrelay |= 1UL << 2;
-            myrelay |= 1UL << 3; // relay3
 	    setRelayState(myrelay);
 	}
 	else {
             myrelay &= ~(1UL << 0); // relay0
-            myrelay &= ~(1UL << 3); // relay3
+            setRelayState(myrelay);
+	}
+    }
+}
+
+static void afterWriteTime1(UA_Server *server,
+               const UA_NodeId *sessionId, void *sessionContext,
+               const UA_NodeId *nodeId, void *nodeContext,
+               const UA_NumericRange *range, const UA_DataValue *data) {
+    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
+    if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
+        UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+	if (hrValue > 0){
+            myrelay |= 1UL << 1;
+	    setRelayState(myrelay);
+	}
+	else {
+            myrelay &= ~(1UL << 1);
+            setRelayState(myrelay);
+	}
+    }
+}
+
+static void afterWriteTime2(UA_Server *server,
+               const UA_NodeId *sessionId, void *sessionContext,
+               const UA_NodeId *nodeId, void *nodeContext,
+               const UA_NumericRange *range, const UA_DataValue *data) {
+    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
+    if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
+        UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+	if (hrValue > 0){
+            myrelay |= 1UL << 2;
+	    setRelayState(myrelay);
+	}
+	else {
+            myrelay &= ~(1UL << 2);
+            setRelayState(myrelay);
+	}
+    }
+}
+
+static void afterWriteTime3(UA_Server *server,
+               const UA_NodeId *sessionId, void *sessionContext,
+               const UA_NodeId *nodeId, void *nodeContext,
+               const UA_NumericRange *range, const UA_DataValue *data) {
+    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
+    if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
+        UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+	if (hrValue > 0){
+            myrelay |= 1UL << 3;
+	    setRelayState(myrelay);
+	}
+	else {
+            myrelay &= ~(1UL << 3);
             setRelayState(myrelay);
 	}
     }
@@ -163,28 +212,28 @@ static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {
     UA_NodeId currentNodeId0 = UA_NODEID_STRING(1, "relay0");
     UA_ValueCallback callback0 ;
     callback0.onRead = beforeReadTime;
-    callback0.onWrite = afterWriteTime;
+    callback0.onWrite = afterWriteTime0;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId0, callback0);
     
     // relay 1
     UA_NodeId currentNodeId1 = UA_NODEID_STRING(1, "relay1");
     UA_ValueCallback callback1 ;
     callback1.onRead = beforeReadTime;
-    callback1.onWrite = afterWriteTime;
+    callback1.onWrite = afterWriteTime1;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId1, callback1);
     
     // relay 2
     UA_NodeId currentNodeId2 = UA_NODEID_STRING(1, "relay2");
     UA_ValueCallback callback2 ;
     callback2.onRead = beforeReadTime;
-    callback2.onWrite = afterWriteTime;
+    callback2.onWrite = afterWriteTime2;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId2, callback2);
     
     // relay 3
     UA_NodeId currentNodeId3 = UA_NODEID_STRING(1, "relay3");
     UA_ValueCallback callback3 ;
     callback3.onRead = beforeReadTime;
-    callback3.onWrite = afterWriteTime;
+    callback3.onWrite = afterWriteTime3;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId3, callback3);
 }
 
@@ -242,9 +291,9 @@ int main(void) {
     UA_ServerConfig_setDefault(UA_Server_getConfig(server));
     UA_ServerConfig* config = UA_Server_getConfig(server);
     config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
-#ifdef UA_ENABLE_WEBSOCKET_SERVER
-    UA_ServerConfig_addNetworkLayerWS(UA_Server_getConfig(server), 7681, 0, 0, NULL, NULL);
-#endif
+//#ifdef UA_ENABLE_WEBSOCKET_SERVER
+//    UA_ServerConfig_addNetworkLayerWS(UA_Server_getConfig(server), 7681, 0, 0, NULL, NULL);
+//#endif
 
     addVariable(server);
     writeVariable(server);

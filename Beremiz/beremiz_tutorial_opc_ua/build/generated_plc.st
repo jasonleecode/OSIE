@@ -17,6 +17,9 @@ FUNCTION_BLOCK CounterST
     Relay2Value : BOOL;
     Relay3Value : BOOL;
     Relay3Value0 : DINT;
+    Relay3Value1 : DINT;
+    Relay3Value2 : DINT;
+    Relay3Value3 : DINT;
   END_VAR
 
   IF Reset THEN
@@ -26,12 +29,19 @@ FUNCTION_BLOCK CounterST
   ELSE
     Cnt0 := Cnt0 + 1;
     Cnt1 := Cnt1 + 1;
-    IF Cnt1 = 100 THEN
+    IF Cnt1 = 50 THEN
       Relay3Value0 := 1;
+      Relay3Value1 := 1; 
+      Relay3Value2 := 1;
+      Relay3Value3 := 1;
     END_IF;
     
-    IF Cnt1 = 500 THEN
+    IF Cnt1 = 100 THEN
       Relay3Value0 := 0;
+      Relay3Value1 := 0;
+      Relay3Value2 := 0;
+      Relay3Value3 := 0;
+      Cnt1 := 0;
     END_IF;
     
   END_IF;
@@ -66,6 +76,9 @@ CONFIGURATION config
     Relay2Value AT %QX0.0.2.2 : BOOL := 0;
     Relay3Value AT %QX0.0.3.3 : BOOL := 0;
     Relay3Value0 AT %QD1.0 : DINT := 0;
+    Relay3Value1 AT %QD1.1 : DINT := 0;
+    Relay3Value2 AT %QD1.2 : DINT := 0;
+    Relay3Value3 AT %QD1.3 : DINT := 0;
   END_VAR
 
   RESOURCE resource1 ON PLC

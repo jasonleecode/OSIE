@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-10-20T13:35:20">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-10-20T17:08:40">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -179,6 +179,21 @@
                 <DINT/>
               </type>
             </variable>
+            <variable name="Relay3Value1">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
+            <variable name="Relay3Value2">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
+            <variable name="Relay3Value3">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
           </externalVars>
         </interface>
         <body>
@@ -190,12 +205,19 @@
 ELSE
   Cnt0 := Cnt0 + 1;
   Cnt1 := Cnt1 + 1;
-  IF Cnt1 = 100 THEN
+  IF Cnt1 = 50 THEN
     Relay3Value0 := 1;
+    Relay3Value1 := 1; 
+    Relay3Value2 := 1;
+    Relay3Value3 := 1;
   END_IF;
   
-  IF Cnt1 = 500 THEN
+  IF Cnt1 = 100 THEN
     Relay3Value0 := 0;
+    Relay3Value1 := 0;
+    Relay3Value2 := 0;
+    Relay3Value3 := 0;
+    Cnt1 := 0;
   END_IF;
   
 END_IF;
@@ -276,7 +298,40 @@ Out0 := Cnt0;]]></xhtml:p>
               <simpleValue value="0"/>
             </initialValue>
             <documentation>
-              <xhtml:p><![CDATA[OPC-UA relay valu]]></xhtml:p>
+              <xhtml:p><![CDATA[OPC-UA relay 0]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Relay3Value1" address="%QD1.1">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 1]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Relay3Value2" address="%QD1.2">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 2]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Relay3Value3" address="%QD1.3">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 2]]></xhtml:p>
             </documentation>
           </variable>
         </globalVars>

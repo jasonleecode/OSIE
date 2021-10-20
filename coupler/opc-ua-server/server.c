@@ -56,6 +56,7 @@ static int setRelayState(int command) {
         /* ERROR HANDLING: i2c transaction failed */
         printf("Error writing to i2c slave."); 
     }
+    close(file);
 }
 
 static void addVariable(UA_Server *server) {

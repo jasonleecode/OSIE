@@ -42,10 +42,6 @@ int __init_py_ext(int argc,char **argv);
 void __cleanup_py_ext(void);
 void __retrieve_py_ext(void);
 void __publish_py_ext(void);
-int __init_0(int argc,char **argv);
-void __cleanup_0(void);
-void __retrieve_0(void);
-void __publish_0(void);
 int __init_1(int argc,char **argv);
 void __cleanup_1(void);
 void __retrieve_1(void);
@@ -61,7 +57,6 @@ void __run(void)
         __tick %= greatest_tick_count__;
 
     __retrieve_py_ext();
-    __retrieve_0();
     __retrieve_1();
 
     /*__retrieve_debug();*/
@@ -71,7 +66,6 @@ void __run(void)
     __publish_debug();
 
     __publish_1();
-    __publish_0();
     __publish_py_ext();
 
 }
@@ -92,8 +86,7 @@ int __init(int argc,char **argv)
     config_init__();
     __init_debug();
     init_level=1; if((res = __init_py_ext(argc,argv))){return res;}
-    init_level=2; if((res = __init_0(argc,argv))){return res;}
-    init_level=3; if((res = __init_1(argc,argv))){return res;}
+    init_level=2; if((res = __init_1(argc,argv))){return res;}
     return res;
 }
 /*
@@ -101,8 +94,7 @@ int __init(int argc,char **argv)
  **/
 void __cleanup(void)
 {
-    if(init_level >= 3) __cleanup_1();
-    if(init_level >= 2) __cleanup_0();
+    if(init_level >= 2) __cleanup_1();
     if(init_level >= 1) __cleanup_py_ext();
     __cleanup_debug();
 }
@@ -331,7 +323,7 @@ int WaitPythonCommands(void)
 /* Called by PLC thread on each new python command*/
 void UnBlockPythonCommands(void)
 {
-    /* signal debugger thread it can read data */
+    /* signal python thread it can read data */
     pthread_mutex_unlock(&python_wait_mutex);
 }
 

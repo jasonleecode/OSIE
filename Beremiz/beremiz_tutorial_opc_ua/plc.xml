@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-10-20T17:08:40">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-10-21T16:00:32">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -154,26 +154,6 @@
                 <INT/>
               </type>
             </variable>
-            <variable name="Relay0Value">
-              <type>
-                <BOOL/>
-              </type>
-            </variable>
-            <variable name="Relay1Value">
-              <type>
-                <BOOL/>
-              </type>
-            </variable>
-            <variable name="Relay2Value">
-              <type>
-                <BOOL/>
-              </type>
-            </variable>
-            <variable name="Relay3Value">
-              <type>
-                <BOOL/>
-              </type>
-            </variable>
             <variable name="Relay3Value0">
               <type>
                 <DINT/>
@@ -233,7 +213,7 @@ Out0 := Cnt0;]]></xhtml:p>
     <configurations>
       <configuration name="config">
         <resource name="resource1">
-          <task name="task0" priority="0" interval="T#20ms">
+          <task name="task0" priority="0" interval="T#30ms">
             <pouInstance name="instance0" typeName="plc_prg"/>
           </task>
         </resource>
@@ -245,50 +225,6 @@ Out0 := Cnt0;]]></xhtml:p>
             <initialValue>
               <simpleValue value="0"/>
             </initialValue>
-          </variable>
-          <variable name="Relay0Value" address="%QX0.0.0.0">
-            <type>
-              <BOOL/>
-            </type>
-            <initialValue>
-              <simpleValue value="0"/>
-            </initialValue>
-            <documentation>
-              <xhtml:p><![CDATA[The status of the Lime's relay0 (read over modbus)]]></xhtml:p>
-            </documentation>
-          </variable>
-          <variable name="Relay1Value" address="%QX0.0.1.1">
-            <type>
-              <BOOL/>
-            </type>
-            <initialValue>
-              <simpleValue value="0"/>
-            </initialValue>
-            <documentation>
-              <xhtml:p><![CDATA[The status of the Lime's relay1 (read over modbus)]]></xhtml:p>
-            </documentation>
-          </variable>
-          <variable name="Relay2Value" address="%QX0.0.2.2">
-            <type>
-              <BOOL/>
-            </type>
-            <initialValue>
-              <simpleValue value="0"/>
-            </initialValue>
-            <documentation>
-              <xhtml:p><![CDATA[The status of the Lime's relay2 (read over modbus)]]></xhtml:p>
-            </documentation>
-          </variable>
-          <variable name="Relay3Value" address="%QX0.0.3.3">
-            <type>
-              <BOOL/>
-            </type>
-            <initialValue>
-              <simpleValue value="0"/>
-            </initialValue>
-            <documentation>
-              <xhtml:p><![CDATA[The status of the Lime's relay3 (read over modbus)]]></xhtml:p>
-            </documentation>
           </variable>
           <variable name="Relay3Value0" address="%QD1.0">
             <type>

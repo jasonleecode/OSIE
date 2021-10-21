@@ -12,10 +12,6 @@ FUNCTION_BLOCK CounterST
   END_VAR
   VAR_EXTERNAL
     ResetCounterValue : INT;
-    Relay0Value : BOOL;
-    Relay1Value : BOOL;
-    Relay2Value : BOOL;
-    Relay3Value : BOOL;
     Relay3Value0 : DINT;
     Relay3Value1 : DINT;
     Relay3Value2 : DINT;
@@ -71,10 +67,6 @@ END_PROGRAM
 CONFIGURATION config
   VAR_GLOBAL
     ResetCounterValue : INT := 0;
-    Relay0Value AT %QX0.0.0.0 : BOOL := 0;
-    Relay1Value AT %QX0.0.1.1 : BOOL := 0;
-    Relay2Value AT %QX0.0.2.2 : BOOL := 0;
-    Relay3Value AT %QX0.0.3.3 : BOOL := 0;
     Relay3Value0 AT %QD1.0 : DINT := 0;
     Relay3Value1 AT %QD1.1 : DINT := 0;
     Relay3Value2 AT %QD1.2 : DINT := 0;
@@ -82,7 +74,7 @@ CONFIGURATION config
   END_VAR
 
   RESOURCE resource1 ON PLC
-    TASK task0(INTERVAL := T#20ms,PRIORITY := 0);
+    TASK task0(INTERVAL := T#30ms,PRIORITY := 0);
     PROGRAM instance0 WITH task0 : plc_prg;
   END_RESOURCE
 END_CONFIGURATION

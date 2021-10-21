@@ -140,7 +140,7 @@ static void afterWriteTime0(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
-    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
+    //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){

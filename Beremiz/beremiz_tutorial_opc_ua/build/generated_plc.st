@@ -74,7 +74,7 @@ CONFIGURATION config
   END_VAR
 
   RESOURCE resource1 ON PLC
-    TASK task0(INTERVAL := T#30ms,PRIORITY := 0);
+    TASK task0(INTERVAL := T#20ms,PRIORITY := 0);
     PROGRAM instance0 WITH task0 : plc_prg;
   END_RESOURCE
 END_CONFIGURATION

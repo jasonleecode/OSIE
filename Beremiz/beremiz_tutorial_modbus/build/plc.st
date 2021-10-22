@@ -119,7 +119,7 @@ FUNCTION_BLOCK CounterST
   ELSE
     Cnt0 := Cnt0 + 1;
     Cnt1 := Cnt1 + 1;
-    IF Cnt1 > 5 THEN
+    IF Cnt1 > 10 THEN
       Relay0Value := True;
       Relay1Value := True;
     ELSE
@@ -127,7 +127,7 @@ FUNCTION_BLOCK CounterST
       Relay1Value := False;
     END_IF;
     
-    IF Cnt1 > 7 THEN
+    IF Cnt1 > 15 THEN
       Relay1Value := False;
       Cnt1 :=0;
     END_IF;

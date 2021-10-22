@@ -234,14 +234,14 @@ void COUNTERST_body__(COUNTERST *data__) {
   } else {
     __SET_VAR(data__->,CNT0,,(__GET_VAR(data__->CNT0,) + 1));
     __SET_VAR(data__->,CNT1,,(__GET_VAR(data__->CNT1,) + 1));
-    if ((__GET_VAR(data__->CNT1,) > 5)) {
+    if ((__GET_VAR(data__->CNT1,) > 10)) {
       __SET_EXTERNAL(data__->,RELAY0VALUE,,__BOOL_LITERAL(TRUE));
       __SET_EXTERNAL(data__->,RELAY1VALUE,,__BOOL_LITERAL(TRUE));
     } else {
       __SET_EXTERNAL(data__->,RELAY0VALUE,,__BOOL_LITERAL(TRUE));
       __SET_EXTERNAL(data__->,RELAY1VALUE,,__BOOL_LITERAL(FALSE));
     };
-    if ((__GET_VAR(data__->CNT1,) > 7)) {
+    if ((__GET_VAR(data__->CNT1,) > 15)) {
       __SET_EXTERNAL(data__->,RELAY1VALUE,,__BOOL_LITERAL(FALSE));
       __SET_VAR(data__->,CNT1,,0);
     };

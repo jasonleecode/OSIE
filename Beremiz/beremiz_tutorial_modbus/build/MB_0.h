@@ -256,7 +256,7 @@ typedef struct{
 
 static client_node_t		client_nodes[NUMBER_OF_CLIENT_NODES] = {
 /*node 0.0*/
-{"0.0", "Modbus TCP Client 0.0", "192.168.0.110", "502", {naf_tcp, {.tcp = {NULL, NULL, DEF_CLOSE_ON_SILENCE}}}, -1 /* mb_nd */, 0 /* init_state */, 1000 /* communication period */, 0 /* prev_error */}
+{"0.0", "Modbus TCP Client 0.0", "192.168.0.78", "1502", {naf_tcp, {.tcp = {NULL, NULL, DEF_CLOSE_ON_SILENCE}}}, -1 /* mb_nd */, 0 /* init_state */, 1000 /* communication period */, 0 /* prev_error */}
 };
 
 

@@ -12,10 +12,10 @@ FUNCTION_BLOCK CounterST
   END_VAR
   VAR_EXTERNAL
     ResetCounterValue : INT;
-    Relay3Value0 : DINT;
-    Relay3Value1 : DINT;
-    Relay3Value2 : DINT;
-    Relay3Value3 : DINT;
+    Relay0 : DINT;
+    Relay1 : DINT;
+    Relay2 : DINT;
+    Relay3 : DINT;
   END_VAR
 
   IF Reset THEN
@@ -26,17 +26,17 @@ FUNCTION_BLOCK CounterST
     Cnt0 := Cnt0 + 1;
     Cnt1 := Cnt1 + 1;
     IF Cnt1 = 50 THEN
-      Relay3Value0 := 1;
-      Relay3Value1 := 1; 
-      Relay3Value2 := 1;
-      Relay3Value3 := 1;
+      Relay0 := 1;
+      Relay1 := 1; 
+      Relay2 := 1;
+      Relay3 := 1;
     END_IF;
     
     IF Cnt1 = 100 THEN
-      Relay3Value0 := 0;
-      Relay3Value1 := 0;
-      Relay3Value2 := 0;
-      Relay3Value3 := 0;
+      Relay0 := 0;
+      Relay1 := 0;
+      Relay2 := 0;
+      Relay3 := 0;
       Cnt1 := 0;
     END_IF;
     
@@ -67,10 +67,10 @@ END_PROGRAM
 CONFIGURATION config
   VAR_GLOBAL
     ResetCounterValue : INT := 0;
-    Relay3Value0 AT %QD1.0 : DINT := 0;
-    Relay3Value1 AT %QD1.1 : DINT := 0;
-    Relay3Value2 AT %QD1.2 : DINT := 0;
-    Relay3Value3 AT %QD1.3 : DINT := 0;
+    Relay0 AT %QD1.0 : DINT := 0;
+    Relay1 AT %QD1.1 : DINT := 0;
+    Relay2 AT %QD1.2 : DINT := 0;
+    Relay3 AT %QD1.3 : DINT := 0;
   END_VAR
 
   RESOURCE resource1 ON PLC

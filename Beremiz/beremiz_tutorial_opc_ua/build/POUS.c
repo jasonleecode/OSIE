@@ -209,10 +209,10 @@ void COUNTERST_init__(COUNTERST *data__, BOOL retain) {
   __INIT_VAR(data__->CNT1,0,retain)
   __INIT_VAR(data__->CNT0,0,retain)
   __INIT_EXTERNAL(INT,RESETCOUNTERVALUE,data__->RESETCOUNTERVALUE,retain)
-  __INIT_EXTERNAL(DINT,RELAY3VALUE0,data__->RELAY3VALUE0,retain)
-  __INIT_EXTERNAL(DINT,RELAY3VALUE1,data__->RELAY3VALUE1,retain)
-  __INIT_EXTERNAL(DINT,RELAY3VALUE2,data__->RELAY3VALUE2,retain)
-  __INIT_EXTERNAL(DINT,RELAY3VALUE3,data__->RELAY3VALUE3,retain)
+  __INIT_EXTERNAL(DINT,RELAY0,data__->RELAY0,retain)
+  __INIT_EXTERNAL(DINT,RELAY1,data__->RELAY1,retain)
+  __INIT_EXTERNAL(DINT,RELAY2,data__->RELAY2,retain)
+  __INIT_EXTERNAL(DINT,RELAY3,data__->RELAY3,retain)
 }
 
 // Code part
@@ -235,16 +235,16 @@ void COUNTERST_body__(COUNTERST *data__) {
     __SET_VAR(data__->,CNT0,,(__GET_VAR(data__->CNT0,) + 1));
     __SET_VAR(data__->,CNT1,,(__GET_VAR(data__->CNT1,) + 1));
     if ((__GET_VAR(data__->CNT1,) == 50)) {
-      __SET_EXTERNAL(data__->,RELAY3VALUE0,,1);
-      __SET_EXTERNAL(data__->,RELAY3VALUE1,,1);
-      __SET_EXTERNAL(data__->,RELAY3VALUE2,,1);
-      __SET_EXTERNAL(data__->,RELAY3VALUE3,,1);
+      __SET_EXTERNAL(data__->,RELAY0,,1);
+      __SET_EXTERNAL(data__->,RELAY1,,1);
+      __SET_EXTERNAL(data__->,RELAY2,,1);
+      __SET_EXTERNAL(data__->,RELAY3,,1);
     };
     if ((__GET_VAR(data__->CNT1,) == 100)) {
-      __SET_EXTERNAL(data__->,RELAY3VALUE0,,0);
-      __SET_EXTERNAL(data__->,RELAY3VALUE1,,0);
-      __SET_EXTERNAL(data__->,RELAY3VALUE2,,0);
-      __SET_EXTERNAL(data__->,RELAY3VALUE3,,0);
+      __SET_EXTERNAL(data__->,RELAY0,,0);
+      __SET_EXTERNAL(data__->,RELAY1,,0);
+      __SET_EXTERNAL(data__->,RELAY2,,0);
+      __SET_EXTERNAL(data__->,RELAY3,,0);
       __SET_VAR(data__->,CNT1,,0);
     };
   };

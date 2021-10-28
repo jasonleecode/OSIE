@@ -18,8 +18,8 @@
 #include <open62541/server_config_default.h>
 
 // global relay state
-uint8_t I2C_0_RELAYS_STATE = 0; // state of 4 relays at MOD-IO 0
-uint8_t I2C_1_RELAYS_STATE = 0; // state of 4 relays at MOD-IO 1
+uint8_t I2C_0_RELAYS_STATE = 0; // state of 4 relays at I2C slave 0
+uint8_t I2C_1_RELAYS_STATE = 0; // state of 4 relays at I2C slave 1
 
 // the default addresses of MOD-IOs
 const int I2C_0_ADDR = 0x58;
@@ -139,7 +139,7 @@ static void beforeReadTime(UA_Server *server,
 
 // XXX: having afterWriteTime{0..3} is not needed and maybe with introspection of context we can
 // write only one callback function
-static void afterWriteTime0(UA_Server *server,
+static void afterWriteTimeI2C0_0(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
@@ -156,7 +156,7 @@ static void afterWriteTime0(UA_Server *server,
     }
 }
 
-static void afterWriteTime1(UA_Server *server,
+static void afterWriteTimeI2C0_1(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
@@ -173,7 +173,7 @@ static void afterWriteTime1(UA_Server *server,
     }
 }
 
-static void afterWriteTime2(UA_Server *server,
+static void afterWriteTimeI2C0_2(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
@@ -190,7 +190,7 @@ static void afterWriteTime2(UA_Server *server,
     }
 }
 
-static void afterWriteTime3(UA_Server *server,
+static void afterWriteTimeI2C0_3(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
@@ -212,28 +212,28 @@ static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {
     UA_NodeId currentNodeId0 = UA_NODEID_STRING(1, "i2c0.relay0");
     UA_ValueCallback callback0 ;
     callback0.onRead = beforeReadTime;
-    callback0.onWrite = afterWriteTime0;
+    callback0.onWrite = afterWriteTimeI2C0_0;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId0, callback0);
     
     // relay 1
     UA_NodeId currentNodeId1 = UA_NODEID_STRING(1, "i2c0.relay1");
     UA_ValueCallback callback1 ;
     callback1.onRead = beforeReadTime;
-    callback1.onWrite = afterWriteTime1;
+    callback1.onWrite = afterWriteTimeI2C0_1;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId1, callback1);
     
     // relay 2
     UA_NodeId currentNodeId2 = UA_NODEID_STRING(1, "i2c0.relay2");
     UA_ValueCallback callback2 ;
     callback2.onRead = beforeReadTime;
-    callback2.onWrite = afterWriteTime2;
+    callback2.onWrite = afterWriteTimeI2C0_2;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId2, callback2);
     
     // relay 3
     UA_NodeId currentNodeId3 = UA_NODEID_STRING(1, "i2c0.relay3");
     UA_ValueCallback callback3 ;
     callback3.onRead = beforeReadTime;
-    callback3.onWrite = afterWriteTime3;
+    callback3.onWrite = afterWriteTimeI2C0_3;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId3, callback3);
 }
 

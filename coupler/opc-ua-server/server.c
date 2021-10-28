@@ -81,8 +81,7 @@ static void addVariable(UA_Server *server) {
     attr0.displayName = UA_LOCALIZEDTEXT("en-US", "Relay 0");
     attr0.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
     attr0.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-
-    UA_NodeId myIntegerNodeId0 = UA_NODEID_STRING(1, "relay0");
+    UA_NodeId myIntegerNodeId0 = UA_NODEID_STRING(1, "i2c0.relay0");
     UA_QualifiedName myIntegerName0 = UA_QUALIFIEDNAME(1, "Relay 0");
     UA_Server_addVariableNode(server, myIntegerNodeId0, parentNodeId,
                               parentReferenceNodeId, myIntegerName0,
@@ -94,8 +93,7 @@ static void addVariable(UA_Server *server) {
     attr1.displayName = UA_LOCALIZEDTEXT("en-US", "Relay 1");
     attr1.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
     attr1.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-
-    UA_NodeId myIntegerNodeId1 = UA_NODEID_STRING(1, "relay1");
+    UA_NodeId myIntegerNodeId1 = UA_NODEID_STRING(1, "i2c0.relay1");
     UA_QualifiedName myIntegerName1 = UA_QUALIFIEDNAME(1, "Relay 1");
     UA_Server_addVariableNode(server, myIntegerNodeId1, parentNodeId,
                               parentReferenceNodeId, myIntegerName1,
@@ -108,8 +106,7 @@ static void addVariable(UA_Server *server) {
     attr2.displayName = UA_LOCALIZEDTEXT("en-US", "Relay 2");
     attr2.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
     attr2.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-
-    UA_NodeId myIntegerNodeId2 = UA_NODEID_STRING(1, "relay2");
+    UA_NodeId myIntegerNodeId2 = UA_NODEID_STRING(1, "i2c0.relay2");
     UA_QualifiedName myIntegerName2 = UA_QUALIFIEDNAME(1, "Relay 2");
     UA_Server_addVariableNode(server, myIntegerNodeId2, parentNodeId,
                               parentReferenceNodeId, myIntegerName2,
@@ -122,8 +119,7 @@ static void addVariable(UA_Server *server) {
     attr3.displayName = UA_LOCALIZEDTEXT("en-US", "Relay 3");
     attr3.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
     attr3.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-
-    UA_NodeId myIntegerNodeId3 = UA_NODEID_STRING(1, "relay3");
+    UA_NodeId myIntegerNodeId3 = UA_NODEID_STRING(1, "i2c0.relay3");
     UA_QualifiedName myIntegerName3 = UA_QUALIFIEDNAME(1, "Relay 3");
     UA_Server_addVariableNode(server, myIntegerNodeId3, parentNodeId,
                               parentReferenceNodeId, myIntegerName3,
@@ -213,68 +209,34 @@ static void afterWriteTime3(UA_Server *server,
 
 static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {
     // relay 0
-    UA_NodeId currentNodeId0 = UA_NODEID_STRING(1, "relay0");
+    UA_NodeId currentNodeId0 = UA_NODEID_STRING(1, "i2c0.relay0");
     UA_ValueCallback callback0 ;
     callback0.onRead = beforeReadTime;
     callback0.onWrite = afterWriteTime0;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId0, callback0);
     
     // relay 1
-    UA_NodeId currentNodeId1 = UA_NODEID_STRING(1, "relay1");
+    UA_NodeId currentNodeId1 = UA_NODEID_STRING(1, "i2c0.relay1");
     UA_ValueCallback callback1 ;
     callback1.onRead = beforeReadTime;
     callback1.onWrite = afterWriteTime1;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId1, callback1);
     
     // relay 2
-    UA_NodeId currentNodeId2 = UA_NODEID_STRING(1, "relay2");
+    UA_NodeId currentNodeId2 = UA_NODEID_STRING(1, "i2c0.relay2");
     UA_ValueCallback callback2 ;
     callback2.onRead = beforeReadTime;
     callback2.onWrite = afterWriteTime2;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId2, callback2);
     
     // relay 3
-    UA_NodeId currentNodeId3 = UA_NODEID_STRING(1, "relay3");
+    UA_NodeId currentNodeId3 = UA_NODEID_STRING(1, "i2c0.relay3");
     UA_ValueCallback callback3 ;
     callback3.onRead = beforeReadTime;
     callback3.onWrite = afterWriteTime3;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId3, callback3);
 }
 
-
-/**
- * Now we change the value with the write service. This uses the same service
- * implementation that can also be reached over the network by an OPC UA client.
- */
-
-static void writeVariable(UA_Server *server) {
-    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "relay0");
-
-    /* Write a different integer value */
-    UA_Int32 myInteger = 0;
-    UA_Variant myVar;
-    UA_Variant_init(&myVar);
-    UA_Variant_setScalar(&myVar, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    UA_Server_writeValue(server, myIntegerNodeId, myVar);
-
-    /* Set the status code of the value to an error code. The function
-     * UA_Server_write provides access to the raw service. The above
-     * UA_Server_writeValue is syntactic sugar for writing a specific node
-     * attribute with the write service. */
-    UA_WriteValue wv;
-    UA_WriteValue_init(&wv);
-    wv.nodeId = myIntegerNodeId;
-    wv.attributeId = UA_ATTRIBUTEID_VALUE;
-    wv.value.status = UA_STATUSCODE_BADNOTCONNECTED;
-    wv.value.hasStatus = true;
-    UA_Server_write(server, &wv);
-
-    /* Reset the variable to a good statuscode with a value */
-    wv.value.hasStatus = false;
-    wv.value.value = myVar;
-    wv.value.hasValue = true;
-    UA_Server_write(server, &wv);
-}
 
 
 static volatile UA_Boolean running = true;
@@ -297,7 +259,6 @@ int main(void) {
     config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
 
     addVariable(server);
-    writeVariable(server);
     addValueCallbackToCurrentTimeVariable(server);
 
     UA_StatusCode retval = UA_Server_run(server, &running);

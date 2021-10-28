@@ -2,14 +2,13 @@
 
 ## Prerequisites
 
+### Installing Beremiz
+
+Run beremiz_install.sh file under Init folder
+
 ### Installing open62541
-$ git clone https://github.com/open62541/open62541.git
-$ cd open62541/
-$ git submodule update --init --recursive
-$ mkdir build && cd build
-$ cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -DUA_NAMESPACE_ZERO=FULL -DUA_ENABLE_AMALGAMATION=ON ..
-$ make
-$ sudo make install
+
+Run open62541_install.sh file under Init folder
 
 ### Copy the open62541.h and open62541.c
 

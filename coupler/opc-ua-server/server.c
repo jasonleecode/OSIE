@@ -13,9 +13,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <signal.h>
-#include <open62541/plugin/log_stdout.h>
-#include <open62541/server.h>
-#include <open62541/server_config_default.h>
+#include "open62541.h"
 
 // global relay state
 uint8_t myrelay = 0;

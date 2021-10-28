@@ -11,3 +11,7 @@
 # ignore specific files
 coupler/opc-ua-server/open62541.c
 coupler/opc-ua-server/open62541.h
+
+
+# ignore by directory
+coupler/opc-ua-server/bin

@@ -140,7 +140,6 @@ static void afterWriteTime0(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
-    //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
@@ -158,7 +157,6 @@ static void afterWriteTime1(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
-    //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
@@ -176,7 +174,6 @@ static void afterWriteTime2(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
-    //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
@@ -194,7 +191,6 @@ static void afterWriteTime3(UA_Server *server,
                const UA_NodeId *sessionId, void *sessionContext,
                const UA_NodeId *nodeId, void *nodeContext,
                const UA_NumericRange *range, const UA_DataValue *data) {
-    //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,  "The variable was updated");
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
@@ -292,9 +288,6 @@ int main(void) {
     UA_ServerConfig_setDefault(UA_Server_getConfig(server));
     UA_ServerConfig* config = UA_Server_getConfig(server);
     config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
-//#ifdef UA_ENABLE_WEBSOCKET_SERVER
-//    UA_ServerConfig_addNetworkLayerWS(UA_Server_getConfig(server), 7681, 0, 0, NULL, NULL);
-//#endif
 
     addVariable(server);
     writeVariable(server);

@@ -20,16 +20,23 @@
 // global relay state
 uint8_t myrelay = 0;
 
-static int setRelayState(int command) {
+// the default addresses of MOD-IOs
+const int MOD_IO_0_ADDR = 0x58;
+const int MOD_IO_1_ADDR = 0x59;
+
+// the block device at host machine
+static const char I2C_BLOCK_DEVICE_NAME[] = "/dev/i2c-1";
+
+
+static int setRelayState(int command, int i2c_addr) {
     /*
      *  Set relays' state over I2C
      */
     int file;
-    int adapter_nr = 1; /* probably dynamically determined */
     char filename[20];
 
     // step 1: open device
-    snprintf(filename, 19, "/dev/i2c-%d", adapter_nr);
+    snprintf(filename, 19, I2C_BLOCK_DEVICE_NAME);
     file = open(filename, O_RDWR);
     if (file < 0) {
         /* ERROR HANDLING; you can check errno to see what went wrong */
@@ -38,8 +45,7 @@ static int setRelayState(int command) {
     }
 
     // step 2: address the slave by its address 
-    int addr = 0x58; /* The I2C address */
-    if (ioctl(file, I2C_SLAVE, addr) < 0) {
+    if (ioctl(file, I2C_SLAVE, i2c_addr) < 0) {
         /* ERROR HANDLING; you can check errno to see what went wrong */
         printf("Error addressing i2c slave.");
         exit(1);
@@ -144,11 +150,11 @@ static void afterWriteTime0(UA_Server *server,
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
             myrelay |= 1UL << 0; // relay0
-	    setRelayState(myrelay);
+	    setRelayState(myrelay, MOD_IO_0_ADDR);
 	}
 	else {
             myrelay &= ~(1UL << 0); // relay0
-            setRelayState(myrelay);
+            setRelayState(myrelay, MOD_IO_0_ADDR);
 	}
     }
 }
@@ -161,11 +167,11 @@ static void afterWriteTime1(UA_Server *server,
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
             myrelay |= 1UL << 1;
-	    setRelayState(myrelay);
+	    setRelayState(myrelay, MOD_IO_0_ADDR);
 	}
 	else {
             myrelay &= ~(1UL << 1);
-            setRelayState(myrelay);
+            setRelayState(myrelay, MOD_IO_0_ADDR);
 	}
     }
 }
@@ -178,11 +184,11 @@ static void afterWriteTime2(UA_Server *server,
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
             myrelay |= 1UL << 2;
-	    setRelayState(myrelay);
+	    setRelayState(myrelay, MOD_IO_0_ADDR);
 	}
 	else {
             myrelay &= ~(1UL << 2);
-            setRelayState(myrelay);
+            setRelayState(myrelay, MOD_IO_0_ADDR);
 	}
     }
 }
@@ -195,11 +201,11 @@ static void afterWriteTime3(UA_Server *server,
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
             myrelay |= 1UL << 3;
-	    setRelayState(myrelay);
+	    setRelayState(myrelay, MOD_IO_0_ADDR);
 	}
 	else {
             myrelay &= ~(1UL << 3);
-            setRelayState(myrelay);
+            setRelayState(myrelay, MOD_IO_0_ADDR);
 	}
     }
 }
@@ -279,7 +285,7 @@ static void stopHandler(int sign) {
 
 int main(void) {
     // set all relays to OFF at startup
-    setRelayState(0x00);
+    setRelayState(0x00, MOD_IO_0_ADDR);
 
     signal(SIGINT, stopHandler);
     signal(SIGTERM, stopHandler);
@@ -298,7 +304,7 @@ int main(void) {
     UA_Server_delete(server);
 
     // set all relays to OFF at startup
-    setRelayState(0x00);
+    setRelayState(0x00, MOD_IO_0_ADDR);
 
     return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
 }

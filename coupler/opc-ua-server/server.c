@@ -163,6 +163,19 @@ static void addVariable(UA_Server *server) {
     UA_Server_addVariableNode(server, myIntegerNodeId6, parentNodeId,
                               parentReferenceNodeId, myIntegerName6,
                               UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr6, NULL, NULL);
+    
+    // I2C1 / relay 3 
+    UA_VariableAttributes attr7 = UA_VariableAttributes_default;
+    UA_Variant_setScalar(&attr7.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
+    attr7.description = UA_LOCALIZEDTEXT("en-US","I2C1 / Relay 3");
+    attr7.displayName = UA_LOCALIZEDTEXT("en-US", "I2C1 / Relay 3");
+    attr7.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
+    attr7.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+    UA_NodeId myIntegerNodeId7 = UA_NODEID_STRING(1, "i2c1.relay3");
+    UA_QualifiedName myIntegerName7 = UA_QUALIFIEDNAME(1, "I2C1 / Relay 3");
+    UA_Server_addVariableNode(server, myIntegerNodeId7, parentNodeId,
+                              parentReferenceNodeId, myIntegerName7,
+                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr7, NULL, NULL);
  
 }
 
@@ -299,6 +312,22 @@ static void afterWriteTimeI2C1_2(UA_Server *server,
     }
 }
 
+static void afterWriteTimeI2C1_3(UA_Server *server,
+               const UA_NodeId *sessionId, void *sessionContext,
+               const UA_NodeId *nodeId, void *nodeContext,
+               const UA_NumericRange *range, const UA_DataValue *data) {
+    if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
+        UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+	if (hrValue > 0){
+            I2C_1_RELAYS_STATE |= 1UL << 3; 
+            setRelayState(I2C_1_RELAYS_STATE, I2C_1_ADDR);
+	}
+	else {
+            I2C_1_RELAYS_STATE &= ~(1UL << 3);
+            setRelayState(I2C_1_RELAYS_STATE, I2C_1_ADDR);
+	}
+    }
+}
 
 static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {
     // I2C0
@@ -351,6 +380,13 @@ static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {
     callback6.onRead = beforeReadTime;
     callback6.onWrite = afterWriteTimeI2C1_2;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId6, callback6);
+    
+    // relay 2
+    UA_NodeId currentNodeId7 = UA_NODEID_STRING(1, "i2c1.relay3");
+    UA_ValueCallback callback7;
+    callback7.onRead = beforeReadTime;
+    callback7.onWrite = afterWriteTimeI2C1_3;
+    UA_Server_setVariableNode_valueCallback(server, currentNodeId7, callback7);
     
 }
 

@@ -22,8 +22,8 @@ uint8_t I2C_0_RELAYS_STATE = 0; // state of 4 relays at MOD-IO 0
 uint8_t I2C_1_RELAYS_STATE = 0; // state of 4 relays at MOD-IO 1
 
 // the default addresses of MOD-IOs
-const int MOD_IO_0_ADDR = 0x58;
-const int MOD_IO_1_ADDR = 0x59;
+const int I2C_0_ADDR = 0x58;
+const int I2C_1_ADDR = 0x59;
 
 // the block device at host machine
 static const char I2C_BLOCK_DEVICE_NAME[] = "/dev/i2c-1";
@@ -147,11 +147,11 @@ static void afterWriteTime0(UA_Server *server,
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
             I2C_0_RELAYS_STATE |= 1UL << 0; 
-            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
 	}
 	else {
             I2C_0_RELAYS_STATE &= ~(1UL << 0);
-            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
 	}
     }
 }
@@ -164,11 +164,11 @@ static void afterWriteTime1(UA_Server *server,
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
             I2C_0_RELAYS_STATE |= 1UL << 1;
-            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
 	}
 	else {
             I2C_0_RELAYS_STATE &= ~(1UL << 1);
-            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
 	}
     }
 }
@@ -181,11 +181,11 @@ static void afterWriteTime2(UA_Server *server,
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
             I2C_0_RELAYS_STATE |= 1UL << 2;
-            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
 	}
 	else {
             I2C_0_RELAYS_STATE &= ~(1UL << 2);
-            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
 	}
     }
 }
@@ -198,11 +198,11 @@ static void afterWriteTime3(UA_Server *server,
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
             I2C_0_RELAYS_STATE |= 1UL << 3;
-            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
 	}
 	else {
             I2C_0_RELAYS_STATE &= ~(1UL << 3);
-            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
 	}
     }
 }
@@ -248,7 +248,7 @@ static void stopHandler(int sign) {
 
 int main(void) {
     // set all relays to OFF at startup
-    setRelayState(0x00, MOD_IO_0_ADDR);
+    setRelayState(0x00, I2C_0_ADDR);
 
     signal(SIGINT, stopHandler);
     signal(SIGTERM, stopHandler);
@@ -266,7 +266,7 @@ int main(void) {
     UA_Server_delete(server);
 
     // set all relays to OFF at startup
-    setRelayState(0x00, MOD_IO_0_ADDR);
+    setRelayState(0x00, I2C_0_ADDR);
 
     return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
 }

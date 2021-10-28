@@ -18,7 +18,8 @@
 #include <open62541/server_config_default.h>
 
 // global relay state
-uint8_t myrelay = 0;
+uint8_t I2C_0_RELAYS_STATE = 0; // state of 4 relays at MOD-IO 0
+uint8_t I2C_1_RELAYS_STATE = 0; // state of 4 relays at MOD-IO 1
 
 // the default addresses of MOD-IOs
 const int MOD_IO_0_ADDR = 0x58;
@@ -149,12 +150,12 @@ static void afterWriteTime0(UA_Server *server,
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
-            myrelay |= 1UL << 0; // relay0
-	    setRelayState(myrelay, MOD_IO_0_ADDR);
+            I2C_0_RELAYS_STATE |= 1UL << 0; 
+            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
 	}
 	else {
-            myrelay &= ~(1UL << 0); // relay0
-            setRelayState(myrelay, MOD_IO_0_ADDR);
+            I2C_0_RELAYS_STATE &= ~(1UL << 0);
+            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
 	}
     }
 }
@@ -166,12 +167,12 @@ static void afterWriteTime1(UA_Server *server,
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
-            myrelay |= 1UL << 1;
-	    setRelayState(myrelay, MOD_IO_0_ADDR);
+            I2C_0_RELAYS_STATE |= 1UL << 1;
+            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
 	}
 	else {
-            myrelay &= ~(1UL << 1);
-            setRelayState(myrelay, MOD_IO_0_ADDR);
+            I2C_0_RELAYS_STATE &= ~(1UL << 1);
+            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
 	}
     }
 }
@@ -183,12 +184,12 @@ static void afterWriteTime2(UA_Server *server,
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
-            myrelay |= 1UL << 2;
-	    setRelayState(myrelay, MOD_IO_0_ADDR);
+            I2C_0_RELAYS_STATE |= 1UL << 2;
+            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
 	}
 	else {
-            myrelay &= ~(1UL << 2);
-            setRelayState(myrelay, MOD_IO_0_ADDR);
+            I2C_0_RELAYS_STATE &= ~(1UL << 2);
+            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
 	}
     }
 }
@@ -200,12 +201,12 @@ static void afterWriteTime3(UA_Server *server,
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
 	if (hrValue > 0){
-            myrelay |= 1UL << 3;
-	    setRelayState(myrelay, MOD_IO_0_ADDR);
+            I2C_0_RELAYS_STATE |= 1UL << 3;
+            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
 	}
 	else {
-            myrelay &= ~(1UL << 3);
-            setRelayState(myrelay, MOD_IO_0_ADDR);
+            I2C_0_RELAYS_STATE &= ~(1UL << 3);
+            setRelayState(I2C_0_RELAYS_STATE, MOD_IO_0_ADDR);
 	}
     }
 }

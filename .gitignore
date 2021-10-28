@@ -1,2 +1,13 @@
+# ignore by file extension
 *.pyc
 *.pyo
+*.o
+*.a
+*.so
+*.gch
+*.vscode
+*.log
+
+# ignore specific files
+coupler/opc-ua-server/open62541.c
+coupler/opc-ua-server/open62541.h

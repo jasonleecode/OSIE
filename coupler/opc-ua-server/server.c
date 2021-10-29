@@ -23,6 +23,9 @@ uint8_t I2C_1_RELAYS_STATE = 0; // state of 4 relays at I2C slave 1
 const int I2C_0_ADDR = 0x58;
 const int I2C_1_ADDR = 0x59;
 
+// the list of attached I2C slaves
+const int I2C_SLAVE_ADDR_LIST[] = {I2C_0_ADDR, I2C_1_ADDR};
+
 // the block device at host machine
 static const char I2C_BLOCK_DEVICE_NAME[] = "/dev/i2c-1";
 
@@ -398,8 +401,14 @@ static void stopHandler(int sign) {
 }
 
 int main(void) {
+    int i;
+    int length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
+
     // set all relays to OFF at startup
-    setRelayState(0x00, I2C_0_ADDR);
+    for(i = 0; i < length; i++)
+    {
+        setRelayState(0x00, I2C_SLAVE_ADDR_LIST[i]);
+    }
 
     signal(SIGINT, stopHandler);
     signal(SIGTERM, stopHandler);
@@ -416,8 +425,13 @@ int main(void) {
 
     UA_Server_delete(server);
 
-    // set all relays to OFF at startup
-    setRelayState(0x00, I2C_0_ADDR);
+    // set all relays to OFF at shutdown
+    for(i = 0; i < length; i++)
+    {
+        setRelayState(0x00, I2C_SLAVE_ADDR_LIST[i]);
+    }
+
+
 
     return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
 }

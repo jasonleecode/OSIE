@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-10-22T15:02:46">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-10-28T19:14:23">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -185,20 +185,120 @@
 ELSE
   Cnt0 := Cnt0 + 1;
   Cnt1 := Cnt1 + 1;
+  IF Cnt1 = 0 THEN
+    Relay0 := 0;
+    Relay1 := 0; 
+    Relay2 := 0;
+    Relay3 := 0;
+  END_IF;
+  
   IF Cnt1 = 50 THEN
-    Relay0 := 1;
-    Relay1 := 1; 
-    Relay2 := 1;
+    Relay0 := 0;
+    Relay1 := 0; 
+    Relay2 := 0;
     Relay3 := 1;
   END_IF;
   
   IF Cnt1 = 100 THEN
     Relay0 := 0;
-    Relay1 := 0;
+    Relay1 := 0; 
+    Relay2 := 1;
+    Relay3 := 0;
+  END_IF;
+
+  IF Cnt1 = 150 THEN
+    Relay0 := 0;
+    Relay1 := 0; 
+    Relay2 := 1;
+    Relay3 := 1;
+  END_IF;
+  
+  IF Cnt1 = 150 THEN
+    Relay0 := 0;
+    Relay1 := 1; 
     Relay2 := 0;
     Relay3 := 0;
+  END_IF;
+
+  IF Cnt1 = 200 THEN
+    Relay0 := 0;
+    Relay1 := 1; 
+    Relay2 := 0;
+    Relay3 := 1;
+  END_IF;
+  
+  IF Cnt1 = 250 THEN
+    Relay0 := 0;
+    Relay1 := 1; 
+    Relay2 := 1;
+    Relay3 := 0;
+  END_IF;
+  
+  IF Cnt1 = 300 THEN
+    Relay0 := 0;
+    Relay1 := 1; 
+    Relay2 := 1;
+    Relay3 := 1;
+  END_IF;
+
+  IF Cnt1 = 350 THEN
+    Relay0 := 1;
+    Relay1 := 0; 
+    Relay2 := 0;
+    Relay3 := 0;
+  END_IF;
+  
+   IF Cnt1 = 400 THEN
+    Relay0 := 1;
+    Relay1 := 0; 
+    Relay2 := 0;
+    Relay3 := 1;
+  END_IF;
+  
+  IF Cnt1 = 450 THEN
+    Relay0 := 1;
+    Relay1 := 0; 
+    Relay2 := 1;
+    Relay3 := 0;
+  END_IF;
+
+  IF Cnt1 = 500 THEN
+    Relay0 := 1;
+    Relay1 := 0; 
+    Relay2 := 1;
+    Relay3 := 1;
+  END_IF;
+  
+  IF Cnt1 = 550 THEN
+    Relay0 := 1;
+    Relay1 := 1; 
+    Relay2 := 0;
+    Relay3 := 0;
+  END_IF;
+
+  IF Cnt1 = 600 THEN
+    Relay0 := 1;
+    Relay1 := 1; 
+    Relay2 := 0;
+    Relay3 := 1;
+  END_IF;
+  
+  IF Cnt1 = 650 THEN
+    Relay0 := 1;
+    Relay1 := 1; 
+    Relay2 := 1;
+    Relay3 := 0;
+  END_IF;
+  
+  IF Cnt1 = 700 THEN
+    Relay0 := 1;
+    Relay1 := 1; 
+    Relay2 := 1;
+    Relay3 := 1;
     Cnt1 := 0;
   END_IF;
+    
+  
   
 END_IF;
 

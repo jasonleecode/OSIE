@@ -27,8 +27,8 @@ const int I2C_1_ADDR = 0x59;
 const int I2C_SLAVE_ADDR_LIST[] = {I2C_0_ADDR, I2C_1_ADDR};
 
 // the block device at host machine
-static const char I2C_BLOCK_DEVICE_NAME[] = "/dev/i2c-1";
-
+static char *DEFAULT_I2C_BLOCK_DEVICE_NAME = "/dev/i2c-1";
+char *I2C_BLOCK_DEVICE_NAME;
 
 static int setRelayState(int command, int i2c_addr) {
     /*
@@ -38,18 +38,17 @@ static int setRelayState(int command, int i2c_addr) {
     char filename[20];
 
     // step 1: open device
-    snprintf(filename, 19, I2C_BLOCK_DEVICE_NAME);
-    file = open(filename, O_RDWR);
+    file = open(I2C_BLOCK_DEVICE_NAME, O_RDWR);
     if (file < 0) {
         /* ERROR HANDLING; you can check errno to see what went wrong */
-        printf("Error openind i2c device.");
+        printf("Error openind i2c device.\n");
         exit(1);
     }
 
     // step 2: address the slave by its address 
     if (ioctl(file, I2C_SLAVE, i2c_addr) < 0) {
         /* ERROR HANDLING; you can check errno to see what went wrong */
-        printf("Error addressing i2c slave.");
+        printf("Error addressing i2c slave.\n");
         exit(1);
     }
 
@@ -62,7 +61,7 @@ static int setRelayState(int command, int i2c_addr) {
     buf[2] = 0x65; // seems irrelevant the value
     if (write(file, buf, 3) != 3) {
         /* ERROR HANDLING: i2c transaction failed */
-        printf("Error writing to i2c slave."); 
+        printf("Error writing to i2c slave.\n"); 
     }
     close(file);
 }
@@ -72,7 +71,6 @@ void addIntegerVariableNode(UA_Server *server, char *node_id, char *node_descrip
     UA_NodeId parentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
     UA_NodeId parentReferenceNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES);
     
-    // I2C0 / relay 0
     UA_VariableAttributes attr0 = UA_VariableAttributes_default;
     UA_Variant_setScalar(&attr0.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
     attr0.description = UA_LOCALIZEDTEXT("en-US", node_description);
@@ -91,11 +89,12 @@ static void addVariable(UA_Server *server) {
     /* 
      * Create all variables representing MOD-IO's relays
      */
+    // IC2-0
     addIntegerVariableNode(server, "i2c0.relay0", "I2C0 / Relay 0");
     addIntegerVariableNode(server, "i2c0.relay1", "I2C0 / Relay 1");
     addIntegerVariableNode(server, "i2c0.relay2", "I2C0 / Relay 2");
     addIntegerVariableNode(server, "i2c0.relay3", "I2C0 / Relay 3");
-    
+    // IC2-1
     addIntegerVariableNode(server, "i2c1.relay0", "I2C1 / Relay 0");
     addIntegerVariableNode(server, "i2c1.relay1", "I2C1 / Relay 1");
     addIntegerVariableNode(server, "i2c1.relay2", "I2C1 / Relay 2");
@@ -322,9 +321,18 @@ static void stopHandler(int sign) {
     running = false;
 }
 
-int main(void) {
+int main(int argc, char **argv) {
     int i;
     int length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
+
+    // it's possible to override default i2c block device from first cmd line argument
+    if (argc >= 2) {
+        I2C_BLOCK_DEVICE_NAME = argv[1];
+    }
+    else {
+        I2C_BLOCK_DEVICE_NAME = DEFAULT_I2C_BLOCK_DEVICE_NAME;
+    }
+    printf("Block device=%s\n", I2C_BLOCK_DEVICE_NAME);
 
     // set all relays to OFF at startup
     for(i = 0; i < length; i++)
@@ -352,8 +360,6 @@ int main(void) {
     {
         setRelayState(0x00, I2C_SLAVE_ADDR_LIST[i]);
     }
-
-
 
     return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
 }

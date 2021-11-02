@@ -67,10 +67,7 @@ static int setRelayState(int command, int i2c_addr) {
     close(file);
 }
 
-static void addVariable(UA_Server *server) {
-    /* 
-     * Create all variables representing MOD-IO's relays
-     */
+void addIntegerVariableNode(UA_Server *server, char *node_id, char *node_description) {
     UA_Int32 myInteger = 0;
     UA_NodeId parentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER);
     UA_NodeId parentReferenceNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES);
@@ -78,106 +75,31 @@ static void addVariable(UA_Server *server) {
     // I2C0 / relay 0
     UA_VariableAttributes attr0 = UA_VariableAttributes_default;
     UA_Variant_setScalar(&attr0.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    attr0.description = UA_LOCALIZEDTEXT("en-US","I2C0 / Relay 0");
-    attr0.displayName = UA_LOCALIZEDTEXT("en-US", "I2C0 / Relay 0");
+    attr0.description = UA_LOCALIZEDTEXT("en-US", node_description);
+    attr0.displayName = UA_LOCALIZEDTEXT("en-US", node_description);
     attr0.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
     attr0.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-    UA_NodeId myIntegerNodeId0 = UA_NODEID_STRING(1, "i2c0.relay0");
-    UA_QualifiedName myIntegerName0 = UA_QUALIFIEDNAME(1, "I2C0 / Relay 0");
+    UA_NodeId myIntegerNodeId0 = UA_NODEID_STRING(1, node_id);
+    UA_QualifiedName myIntegerName0 = UA_QUALIFIEDNAME(1, node_description);
     UA_Server_addVariableNode(server, myIntegerNodeId0, parentNodeId,
                               parentReferenceNodeId, myIntegerName0,
                               UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr0, NULL, NULL);
-    // I2C0 / relay 1
-    UA_VariableAttributes attr1 = UA_VariableAttributes_default;
-    UA_Variant_setScalar(&attr1.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    attr1.description = UA_LOCALIZEDTEXT("en-US","I2C0 / Relay 1");
-    attr1.displayName = UA_LOCALIZEDTEXT("en-US", "I2C0 / Relay 1");
-    attr1.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
-    attr1.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-    UA_NodeId myIntegerNodeId1 = UA_NODEID_STRING(1, "i2c0.relay1");
-    UA_QualifiedName myIntegerName1 = UA_QUALIFIEDNAME(1, "I2C0 / Relay 1");
-    UA_Server_addVariableNode(server, myIntegerNodeId1, parentNodeId,
-                              parentReferenceNodeId, myIntegerName1,
-                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr1, NULL, NULL);
-
-    // I2C0 / relay 2
-    UA_VariableAttributes attr2 = UA_VariableAttributes_default;
-    UA_Variant_setScalar(&attr2.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    attr2.description = UA_LOCALIZEDTEXT("en-US","I2C0 / Relay 2");
-    attr2.displayName = UA_LOCALIZEDTEXT("en-US", "I2C0 / Relay 2");
-    attr2.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
-    attr2.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-    UA_NodeId myIntegerNodeId2 = UA_NODEID_STRING(1, "i2c0.relay2");
-    UA_QualifiedName myIntegerName2 = UA_QUALIFIEDNAME(1, "I2C0 / Relay 2");
-    UA_Server_addVariableNode(server, myIntegerNodeId2, parentNodeId,
-                              parentReferenceNodeId, myIntegerName2,
-                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr2, NULL, NULL);
-
-    // I2C0 / relay 3
-    UA_VariableAttributes attr3 = UA_VariableAttributes_default;
-    UA_Variant_setScalar(&attr3.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    attr3.description = UA_LOCALIZEDTEXT("en-US","I2C0 / Relay 3");
-    attr3.displayName = UA_LOCALIZEDTEXT("en-US", "I2C0 / Relay 3");
-    attr3.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
-    attr3.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-    UA_NodeId myIntegerNodeId3 = UA_NODEID_STRING(1, "i2c0.relay3");
-    UA_QualifiedName myIntegerName3 = UA_QUALIFIEDNAME(1, "I2C0 / Relay 3");
-    UA_Server_addVariableNode(server, myIntegerNodeId3, parentNodeId,
-                              parentReferenceNodeId, myIntegerName3,
-                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr3, NULL, NULL);
-
-    // I2C1 / relay 0
-    UA_VariableAttributes attr4 = UA_VariableAttributes_default;
-    UA_Variant_setScalar(&attr4.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    attr4.description = UA_LOCALIZEDTEXT("en-US","I2C1 / Relay 0");
-    attr4.displayName = UA_LOCALIZEDTEXT("en-US", "I2C1 / Relay 0");
-    attr4.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
-    attr4.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-    UA_NodeId myIntegerNodeId4 = UA_NODEID_STRING(1, "i2c1.relay0");
-    UA_QualifiedName myIntegerName4 = UA_QUALIFIEDNAME(1, "I2C1 / Relay 0");
-    UA_Server_addVariableNode(server, myIntegerNodeId4, parentNodeId,
-                              parentReferenceNodeId, myIntegerName4,
-                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr4, NULL, NULL);
  
-    // I2C1 / relay 1 
-    UA_VariableAttributes attr5 = UA_VariableAttributes_default;
-    UA_Variant_setScalar(&attr5.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    attr5.description = UA_LOCALIZEDTEXT("en-US","I2C1 / Relay 1");
-    attr5.displayName = UA_LOCALIZEDTEXT("en-US", "I2C1 / Relay 1");
-    attr5.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
-    attr5.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-    UA_NodeId myIntegerNodeId5 = UA_NODEID_STRING(1, "i2c1.relay1");
-    UA_QualifiedName myIntegerName5 = UA_QUALIFIEDNAME(1, "I2C1 / Relay 1");
-    UA_Server_addVariableNode(server, myIntegerNodeId5, parentNodeId,
-                              parentReferenceNodeId, myIntegerName5,
-                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr5, NULL, NULL);
+}
+
+static void addVariable(UA_Server *server) {
+    /* 
+     * Create all variables representing MOD-IO's relays
+     */
+    addIntegerVariableNode(server, "i2c0.relay0", "I2C0 / Relay 0");
+    addIntegerVariableNode(server, "i2c0.relay1", "I2C0 / Relay 1");
+    addIntegerVariableNode(server, "i2c0.relay2", "I2C0 / Relay 2");
+    addIntegerVariableNode(server, "i2c0.relay3", "I2C0 / Relay 3");
     
-    // I2C1 / relay 2 
-    UA_VariableAttributes attr6 = UA_VariableAttributes_default;
-    UA_Variant_setScalar(&attr6.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    attr6.description = UA_LOCALIZEDTEXT("en-US","I2C1 / Relay 2");
-    attr6.displayName = UA_LOCALIZEDTEXT("en-US", "I2C1 / Relay 2");
-    attr6.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
-    attr6.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-    UA_NodeId myIntegerNodeId6 = UA_NODEID_STRING(1, "i2c1.relay2");
-    UA_QualifiedName myIntegerName6 = UA_QUALIFIEDNAME(1, "I2C1 / Relay 2");
-    UA_Server_addVariableNode(server, myIntegerNodeId6, parentNodeId,
-                              parentReferenceNodeId, myIntegerName6,
-                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr6, NULL, NULL);
-    
-    // I2C1 / relay 3 
-    UA_VariableAttributes attr7 = UA_VariableAttributes_default;
-    UA_Variant_setScalar(&attr7.value, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
-    attr7.description = UA_LOCALIZEDTEXT("en-US","I2C1 / Relay 3");
-    attr7.displayName = UA_LOCALIZEDTEXT("en-US", "I2C1 / Relay 3");
-    attr7.dataType = UA_TYPES[UA_TYPES_INT32].typeId;
-    attr7.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
-    UA_NodeId myIntegerNodeId7 = UA_NODEID_STRING(1, "i2c1.relay3");
-    UA_QualifiedName myIntegerName7 = UA_QUALIFIEDNAME(1, "I2C1 / Relay 3");
-    UA_Server_addVariableNode(server, myIntegerNodeId7, parentNodeId,
-                              parentReferenceNodeId, myIntegerName7,
-                              UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE), attr7, NULL, NULL);
- 
+    addIntegerVariableNode(server, "i2c1.relay0", "I2C1 / Relay 0");
+    addIntegerVariableNode(server, "i2c1.relay1", "I2C1 / Relay 1");
+    addIntegerVariableNode(server, "i2c1.relay2", "I2C1 / Relay 2");
+    addIntegerVariableNode(server, "i2c1.relay3", "I2C1 / Relay 3");
 }
 
 /* Connect to variables to physical relays

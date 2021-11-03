@@ -42,14 +42,14 @@ static int setRelayState(int command, int i2c_addr) {
     file = open(I2C_BLOCK_DEVICE_NAME, O_RDWR);
     if (file < 0) {
         /* ERROR HANDLING; you can check errno to see what went wrong */
-        printf("Error openind i2c device.\n");
+        printf("Error opening i2c device (0x%x).\n", i2c_addr);
         exit(1);
     }
 
     // step 2: address the slave by its address 
     if (ioctl(file, I2C_SLAVE, i2c_addr) < 0) {
         /* ERROR HANDLING; you can check errno to see what went wrong */
-        printf("Error addressing i2c slave.\n");
+        printf("Error addressing i2c slave (0x%x).\n", i2c_addr);
         exit(1);
     }
 
@@ -62,7 +62,7 @@ static int setRelayState(int command, int i2c_addr) {
     buf[2] = 0x65; // seems irrelevant the value
     if (write(file, buf, 3) != 3) {
         /* ERROR HANDLING: i2c transaction failed */
-        printf("Error writing to i2c slave.\n"); 
+        printf("Error writing to i2c slave (0x%x).\n", i2c_addr); 
     }
     close(file);
 }

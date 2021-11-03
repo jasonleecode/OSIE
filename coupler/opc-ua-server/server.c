@@ -24,7 +24,8 @@ const int I2C_0_ADDR = 0x58;
 const int I2C_1_ADDR = 0x59;
 
 // the list of attached I2C slaves
-const int I2C_SLAVE_ADDR_LIST[] = {I2C_0_ADDR, I2C_1_ADDR};
+const int DEFAULT_I2C_SLAVE_ADDR = 0x58;
+int I2C_SLAVE_ADDR_LIST[] = {0, 0, 0, 0, 0}; // XXX: make dynamic array
 
 // the block device at host machine
 static char *DEFAULT_I2C_BLOCK_DEVICE_NAME = "/dev/i2c-1";
@@ -312,7 +313,24 @@ static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {
     
 }
 
+void safeShutdownI2CSlaveList() {
+    /*
+     * Perform a safe shutdown of all known I2C slaves
+     */
+    int i;
+    int length;
+    int addr;
+    length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
 
+    for(i = 0; i < length; i++)
+    {
+        addr = I2C_SLAVE_ADDR_LIST[i];
+	if (addr!= 0) {
+	    // properly initialized from CLI
+	    setRelayState(0x00, addr);
+	}
+    }
+}
 
 static volatile UA_Boolean running = true;
 
@@ -323,22 +341,40 @@ static void stopHandler(int sign) {
 
 int main(int argc, char **argv) {
     int i;
-    int length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
+    int length;
+    long result;
+    char *eptr;
 
-    // it's possible to override default i2c block device from first cmd line argument
+    // handle comand line arguments
     if (argc >= 2) {
+	// override default i2c block device from first cmd line argument
         I2C_BLOCK_DEVICE_NAME = argv[1];
+	
+	// if nothing specified on CLI set a default one
+	if (argc<= 2){
+	    I2C_SLAVE_ADDR_LIST[0] = I2C_0_ADDR;
+	    printf("I2C_slave=0x%x\n", I2C_0_ADDR);
+	}
+	else {
+	    // override list of I2C slaves addresses from CLI
+	    for(i=2; i < argc; i++) 
+	    {
+	        // from CLI we get a hexidecimal string as a char (0x58 for example), convert to decimal
+	        result = strtol(argv[i], &eptr, 16);
+	        printf("I2C_slave=0x%lx\n", result);
+	        I2C_SLAVE_ADDR_LIST[i -2] = result;
+	    }
+	}
+	
     }
     else {
         I2C_BLOCK_DEVICE_NAME = DEFAULT_I2C_BLOCK_DEVICE_NAME;
     }
-    printf("Block device=%s\n", I2C_BLOCK_DEVICE_NAME);
 
-    // set all relays to OFF at startup
-    for(i = 0; i < length; i++)
-    {
-        setRelayState(0x00, I2C_SLAVE_ADDR_LIST[i]);
-    }
+    printf("Block device=%s\n", I2C_BLOCK_DEVICE_NAME);
+    
+    // always start attached slaves from a know safe shutdown state
+    safeShutdownI2CSlaveList();
 
     signal(SIGINT, stopHandler);
     signal(SIGTERM, stopHandler);
@@ -355,11 +391,8 @@ int main(int argc, char **argv) {
 
     UA_Server_delete(server);
 
-    // set all relays to OFF at shutdown
-    for(i = 0; i < length; i++)
-    {
-        setRelayState(0x00, I2C_SLAVE_ADDR_LIST[i]);
-    }
-
+    // always leave attached slaves to a known safe shutdown state
+    safeShutdownI2CSlaveList();
+    
     return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
 }

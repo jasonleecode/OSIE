@@ -1,0 +1,1 @@
+This folder contains various SlapOS profiles for different OSIE components (coupler, ERP5 MES, etc)

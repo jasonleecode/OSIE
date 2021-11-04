@@ -89,16 +89,21 @@ static void addVariable(UA_Server *server) {
     /* 
      * Create all variables representing MOD-IO's relays
      */
-    // IC2-0
-    addIntegerVariableNode(server, "i2c0.relay0", "I2C0 / Relay 0");
-    addIntegerVariableNode(server, "i2c0.relay1", "I2C0 / Relay 1");
-    addIntegerVariableNode(server, "i2c0.relay2", "I2C0 / Relay 2");
-    addIntegerVariableNode(server, "i2c0.relay3", "I2C0 / Relay 3");
-    // IC2-1
-    addIntegerVariableNode(server, "i2c1.relay0", "I2C1 / Relay 0");
-    addIntegerVariableNode(server, "i2c1.relay1", "I2C1 / Relay 1");
-    addIntegerVariableNode(server, "i2c1.relay2", "I2C1 / Relay 2");
-    addIntegerVariableNode(server, "i2c1.relay3", "I2C1 / Relay 3");
+    int length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
+    if (length>=1) {
+        // IC2-0
+        addIntegerVariableNode(server, "i2c0.relay0", "I2C0 / Relay 0");
+        addIntegerVariableNode(server, "i2c0.relay1", "I2C0 / Relay 1");
+        addIntegerVariableNode(server, "i2c0.relay2", "I2C0 / Relay 2");
+        addIntegerVariableNode(server, "i2c0.relay3", "I2C0 / Relay 3");
+    }
+    if (length>=2) {
+        // IC2-1
+        addIntegerVariableNode(server, "i2c1.relay0", "I2C1 / Relay 0");
+        addIntegerVariableNode(server, "i2c1.relay1", "I2C1 / Relay 1");
+        addIntegerVariableNode(server, "i2c1.relay2", "I2C1 / Relay 2");
+        addIntegerVariableNode(server, "i2c1.relay3", "I2C1 / Relay 3");
+    }
 }
 
 /* Connect to variables to physical relays

@@ -1,0 +1,1 @@
+This folder contains various sample Beremiz project files which show a sample PLC program.

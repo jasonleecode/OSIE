@@ -20,8 +20,7 @@ uint8_t I2C_0_RELAYS_STATE = 0; // state of 4 relays at I2C slave 0
 uint8_t I2C_1_RELAYS_STATE = 0; // state of 4 relays at I2C slave 1
 
 // the default addresses of MOD-IOs
-const int I2C_0_ADDR = 0x58;
-const int I2C_1_ADDR = 0x59;
+const int DEFAULT_I2C_0_ADDR = 0x58;
 
 // the list of attached I2C slaves
 const int DEFAULT_I2C_SLAVE_ADDR = 0x58;
@@ -120,13 +119,14 @@ static void afterWriteTimeI2C0_0(UA_Server *server,
                const UA_NumericRange *range, const UA_DataValue *data) {
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+	int addr = I2C_SLAVE_ADDR_LIST[0];
 	if (hrValue > 0){
             I2C_0_RELAYS_STATE |= 1UL << 0; 
-            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, addr);
 	}
 	else {
             I2C_0_RELAYS_STATE &= ~(1UL << 0);
-            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, addr);
 	}
     }
 }
@@ -137,13 +137,14 @@ static void afterWriteTimeI2C0_1(UA_Server *server,
                const UA_NumericRange *range, const UA_DataValue *data) {
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+        int addr = I2C_SLAVE_ADDR_LIST[0];
 	if (hrValue > 0){
             I2C_0_RELAYS_STATE |= 1UL << 1;
-            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, addr);
 	}
 	else {
             I2C_0_RELAYS_STATE &= ~(1UL << 1);
-            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, addr);
 	}
     }
 }
@@ -154,13 +155,14 @@ static void afterWriteTimeI2C0_2(UA_Server *server,
                const UA_NumericRange *range, const UA_DataValue *data) {
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+        int addr = I2C_SLAVE_ADDR_LIST[0];
 	if (hrValue > 0){
             I2C_0_RELAYS_STATE |= 1UL << 2;
-            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, addr);
 	}
 	else {
             I2C_0_RELAYS_STATE &= ~(1UL << 2);
-            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, addr);
 	}
     }
 }
@@ -171,13 +173,14 @@ static void afterWriteTimeI2C0_3(UA_Server *server,
                const UA_NumericRange *range, const UA_DataValue *data) {
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+        int addr = I2C_SLAVE_ADDR_LIST[0];
 	if (hrValue > 0){
             I2C_0_RELAYS_STATE |= 1UL << 3;
-            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, addr);
 	}
 	else {
             I2C_0_RELAYS_STATE &= ~(1UL << 3);
-            setRelayState(I2C_0_RELAYS_STATE, I2C_0_ADDR);
+            setRelayState(I2C_0_RELAYS_STATE, addr);
 	}
     }
 }
@@ -190,13 +193,14 @@ static void afterWriteTimeI2C1_0(UA_Server *server,
                const UA_NumericRange *range, const UA_DataValue *data) {
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+        int addr = I2C_SLAVE_ADDR_LIST[1];
 	if (hrValue > 0){
             I2C_1_RELAYS_STATE |= 1UL << 0; 
-            setRelayState(I2C_1_RELAYS_STATE, I2C_1_ADDR);
+            setRelayState(I2C_1_RELAYS_STATE, addr);
 	}
 	else {
             I2C_1_RELAYS_STATE &= ~(1UL << 0);
-            setRelayState(I2C_1_RELAYS_STATE, I2C_1_ADDR);
+            setRelayState(I2C_1_RELAYS_STATE, addr);
 	}
     }
 }
@@ -207,13 +211,14 @@ static void afterWriteTimeI2C1_1(UA_Server *server,
                const UA_NumericRange *range, const UA_DataValue *data) {
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+        int addr = I2C_SLAVE_ADDR_LIST[1];
 	if (hrValue > 0){
             I2C_1_RELAYS_STATE |= 1UL << 1; 
-            setRelayState(I2C_1_RELAYS_STATE, I2C_1_ADDR);
+            setRelayState(I2C_1_RELAYS_STATE, addr);
 	}
 	else {
             I2C_1_RELAYS_STATE &= ~(1UL << 1);
-            setRelayState(I2C_1_RELAYS_STATE, I2C_1_ADDR);
+            setRelayState(I2C_1_RELAYS_STATE, addr);
 	}
     }
 }
@@ -224,13 +229,14 @@ static void afterWriteTimeI2C1_2(UA_Server *server,
                const UA_NumericRange *range, const UA_DataValue *data) {
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+        int addr = I2C_SLAVE_ADDR_LIST[1];
 	if (hrValue > 0){
             I2C_1_RELAYS_STATE |= 1UL << 2; 
-            setRelayState(I2C_1_RELAYS_STATE, I2C_1_ADDR);
+            setRelayState(I2C_1_RELAYS_STATE, addr);
 	}
 	else {
             I2C_1_RELAYS_STATE &= ~(1UL << 2);
-            setRelayState(I2C_1_RELAYS_STATE, I2C_1_ADDR);
+            setRelayState(I2C_1_RELAYS_STATE, addr);
 	}
     }
 }
@@ -241,13 +247,14 @@ static void afterWriteTimeI2C1_3(UA_Server *server,
                const UA_NumericRange *range, const UA_DataValue *data) {
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32]) {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+        int addr = I2C_SLAVE_ADDR_LIST[1];
 	if (hrValue > 0){
             I2C_1_RELAYS_STATE |= 1UL << 3; 
-            setRelayState(I2C_1_RELAYS_STATE, I2C_1_ADDR);
+            setRelayState(I2C_1_RELAYS_STATE, addr);
 	}
 	else {
             I2C_1_RELAYS_STATE &= ~(1UL << 3);
-            setRelayState(I2C_1_RELAYS_STATE, I2C_1_ADDR);
+            setRelayState(I2C_1_RELAYS_STATE, addr);
 	}
     }
 }
@@ -352,8 +359,8 @@ int main(int argc, char **argv) {
 	
 	// if nothing specified on CLI set a default one
 	if (argc<= 2){
-	    I2C_SLAVE_ADDR_LIST[0] = I2C_0_ADDR;
-	    printf("I2C_slave=0x%x\n", I2C_0_ADDR);
+	    I2C_SLAVE_ADDR_LIST[0] = DEFAULT_I2C_0_ADDR;
+	    printf("I2C_slave=0x%x\n", DEFAULT_I2C_0_ADDR);
 	}
 	else {
 	    // override list of I2C slaves addresses from CLI

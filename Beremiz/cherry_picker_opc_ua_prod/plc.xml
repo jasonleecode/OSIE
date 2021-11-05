@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-10-25T16:19:46">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-11-05T14:52:20">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -51,7 +51,8 @@
             <comment localId="1" height="143" width="201">
               <position x="566" y="75"/>
               <content>
-                <xhtml:p><![CDATA[Test Ivan: this PLC will switch ON / OFF attached over modbus relays {0..3} of a Lime2 coupler.]]></xhtml:p>
+                <xhtml:p><![CDATA[Test Ivan: this PLC will switch ON / OFF attached over modbus relays {0..3} of a Lime2 coupler.
+It will use OPC-UA as a communication protocol]]></xhtml:p>
               </content>
             </comment>
             <block localId="2" typeName="CounterST" instanceName="CounterST0" executionOrderId="0" height="109" width="99">

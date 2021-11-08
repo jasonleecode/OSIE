@@ -9,6 +9,7 @@ parts =
   publish-connection-parameter
   coupler
   coupler-promise
+  coupler-opc-ua
 
 # Define egg directories to be the one from Software Release
 # (/opt/slapgrid/...)
@@ -17,6 +18,13 @@ eggs-directory = {{ buildout['eggs-directory'] }}
 develop-eggs-directory = {{ buildout['develop-eggs-directory'] }}
 offline = true
 extends = {{ template_monitor }}
+
+[coupler-opc-ua]
+recipe = slapos.cookbook:wrapper
+# start with defaults
+command-line =
+    {{ buildout['parts-directory'] }}/osie/coupler/opc-ua-server/bin/lime2-opc-ua-server /dev/i2c-1 0x58
+wrapper-path = ${directory:service}/coupler-opc-ua
 
 [instance-parameter]
 # Fetch arbitrary parameters defined by the user in SlapOS Master for his instance.

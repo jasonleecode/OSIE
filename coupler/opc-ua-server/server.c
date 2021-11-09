@@ -358,33 +358,36 @@ int main(int argc, char **argv) {
     char *eptr;
 
     // handle comand line arguments
-    if (argc >= 2) {
-	// override default i2c block device from first cmd line argument
-        I2C_BLOCK_DEVICE_NAME = argv[1];
-	
-	// if nothing specified on CLI set a default one
-	if (argc<= 2){
-	    I2C_SLAVE_ADDR_LIST[0] = DEFAULT_I2C_0_ADDR;
-	    printf("I2C_slave=0x%x\n", DEFAULT_I2C_0_ADDR);
-	}
-	else {
-	    // override list of I2C slaves addresses from CLI
-	    for(i=2; i < argc; i++) 
-	    {
-	        // from CLI we get a hexidecimal string as a char (0x58 for example), convert to decimal
-	        result = strtol(argv[i], &eptr, 16);
-	        printf("I2C_slave=0x%lx\n", result);
-	        I2C_SLAVE_ADDR_LIST[i -2] = result;
-	    }
-	}
-	
-    }
-    else {
-        I2C_BLOCK_DEVICE_NAME = DEFAULT_I2C_BLOCK_DEVICE_NAME;
+    if (argc == 1) {
+        // no paramaters at all
+	I2C_BLOCK_DEVICE_NAME = DEFAULT_I2C_BLOCK_DEVICE_NAME;
+        I2C_SLAVE_ADDR_LIST[0] = DEFAULT_I2C_0_ADDR;	
+    } 
+    if (argc == 2) {
+        // only block device specified
+	I2C_BLOCK_DEVICE_NAME = argv[1];
+	I2C_SLAVE_ADDR_LIST[0] = DEFAULT_I2C_0_ADDR;
+    } 
+    if (argc > 2) {
+        // both block device and I2C slave(s) specified
+	I2C_BLOCK_DEVICE_NAME = argv[1];
+        for(i=2; i < argc; i++){
+            // from CLI we get a hexidecimal string as a char (0x58 for example), convert to decimal
+            result = strtol(argv[i], &eptr, 16);
+            I2C_SLAVE_ADDR_LIST[i - 2] = result;
+        }
+
     }
 
+    // debug info
     printf("Block device=%s\n", I2C_BLOCK_DEVICE_NAME);
-    
+    length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
+    for(i=0; i < length; i++){
+	if (I2C_SLAVE_ADDR_LIST[i] !=0) {
+            printf("I2C_slave=0x%x\n", I2C_SLAVE_ADDR_LIST[i]);
+	}
+    }
+
     // always start attached slaves from a know safe shutdown state
     safeShutdownI2CSlaveList();
 

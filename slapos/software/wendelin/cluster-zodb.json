@@ -1,0 +1,39 @@
+{
+        "timezone": "UTC",
+        "site-id": "erp5",
+        "developer-list": [
+                "zope"
+        ],
+        "inituser-password": "fG5q1Ty",
+        "deadlock-debugger-password": "fG5q1Ty",
+        "mariadb": {
+          "innodb-buffer-pool-size": 8388608,
+          "innodb-log-file-size": 536870912
+        },
+        "zope-partition-dict": {
+                "admin": {
+                        "family": "admin",
+                        "thread-amount": 4,
+                        "port-base": 2210,
+                        "instance-count": 1
+                },
+                "activities": {
+                        "timerserver-interval": 1,
+                        "family": "activities",
+                        "thread-amount": 1,
+                        "port-base": 2220,
+                        "instance-count": 1,
+                        "longrequest-logger-interval": 2,
+                        "longrequest-logger-timeout": 4
+                },
+                "web_fluentd": {
+                        "timerserver-interval": 1,
+                        "family": "web",
+                        "thread-amount": 6,
+                        "port-base": 2230,
+                        "instance-count": 1,
+                        "longrequest-logger-interval": 2,
+                        "longrequest-logger-timeout": 4
+                }
+        }
+}

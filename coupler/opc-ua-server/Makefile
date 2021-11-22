@@ -1,5 +1,4 @@
 CC=arm-linux-gnueabihf-gcc
-OPEN62541_HOME=/home/ivan/open62541
 CFLAGS= -I $(OPEN62541_HOME)/build 
 LDFLAGS= -L $(OPEN62541_HOME)/build/bin
 OUT_DIR=bin/

@@ -1,9 +1,11 @@
 CC=arm-linux-gnueabihf-gcc
-CFLAGS=-I.
+OPEN62541_HOME=/home/ivan/open62541
+CFLAGS= -I $(OPEN62541_HOME)/build 
+LDFLAGS= -L $(OPEN62541_HOME)/build/bin
 OUT_DIR=bin/
 
-server: server.c open62541.c
-	$(CC) -o $@ $^ $(CFLAGS)
+server: server.c
+	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) -std=c99 $(OPEN62541_HOME)/build/open62541.c
 	@cp server $(OUT_DIR)
 	@rm server
 	

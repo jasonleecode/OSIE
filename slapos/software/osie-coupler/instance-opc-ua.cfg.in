@@ -7,8 +7,6 @@
 parts =
   directory
   publish-connection-parameter
-  coupler-modbus
-  coupler-modbus-promise
   coupler-opc-ua
 
 # Define egg directories to be the one from Software Release
@@ -50,7 +48,6 @@ configuration.coupler_i2c_slave_list =
 # All possible parameters should have a default.
 # In our use case, we are expecting from the user to specify one (optional) parameter: "name". We put the default value here if he doesn't specify it, so that it doesn't crash.
 configuration.interface = 0.0.0.0
-configuration.modbus_port = 1502
 configuration.opc_ua_port = 4840
 # If our use case requires that the user can specify a mail address so that his instance can mail to him (for example), we can do:
 # configuration.mail-address =
@@ -69,33 +66,10 @@ service = ${:etc}/service
 # Path of the log directory used by our service (see [helloweb])
 log = ${:var}/log
 
-[coupler-modbus]
-# the service will log here
-logfile = ${directory:log}/coupler-modbus.log
-
-# Actual script that starts the service:
-# This recipe will try to "exec" the command-line after separating parameters.
-recipe = slapos.cookbook:wrapper
-command-line =
-    {{ buildout['bin-directory'] }}/pythonwitheggs {{ buildout['parts-directory'] }}/osie/eggs/osie_coupler/osie_modbus.py -p ${instance-parameter:configuration.modbus_port}
-# Put this shell script in the "etc/service" directory. Each executable of this
-# repository will be started and monitored by supervisord. If a service
-# exits/crashes, it will trigger a "bang" and cause a re-run of the instance.
-wrapper-path = ${directory:service}/coupler-modbus
-
-# promise, that checks that helloweb service is alive
-[coupler-modbus-promise]
-<= monitor-promise-base
-module = check_port_listening
-name = coupler.py
-config-hostname= ${instance-parameter:configuration.interface}
-config-port    = ${instance-parameter:configuration.modbus_port}
-
 # Publish all the parameters needed for the user to connect to the instance.
 # It can be anything: URL(s), password(s), or arbitrary parameters.
 # Here we'll just echo back the entered name as instance parameter
 [publish-connection-parameter]
 recipe = slapos.cookbook:publish
-modbus_port = ${instance-parameter:configuration.modbus_port}
 opc_ua_port = ${instance-parameter:configuration.opc_ua_port}
 interface = ${instance-parameter:configuration.interface}

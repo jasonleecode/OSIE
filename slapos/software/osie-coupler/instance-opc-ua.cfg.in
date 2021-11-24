@@ -21,7 +21,7 @@ extends = {{ template_monitor }}
 recipe = slapos.cookbook:wrapper
 # start with defaults
 command-line =
-    {{ buildout['parts-directory'] }}/osie/coupler/opc-ua-server/bin/lime2-opc-ua-server ${instance-parameter:configuration.coupler_block_device} ${instance-parameter:configuration.coupler_i2c_slave_list}
+    {{ buildout['bin-directory'] }}/server ${instance-parameter:configuration.coupler_block_device} ${instance-parameter:configuration.coupler_i2c_slave_list}
 
 wrapper-path = ${directory:service}/coupler-opc-ua
 

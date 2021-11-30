@@ -30,12 +30,20 @@ int I2C_SLAVE_ADDR_LIST[] = {0, 0, 0, 0, 0}; // XXX: make dynamic array
 static char *DEFAULT_I2C_BLOCK_DEVICE_NAME = "/dev/i2c-1";
 char *I2C_BLOCK_DEVICE_NAME;
 
+// global virtual mode needed for testing on x86 platform
+bool I2C_VIRTUAL_MODE = 0;
+
 static int setRelayState(int command, int i2c_addr) {
     /*
      *  Set relays' state over I2C
      */
     int file;
     char filename[20];
+    if(I2C_VIRTUAL_MODE){
+      // we're in a virtual mode, likely on x86 platform or without I2C support
+      // simply do nothing
+      return 0;
+    }
 
     // step 1: open device
     file = open(I2C_BLOCK_DEVICE_NAME, O_RDWR);
@@ -356,6 +364,13 @@ int main(int argc, char **argv) {
     int length;
     long result;
     char *eptr;
+
+    // read environment to see if we run daemon in real or virtual mode (usable for testing on x86)
+    const char* s = getenv("I2C_VIRTUAL_MODE");
+    if(s!=NULL){
+      I2C_VIRTUAL_MODE = atoi(s);
+    }
+    printf("I2C_VIRTUAL_MODE=%d\n", I2C_VIRTUAL_MODE);
 
     // handle comand line arguments
     if (argc == 1) {

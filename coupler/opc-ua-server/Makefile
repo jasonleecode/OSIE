@@ -1,4 +1,4 @@
-CC=arm-linux-gnueabihf-gcc
+CC=$(CC)
 CFLAGS= -I $(OPEN62541_SOURCE_HOME) 
 LDFLAGS= -L $(OPEN62541_HOME)/lib
 OUT_DIR= $(BINARY_OUT_DIR)

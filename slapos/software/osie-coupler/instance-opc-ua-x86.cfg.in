@@ -1,0 +1,75 @@
+#############################
+#
+# Deploy  OSIE coupler instance
+#
+#############################
+[buildout]
+parts =
+  directory
+  publish-connection-parameter
+  coupler-opc-ua
+
+# Define egg directories to be the one from Software Release
+# (/opt/slapgrid/...)
+# Always the same.
+eggs-directory = {{ buildout['eggs-directory'] }}
+develop-eggs-directory = {{ buildout['develop-eggs-directory'] }}
+offline = true
+extends = {{ template_monitor }}
+
+[coupler-opc-ua]
+recipe = slapos.cookbook:wrapper
+# start with defaults
+command-line =
+    export I2C_VIRTUAL_MODE=1 && {{ buildout['bin-directory'] }}/server ${instance-parameter:configuration.coupler_block_device} ${instance-parameter:configuration.coupler_i2c_slave_list}
+
+wrapper-path = ${directory:service}/coupler-opc-ua
+
+[instance-parameter]
+# Fetch arbitrary parameters defined by the user in SlapOS Master for his instance.
+# We use the slapconfiguration recipe with a few parameters (partition id,
+# computer id, certificate, etc).
+# It will then authenticate to SlapOS Master and fetch the instance parameters.
+# The parameters are accessible from ${instance-parameter:configuration.name-of-parameter}
+# Always the same. Just copy/paste.
+# See docstring of slapos.cookbook:slapconfiguration for more information.
+recipe = slapos.cookbook:slapconfiguration
+computer = ${slap-connection:computer-id}
+partition = ${slap-connection:partition-id}
+url = ${slap-connection:server-url}
+key = ${slap-connection:key-file}
+cert = ${slap-connection:cert-file}
+
+configuration.coupler_block_device =
+configuration.coupler_i2c_slave_list =
+
+# Define default parameter(s) that will be used later, in case user didn't
+# specify it.
+# All possible parameters should have a default.
+# In our use case, we are expecting from the user to specify one (optional) parameter: "name". We put the default value here if he doesn't specify it, so that it doesn't crash.
+configuration.interface = 0.0.0.0
+configuration.opc_ua_port = 4840
+# If our use case requires that the user can specify a mail address so that his instance can mail to him (for example), we can do:
+# configuration.mail-address =
+# If the user doesn't specify it, it won't break and the recipe can handle it (i.e don't send any mail for example).
+
+# Create all needed directories, depending on your needs
+[directory]
+recipe = slapos.cookbook:mkdirectory
+home = ${buildout:directory}
+etc = ${:home}/etc
+var = ${:home}/var
+# Executables put here will be started but not monitored (for startup scripts)
+script = ${:etc}/run/
+# Executables put here will be started and monitored (for daemons)
+service = ${:etc}/service
+# Path of the log directory used by our service (see [helloweb])
+log = ${:var}/log
+
+# Publish all the parameters needed for the user to connect to the instance.
+# It can be anything: URL(s), password(s), or arbitrary parameters.
+# Here we'll just echo back the entered name as instance parameter
+[publish-connection-parameter]
+recipe = slapos.cookbook:publish
+opc_ua_port = ${instance-parameter:configuration.opc_ua_port}
+interface = ${instance-parameter:configuration.interface}

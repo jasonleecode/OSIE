@@ -20,8 +20,10 @@ extends = {{ template_monitor }}
 [coupler-opc-ua]
 recipe = slapos.cookbook:wrapper
 # start with defaults
+environment =
+  I2C_VIRTUAL_MODE=1
 command-line =
-    export I2C_VIRTUAL_MODE=1 && {{ buildout['bin-directory'] }}/server ${instance-parameter:configuration.coupler_block_device} ${instance-parameter:configuration.coupler_i2c_slave_list}
+    {{ buildout['bin-directory'] }}/server ${instance-parameter:configuration.coupler_block_device} ${instance-parameter:configuration.coupler_i2c_slave_list}
 
 wrapper-path = ${directory:service}/coupler-opc-ua
 

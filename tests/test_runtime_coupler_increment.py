@@ -23,11 +23,11 @@ try:
 
   for i in range (0, NUMBER_OF_CHECKS):
     i2c0_relay0_before = var.get_value()
-    print "\ni2c0_relay0 (before) = ", i2c0_relay0_before
-    print "sleep ..."
+    print("\ni2c0_relay0 (before) = ", i2c0_relay0_before)
+    print("sleep ...")
     time.sleep(TIMEOUT)
     i2c0_relay0_after = var.get_value()
-    print "i2c0_relay0 (after) = ", i2c0_relay0_after
+    print("i2c0_relay0 (after) = ", i2c0_relay0_after)
     # for the wait timeout runtime should have increased the value
     assert i2c0_relay0_after > i2c0_relay0_before
 

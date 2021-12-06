@@ -25,7 +25,7 @@ environment =
 command-line =
     {{ buildout['bin-directory'] }}/server ${instance-parameter:configuration.coupler_block_device} ${instance-parameter:configuration.coupler_i2c_slave_list}
 
-wrapper-path = ${directory:service}/coupler-opc-ua
+wrapper-path = ${directory:service}/coupler-opc-ua-virtual
 
 [instance-parameter]
 # Fetch arbitrary parameters defined by the user in SlapOS Master for his instance.

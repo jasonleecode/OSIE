@@ -1,2 +1,2 @@
 <?xml version='1.0' encoding='utf-8'?>
-<OPCUAClient xmlns:xsd="http://www.w3.org/2001/XMLSchema" Server_URI="opc.tcp://k2-osie:4840"/>
+<OPCUAClient xmlns:xsd="http://www.w3.org/2001/XMLSchema" Server_URI="opc.tcp://0.0.0.0:4840"/>

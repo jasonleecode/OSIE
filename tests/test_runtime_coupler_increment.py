@@ -21,7 +21,7 @@ def main():
                       help='seconds to wait between checks')
   parser.add_argument('--opc-ua-server', \
                       type = str, \
-                      default = 'opc.tcp://k2-osie:4840/', \
+                      default = 'opc.tcp://0.0.0.0:4840/', \
                       help='Address of OPC-UA server')
   parser.add_argument('--opc-ua-node-identifier', \
                       type = str, \

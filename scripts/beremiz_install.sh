@@ -40,7 +40,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
       # install required packages
       apt -yq update
       apt -yq install python-wxgtk3.0 python-lxml python-is-python2 python-numpy build-essential python-dev-is-python2 mercurial autoconf bison flex python2 virtualenv python-lxml python-numpy libgtk-3-dev libgl1-mesa-dev libglu1-mesa-dev
-      pip2 install pyro twisted nevow autobahn lxml opcua
+      pip2 install pyro twisted nevow autobahn lxml opcua zeroconf==0.19.1
 
       # Path preparation
       LOCAL_HOME_DIR=/home/${SUDO_USER:-$(whoami)}/
@@ -55,19 +55,23 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
       # Build Matiec
       echo "Building Matiec."
+      cd $LOCAL_HOME_DIR/Beremiz/
       hg clone https://hg.beremiz.org/matiec
+      cd matiec/
       autoreconf -i
       ./configure
       make -j
       pwd
 
       # Build Modbus
-      echo "Building Modbus."  
+      echo "Building Modbus."
+      cd $LOCAL_HOME_DIR/Beremiz/  
       hg clone https://hg.beremiz.org/Modbus/
+      cd Modbus/
       make
 
       echo "Beremiz is installed." 
-      echo "Run $ python2 ~/Beremiz/Beremiz/Beremiz.py to open Beremiz" 
+      echo "Run $ python2 ~/Beremiz/beremiz/Beremiz.py to open Beremiz" 
 
 
    else 

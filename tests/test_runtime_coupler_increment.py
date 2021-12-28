@@ -8,7 +8,6 @@ import argparse
 import configparser
 
 def main():
-
   # handle CLI arguments
   parser = argparse.ArgumentParser()
   parser.add_argument('--iterations', \
@@ -34,10 +33,13 @@ def main():
   OPC_UA_ADDRESS = args.opc_ua_server
   OPC_UA_IDENTIFIER = args.opc_ua_node_identifier
 
-
   # connect to a session at OPC-UA server
   client = Client(OPC_UA_ADDRESS)
 
+  # for now this is the only test thus we start it without a wrapper
+  test_count = 1
+  test_failures = 0
+  expected_failures = 0
   try:
     client.connect()
 
@@ -54,10 +56,15 @@ def main():
       i2c0_relay0_after = var.get_value()
       print("i2c0_relay0 (after) = ", i2c0_relay0_after)
       # for the wait timeout runtime should have increased the value
-      assert i2c0_relay0_after > i2c0_relay0_before
-
+      if (i2c0_relay0_after <= i2c0_relay0_before):
+        # counter should have been increased, mark failure
+        test_falures += 1
   finally:
     client.disconnect()
+
+  # print out to sdtout results
+  print("Integration Tests %d Tests, %d Failures, %d Expected failures" \
+          %(test_count, test_failures, expected_failures))
 
 if __name__ == "__main__":
   main()

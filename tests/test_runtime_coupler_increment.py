@@ -16,7 +16,7 @@ def main():
                       help='number of iterations to check')
   parser.add_argument('--timeout', \
                       type = int, \
-                      default = 5, \
+                      default = 2, \
                       help='seconds to wait between checks')
   parser.add_argument('--opc-ua-server', \
                       type = str, \

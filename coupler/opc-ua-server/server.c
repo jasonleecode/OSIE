@@ -1,5 +1,11 @@
 /* 
- * Example controling MOD-IO's relays' state over OPC-UA protocol
+ * OPC-UA server which controls MOD-IO's relays' state over OPC-UA protocol
+ * Current format of exposed OPC-UA node variables is:
+ * <mod-io_number>.<relay_number>
+ * For example:
+ * i2c0.relay0
+ * i2c0.relay1
+ * i2c1.relay0 
  * Based on 
  *   https://www.kernel.org/doc/Documentation/i2c/dev-interface
  *   https://github.com/open62541/open62541/blob/master/examples/tutorial_server_variable.c

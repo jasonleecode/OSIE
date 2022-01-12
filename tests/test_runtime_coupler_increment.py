@@ -12,11 +12,11 @@ def main():
   parser = argparse.ArgumentParser()
   parser.add_argument('--iterations', \
                       type = int, \
-                      default = 10, \
+                      default = 100, \
                       help='number of iterations to check')
   parser.add_argument('--timeout', \
                       type = int, \
-                      default = 2, \
+                      default = 1, \
                       help='seconds to wait between checks')
   parser.add_argument('--opc-ua-server', \
                       type = str, \

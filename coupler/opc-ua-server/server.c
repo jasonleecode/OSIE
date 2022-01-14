@@ -9,6 +9,7 @@
  * Based on 
  *   https://www.kernel.org/doc/Documentation/i2c/dev-interface
  *   https://github.com/open62541/open62541/blob/master/examples/tutorial_server_variable.c
+ *   https://stackoverflow.com/questions/9642732/parsing-command-line-arguments-in-c
  */
 
 #include <stdio.h>
@@ -20,17 +21,73 @@
 #include <unistd.h>
 #include <signal.h>
 #include "open62541.h"
+#include <argp.h>
+
+// The default port of OPC-UA server
+const int DEFAULT_OPC_UA_PORT = 4840;
+const int DEFAULT_MODE = 0;
+
+// CLI arguments handling
+const char *argp_program_version = "OSIE OPC-UA coupler 0.0.1";
+const char *argp_program_bug_address = "ivan@nexedi.com";
+static char doc[] = "OPC-UA server which controls MOD-IO's relays' state over OPC-UA protocol.";
+static char args_doc[] = "...";
+static struct argp_option options[] = { 
+    { "port", 'p', "4840", 0, "Port to bind to."},
+    { "device", 'd', "/dev/i2c-1", 0, "Linux block device path."},
+    { "slave-address-list", 's', "0x58", 0, "List of slave I2C addresses."},
+    { "mode", 'm', "0", 0, "Set different modes of operation of coupler. Default (0) is set attached \
+	                  I2C's state state. Virtual (1) which does NOT set any I2C slaves' state."},
+    { 0 } 
+};
+
+struct arguments {
+    int  mode;
+    int  port;
+    char *device;
+    char *slave_address_list;
+};
+
+static error_t parse_opt(int key, char *arg, struct argp_state *state) {
+    struct arguments *arguments = state->input;
+    switch (key) {
+    case 'p': 
+	    arguments->port = arg ? atoi (arg) : DEFAULT_OPC_UA_PORT; 
+	    //printf("got arg port=%s\n", arg);
+	    break;
+    case 'd': 
+	    arguments->device = arg; 
+	    //printf("got arg device=%s\n", arg);
+	    break;
+    case 's': 
+	    arguments->slave_address_list = arg; 
+	    //printf("got arg slave_address_list=%s\n", arg);
+	    break;
+    case 'm': 
+	    arguments->mode = arg ? atoi (arg) : DEFAULT_MODE; 
+	    break;
+    case ARGP_KEY_ARG: 
+	    return 0;
+    default: 
+	    return ARGP_ERR_UNKNOWN;
+    }   
+    return 0;
+}
+
+static struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0 };
 
 // global relay state
 uint8_t I2C_0_RELAYS_STATE = 0; // state of 4 relays at I2C slave 0
 uint8_t I2C_1_RELAYS_STATE = 0; // state of 4 relays at I2C slave 1
+// XXX: what if we have more than 2 MOd-IOs / I2C slaves, we need better structure
 
 // the default addresses of MOD-IOs
-const int DEFAULT_I2C_0_ADDR = 0x58;
+static char *DEFAULT_I2C_0_ADDR = "0x58";
 
 // the list of attached I2C slaves
 const int DEFAULT_I2C_SLAVE_ADDR = 0x58;
-int I2C_SLAVE_ADDR_LIST[] = {0, 0, 0, 0, 0}; // XXX: make dynamic array
+// XXX: make dynamic array
+int I2C_SLAVE_ADDR_LIST[] = {0, 0, 0, 0, 0};
 
 // the block device at host machine
 static char *DEFAULT_I2C_BLOCK_DEVICE_NAME = "/dev/i2c-1";
@@ -371,43 +428,32 @@ int main(int argc, char **argv) {
     long result;
     char *eptr;
 
-    // read environment to see if we run daemon in real or virtual mode (usable for testing on x86)
-    const char* s = getenv("I2C_VIRTUAL_MODE");
-    if(s!=NULL){
-      I2C_VIRTUAL_MODE = atoi(s);
-    }
-    printf("I2C_VIRTUAL_MODE=%d\n", I2C_VIRTUAL_MODE);
+    // handle command line arguments
+    struct arguments arguments;
+    arguments.port = DEFAULT_OPC_UA_PORT;
+    arguments.mode = DEFAULT_MODE;
+    arguments.device = DEFAULT_I2C_BLOCK_DEVICE_NAME;
+    arguments.slave_address_list = DEFAULT_I2C_0_ADDR;
+    argp_parse(&argp, argc, argv, 0, 0, &arguments);
+    printf("mode=%d\n", arguments.mode);
+    printf("port=%d\n", arguments.port);
+    printf("device=%s\n", arguments.device);
+    printf("slave-address-list=%s\n", arguments.slave_address_list);
 
-    // handle comand line arguments
-    if (argc == 1) {
-        // no paramaters at all
-	I2C_BLOCK_DEVICE_NAME = DEFAULT_I2C_BLOCK_DEVICE_NAME;
-        I2C_SLAVE_ADDR_LIST[0] = DEFAULT_I2C_0_ADDR;	
+    // transfer to global variables (CLI input) 
+    I2C_VIRTUAL_MODE = arguments.mode;
+    I2C_BLOCK_DEVICE_NAME = arguments.device; 
+    
+    // convert arguments.slave_address_list -> I2C_SLAVE_ADDR_LIST
+    i = 0;
+    char *token = strtok(arguments.slave_address_list, ",");
+    while (token != NULL)
+    {
+	// from CLI we get a hexidecimal string as a char (0x58 for example), convert to decimal
+        result = strtol(token, &eptr, 16);
+        I2C_SLAVE_ADDR_LIST[i++] = result;
+        token = strtok (NULL, ",");
     } 
-    if (argc == 2) {
-        // only block device specified
-	I2C_BLOCK_DEVICE_NAME = argv[1];
-	I2C_SLAVE_ADDR_LIST[0] = DEFAULT_I2C_0_ADDR;
-    } 
-    if (argc > 2) {
-        // both block device and I2C slave(s) specified
-	I2C_BLOCK_DEVICE_NAME = argv[1];
-        for(i=2; i < argc; i++){
-            // from CLI we get a hexidecimal string as a char (0x58 for example), convert to decimal
-            result = strtol(argv[i], &eptr, 16);
-            I2C_SLAVE_ADDR_LIST[i - 2] = result;
-        }
-
-    }
-
-    // debug info
-    printf("Block device=%s\n", I2C_BLOCK_DEVICE_NAME);
-    length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
-    for(i=0; i < length; i++){
-	if (I2C_SLAVE_ADDR_LIST[i] !=0) {
-            printf("I2C_slave=0x%x\n", I2C_SLAVE_ADDR_LIST[i]);
-	}
-    }
 
     // always start attached slaves from a know safe shutdown state
     safeShutdownI2CSlaveList();

@@ -58,7 +58,7 @@ def main():
       # for the wait timeout runtime should have increased the value
       if (i2c0_relay0_after <= i2c0_relay0_before):
         # counter should have been increased, mark failure
-        test_falures += 1
+        test_failures += 1
   finally:
     client.disconnect()
 

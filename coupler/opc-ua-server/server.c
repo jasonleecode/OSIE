@@ -435,10 +435,10 @@ int main(int argc, char **argv) {
     arguments.device = DEFAULT_I2C_BLOCK_DEVICE_NAME;
     arguments.slave_address_list = DEFAULT_I2C_0_ADDR;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
-    printf("mode=%d\n", arguments.mode);
-    printf("port=%d\n", arguments.port);
-    printf("device=%s\n", arguments.device);
-    printf("slave-address-list=%s\n", arguments.slave_address_list);
+    printf("Mode=%d\n", arguments.mode);
+    printf("Listening port=%d\n", arguments.port);
+    printf("Block device=%s\n", arguments.device);
+    printf("Slave address list=%s\n", arguments.slave_address_list);
 
     // transfer to global variables (CLI input) 
     I2C_VIRTUAL_MODE = arguments.mode;
@@ -462,7 +462,7 @@ int main(int argc, char **argv) {
     signal(SIGTERM, stopHandler);
 
     UA_Server *server = UA_Server_new();
-    UA_ServerConfig_setDefault(UA_Server_getConfig(server));
+    UA_ServerConfig_setMinimal(UA_Server_getConfig(server), arguments.port, NULL);
     UA_ServerConfig* config = UA_Server_getConfig(server);
     config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
 

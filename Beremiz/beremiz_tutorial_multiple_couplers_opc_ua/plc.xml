@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2022-01-18T16:06:24">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2022-01-18T16:31:25">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -78,42 +78,42 @@
             </variable>
           </localVars>
           <externalVars>
-            <variable name="Relay0">
+            <variable name="Coupler0_Relay0">
               <type>
                 <DINT/>
               </type>
             </variable>
-            <variable name="Relay1">
+            <variable name="Coupler0_Relay1">
               <type>
                 <DINT/>
               </type>
             </variable>
-            <variable name="Relay2">
+            <variable name="Coupler0_Relay2">
               <type>
                 <DINT/>
               </type>
             </variable>
-            <variable name="Relay3">
+            <variable name="Coupler0_Relay3">
               <type>
                 <DINT/>
               </type>
             </variable>
-            <variable name="Relay4">
+            <variable name="Coupler1_Relay0">
               <type>
                 <DINT/>
               </type>
             </variable>
-            <variable name="Relay5">
+            <variable name="Coupler1_Relay1">
               <type>
                 <DINT/>
               </type>
             </variable>
-            <variable name="Relay6">
+            <variable name="Coupler1_Relay2">
               <type>
                 <DINT/>
               </type>
             </variable>
-            <variable name="Relay7">
+            <variable name="Coupler1_Relay3">
               <type>
                 <DINT/>
               </type>
@@ -124,8 +124,8 @@
           <ST>
             <xhtml:p><![CDATA[Cnt0 := Cnt0 + 1;
 IF Cnt0 = 100 THEN
-    Relay0 := Relay0 + 1;
-    Relay4 := Relay0;
+    Coupler0_Relay0 := Coupler0_Relay0 + 1;
+    Coupler1_Relay0 := Coupler0_Relay0;
     Cnt0 := 0;
 END_IF;
 Out0 := Cnt0;]]></xhtml:p>
@@ -143,7 +143,7 @@ Out0 := Cnt0;]]></xhtml:p>
           </task>
         </resource>
         <globalVars>
-          <variable name="Relay0" address="%QD1.0">
+          <variable name="Coupler0_Relay0" address="%QD1.0">
             <type>
               <DINT/>
             </type>
@@ -154,7 +154,7 @@ Out0 := Cnt0;]]></xhtml:p>
               <xhtml:p><![CDATA[OPC-UA relay 0 at coupler 0]]></xhtml:p>
             </documentation>
           </variable>
-          <variable name="Relay1" address="%QD1.1">
+          <variable name="Coupler0_Relay1" address="%QD1.1">
             <type>
               <DINT/>
             </type>
@@ -165,7 +165,7 @@ Out0 := Cnt0;]]></xhtml:p>
               <xhtml:p><![CDATA[OPC-UA relay 1 at coupler 0]]></xhtml:p>
             </documentation>
           </variable>
-          <variable name="Relay2" address="%QD1.2">
+          <variable name="Coupler0_Relay2" address="%QD1.2">
             <type>
               <DINT/>
             </type>
@@ -176,7 +176,7 @@ Out0 := Cnt0;]]></xhtml:p>
               <xhtml:p><![CDATA[OPC-UA relay 2 at coupler 0]]></xhtml:p>
             </documentation>
           </variable>
-          <variable name="Relay3" address="%QD1.3">
+          <variable name="Coupler0_Relay3" address="%QD1.3">
             <type>
               <DINT/>
             </type>
@@ -187,7 +187,7 @@ Out0 := Cnt0;]]></xhtml:p>
               <xhtml:p><![CDATA[OPC-UA relay 3 at coupler 0]]></xhtml:p>
             </documentation>
           </variable>
-          <variable name="Relay4" address="%QD0.0">
+          <variable name="Coupler1_Relay0" address="%QD0.0">
             <type>
               <DINT/>
             </type>
@@ -198,7 +198,7 @@ Out0 := Cnt0;]]></xhtml:p>
               <xhtml:p><![CDATA[OPC-UA relay 0 at coupler 1]]></xhtml:p>
             </documentation>
           </variable>
-          <variable name="Relay5" address="%QD0.1">
+          <variable name="Coupler1_Relay1" address="%QD0.1">
             <type>
               <DINT/>
             </type>
@@ -209,7 +209,7 @@ Out0 := Cnt0;]]></xhtml:p>
               <xhtml:p><![CDATA[OPC-UA relay 1 at coupler 1]]></xhtml:p>
             </documentation>
           </variable>
-          <variable name="Relay6" address="%QD0.2">
+          <variable name="Coupler1_Relay2" address="%QD0.2">
             <type>
               <DINT/>
             </type>
@@ -220,7 +220,7 @@ Out0 := Cnt0;]]></xhtml:p>
               <xhtml:p><![CDATA[OPC-UA relay 2 at coupler 1]]></xhtml:p>
             </documentation>
           </variable>
-          <variable name="Relay7" address="%QD0.3">
+          <variable name="Coupler1_Relay3" address="%QD0.3">
             <type>
               <DINT/>
             </type>

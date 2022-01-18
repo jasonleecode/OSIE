@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2022-01-17T17:08:22">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2022-01-18T16:06:24">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -19,25 +19,6 @@
     <pous>
       <pou name="plc_prg" pouType="program">
         <interface>
-          <inputVars>
-            <variable name="Reset">
-              <type>
-                <BOOL/>
-              </type>
-            </variable>
-          </inputVars>
-          <outputVars>
-            <variable name="Cnt0">
-              <type>
-                <INT/>
-              </type>
-            </variable>
-            <variable name="Cnt1">
-              <type>
-                <INT/>
-              </type>
-            </variable>
-          </outputVars>
           <localVars>
             <variable name="CounterST0">
               <type>
@@ -60,12 +41,6 @@
                 <variable formalParameter="Reset">
                   <connectionPointIn>
                     <relPosition x="0" y="42"/>
-                    <connection refLocalId="3">
-                      <position x="288" y="234"/>
-                      <position x="258" y="234"/>
-                      <position x="258" y="218"/>
-                      <position x="231" y="218"/>
-                    </connection>
                   </connectionPointIn>
                 </variable>
               </inputVariables>
@@ -83,53 +58,12 @@
                 </variable>
               </outputVariables>
             </block>
-            <inVariable localId="3" executionOrderId="0" height="24" width="50" negated="false">
-              <position x="181" y="206"/>
-              <connectionPointOut>
-                <relPosition x="50" y="12"/>
-              </connectionPointOut>
-              <expression>Reset</expression>
-            </inVariable>
-            <outVariable localId="4" executionOrderId="0" height="24" width="42" negated="false">
-              <position x="433" y="266"/>
-              <connectionPointIn>
-                <relPosition x="0" y="12"/>
-                <connection refLocalId="2" formalParameter="Out0">
-                  <position x="433" y="278"/>
-                  <position x="387" y="278"/>
-                </connection>
-              </connectionPointIn>
-              <expression>Cnt0</expression>
-            </outVariable>
-            <outVariable localId="6" executionOrderId="0" height="24" width="42" negated="false">
-              <position x="435" y="222"/>
-              <connectionPointIn>
-                <relPosition x="0" y="12"/>
-                <connection refLocalId="2" formalParameter="Out1">
-                  <position x="435" y="234"/>
-                  <position x="387" y="234"/>
-                </connection>
-              </connectionPointIn>
-              <expression>Cnt1</expression>
-            </outVariable>
           </FBD>
         </body>
       </pou>
       <pou name="CounterST" pouType="functionBlock">
         <interface>
-          <inputVars>
-            <variable name="Reset">
-              <type>
-                <BOOL/>
-              </type>
-            </variable>
-          </inputVars>
           <outputVars>
-            <variable name="Out1">
-              <type>
-                <INT/>
-              </type>
-            </variable>
             <variable name="Out0">
               <type>
                 <INT/>
@@ -137,11 +71,6 @@
             </variable>
           </outputVars>
           <localVars>
-            <variable name="Cnt1">
-              <type>
-                <INT/>
-              </type>
-            </variable>
             <variable name="Cnt0">
               <type>
                 <INT/>
@@ -149,11 +78,6 @@
             </variable>
           </localVars>
           <externalVars>
-            <variable name="ResetCounterValue">
-              <type>
-                <INT/>
-              </type>
-            </variable>
             <variable name="Relay0">
               <type>
                 <DINT/>
@@ -198,13 +122,12 @@
         </interface>
         <body>
           <ST>
-            <xhtml:p><![CDATA[Cnt1 := Cnt1 + 1;
-IF Cnt1 = 100 THEN
+            <xhtml:p><![CDATA[Cnt0 := Cnt0 + 1;
+IF Cnt0 = 100 THEN
     Relay0 := Relay0 + 1;
-    Cnt1 := 0;
     Relay4 := Relay0;
+    Cnt0 := 0;
 END_IF;
-Out1 := Cnt1;
 Out0 := Cnt0;]]></xhtml:p>
           </ST>
         </body>
@@ -220,14 +143,6 @@ Out0 := Cnt0;]]></xhtml:p>
           </task>
         </resource>
         <globalVars>
-          <variable name="ResetCounterValue">
-            <type>
-              <INT/>
-            </type>
-            <initialValue>
-              <simpleValue value="0"/>
-            </initialValue>
-          </variable>
           <variable name="Relay0" address="%QD1.0">
             <type>
               <DINT/>

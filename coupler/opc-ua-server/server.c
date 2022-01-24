@@ -35,7 +35,7 @@ static char args_doc[] = "...";
 static struct argp_option options[] = { 
     { "port", 'p', "4840", 0, "Port to bind to."},
     { "device", 'd', "/dev/i2c-1", 0, "Linux block device path."},
-    { "slave-address-list", 's', "0x58", 0, "List of slave I2C addresses."},
+    { "slave-address-list", 's', "0x58", 0, "Comma separated list of slave I2C addresses."},
     { "mode", 'm', "0", 0, "Set different modes of operation of coupler. Default (0) is set attached \
 	                  I2C's state state. Virtual (1) which does NOT set any I2C slaves' state."},
     { 0 } 
@@ -95,6 +95,25 @@ char *I2C_BLOCK_DEVICE_NAME;
 
 // global virtual mode needed for testing on x86 platform
 bool I2C_VIRTUAL_MODE = 0;
+
+static int getI2CSlaveListLength() {
+    /*
+     * Return ONLY registred I2C slaves
+     */
+    int i;
+    int addr;
+    int counter = 0;
+    int length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
+
+    for(i = 0; i < length; i++)
+    {
+        addr = I2C_SLAVE_ADDR_LIST[i];
+        if (addr!= 0) {
+	    counter++;
+        }
+    }
+    return counter;
+}
 
 static int setRelayState(int command, int i2c_addr) {
     /*
@@ -160,7 +179,7 @@ static void addVariable(UA_Server *server) {
     /* 
      * Create all variables representing MOD-IO's relays
      */
-    int length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
+    int length = getI2CSlaveListLength();
     if (length>=1) {
         // IC2-0
         addIntegerVariableNode(server, "i2c0.relay0", "I2C0 / Relay 0");
@@ -335,7 +354,9 @@ static void afterWriteTimeI2C1_3(UA_Server *server,
     }
 }
 
+
 static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {
+    int length = getI2CSlaveListLength();	
     // I2C0
     // relay 0
     UA_NodeId currentNodeId0 = UA_NODEID_STRING(1, "i2c0.relay0");
@@ -365,34 +386,36 @@ static void addValueCallbackToCurrentTimeVariable(UA_Server *server) {
     callback3.onWrite = afterWriteTimeI2C0_3;
     UA_Server_setVariableNode_valueCallback(server, currentNodeId3, callback3);
 
-    // I2C1
-    // relay 0
-    UA_NodeId currentNodeId4 = UA_NODEID_STRING(1, "i2c1.relay0");
-    UA_ValueCallback callback4;
-    callback4.onRead = beforeReadTime;
-    callback4.onWrite = afterWriteTimeI2C1_0;
-    UA_Server_setVariableNode_valueCallback(server, currentNodeId4, callback4);
+    if(length > 1){
+        // I2C1
+        // relay 0
+        UA_NodeId currentNodeId4 = UA_NODEID_STRING(1, "i2c1.relay0");
+        UA_ValueCallback callback4;
+        callback4.onRead = beforeReadTime;
+        callback4.onWrite = afterWriteTimeI2C1_0;
+        UA_Server_setVariableNode_valueCallback(server, currentNodeId4, callback4);
     
-    // relay 1
-    UA_NodeId currentNodeId5 = UA_NODEID_STRING(1, "i2c1.relay1");
-    UA_ValueCallback callback5;
-    callback5.onRead = beforeReadTime;
-    callback5.onWrite = afterWriteTimeI2C1_1;
-    UA_Server_setVariableNode_valueCallback(server, currentNodeId5, callback5);
+        // relay 1
+        UA_NodeId currentNodeId5 = UA_NODEID_STRING(1, "i2c1.relay1");
+        UA_ValueCallback callback5;
+        callback5.onRead = beforeReadTime;
+        callback5.onWrite = afterWriteTimeI2C1_1;
+        UA_Server_setVariableNode_valueCallback(server, currentNodeId5, callback5);
     
-    // relay 2
-    UA_NodeId currentNodeId6 = UA_NODEID_STRING(1, "i2c1.relay2");
-    UA_ValueCallback callback6;
-    callback6.onRead = beforeReadTime;
-    callback6.onWrite = afterWriteTimeI2C1_2;
-    UA_Server_setVariableNode_valueCallback(server, currentNodeId6, callback6);
+        // relay 2
+        UA_NodeId currentNodeId6 = UA_NODEID_STRING(1, "i2c1.relay2");
+        UA_ValueCallback callback6;
+        callback6.onRead = beforeReadTime;
+        callback6.onWrite = afterWriteTimeI2C1_2;
+        UA_Server_setVariableNode_valueCallback(server, currentNodeId6, callback6);
     
-    // relay 2
-    UA_NodeId currentNodeId7 = UA_NODEID_STRING(1, "i2c1.relay3");
-    UA_ValueCallback callback7;
-    callback7.onRead = beforeReadTime;
-    callback7.onWrite = afterWriteTimeI2C1_3;
-    UA_Server_setVariableNode_valueCallback(server, currentNodeId7, callback7);
+        // relay 2
+        UA_NodeId currentNodeId7 = UA_NODEID_STRING(1, "i2c1.relay3");
+        UA_ValueCallback callback7;
+        callback7.onRead = beforeReadTime;
+        callback7.onWrite = afterWriteTimeI2C1_3;
+        UA_Server_setVariableNode_valueCallback(server, currentNodeId7, callback7);
+    }
     
 }
 

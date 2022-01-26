@@ -1,0 +1,235 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
+  <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2022-01-25T16:13:36">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="0" y="0"/>
+      </fbd>
+      <ld>
+        <scaling x="0" y="0"/>
+      </ld>
+      <sfc>
+        <scaling x="0" y="0"/>
+      </sfc>
+    </coordinateInfo>
+  </contentHeader>
+  <types>
+    <dataTypes/>
+    <pous>
+      <pou name="plc_prg" pouType="program">
+        <interface>
+          <localVars>
+            <variable name="CounterST0">
+              <type>
+                <derived name="CounterST"/>
+              </type>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <FBD>
+            <comment localId="1" height="143" width="201">
+              <position x="566" y="75"/>
+              <content>
+                <xhtml:p><![CDATA[This PLC program is used in automated testing of beremiz' runtime / coupler integration]]></xhtml:p>
+              </content>
+            </comment>
+            <block localId="2" typeName="CounterST" instanceName="CounterST0" executionOrderId="0" height="109" width="99">
+              <position x="288" y="192"/>
+              <inputVariables>
+                <variable formalParameter="Reset">
+                  <connectionPointIn>
+                    <relPosition x="0" y="42"/>
+                  </connectionPointIn>
+                </variable>
+              </inputVariables>
+              <inOutVariables/>
+              <outputVariables>
+                <variable formalParameter="Out1">
+                  <connectionPointOut>
+                    <relPosition x="99" y="42"/>
+                  </connectionPointOut>
+                </variable>
+                <variable formalParameter="Out0">
+                  <connectionPointOut>
+                    <relPosition x="99" y="86"/>
+                  </connectionPointOut>
+                </variable>
+              </outputVariables>
+            </block>
+          </FBD>
+        </body>
+      </pou>
+      <pou name="CounterST" pouType="functionBlock">
+        <interface>
+          <outputVars>
+            <variable name="Out0">
+              <type>
+                <INT/>
+              </type>
+            </variable>
+          </outputVars>
+          <localVars>
+            <variable name="Cnt0">
+              <type>
+                <INT/>
+              </type>
+            </variable>
+          </localVars>
+          <externalVars>
+            <variable name="Coupler0_Relay0">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
+            <variable name="Coupler0_Relay1">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
+            <variable name="Coupler0_Relay2">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
+            <variable name="Coupler0_Relay3">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
+            <variable name="Coupler1_Relay0">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
+            <variable name="Coupler1_Relay1">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
+            <variable name="Coupler1_Relay2">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
+            <variable name="Coupler1_Relay3">
+              <type>
+                <DINT/>
+              </type>
+            </variable>
+          </externalVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml:p><![CDATA[Cnt0 := Cnt0 + 1;
+Coupler0_Relay0 := Coupler0_Relay0 + 1;
+Coupler1_Relay0 := Coupler0_Relay0;
+Out0 := Cnt0;]]></xhtml:p>
+          </ST>
+        </body>
+      </pou>
+    </pous>
+  </types>
+  <instances>
+    <configurations>
+      <configuration name="config">
+        <resource name="resource1">
+          <task name="task0" priority="0" interval="T#20ms">
+            <pouInstance name="instance0" typeName="plc_prg"/>
+          </task>
+        </resource>
+        <globalVars>
+          <variable name="Coupler0_Relay0" address="%QD1.0">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 0 at coupler 0]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Coupler0_Relay1" address="%QD1.1">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 1 at coupler 0]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Coupler0_Relay2" address="%QD1.2">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 2 at coupler 0]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Coupler0_Relay3" address="%QD1.3">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 3 at coupler 0]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Coupler1_Relay0" address="%QD0.0">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 0 at coupler 1]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Coupler1_Relay1" address="%QD0.1">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 1 at coupler 1]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Coupler1_Relay2" address="%QD0.2">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 2 at coupler 1]]></xhtml:p>
+            </documentation>
+          </variable>
+          <variable name="Coupler1_Relay3" address="%QD0.3">
+            <type>
+              <DINT/>
+            </type>
+            <initialValue>
+              <simpleValue value="0"/>
+            </initialValue>
+            <documentation>
+              <xhtml:p><![CDATA[OPC-UA relay 3 at coupler 1]]></xhtml:p>
+            </documentation>
+          </variable>
+        </globalVars>
+      </configuration>
+    </configurations>
+  </instances>
+</project>

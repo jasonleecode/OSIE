@@ -22,6 +22,7 @@
 #include <signal.h>
 #include "open62541.h"
 #include <argp.h>
+#include <string.h>
 
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
@@ -38,6 +39,8 @@ static struct argp_option options[] = {
     { "slave-address-list", 's', "0x58", 0, "Comma separated list of slave I2C addresses."},
     { "mode", 'm', "0", 0, "Set different modes of operation of coupler. Default (0) is set attached \
 	                  I2C's state state. Virtual (1) which does NOT set any I2C slaves' state."},
+    { "username", 'u', "", 0, "Username."},
+    { "password", 'w', "", 0, "Password."},
     { 0 } 
 };
 
@@ -46,6 +49,8 @@ struct arguments {
     int  port;
     char *device;
     char *slave_address_list;
+    char *username;
+    char *password;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state) {
@@ -53,19 +58,22 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state) {
     switch (key) {
     case 'p': 
 	    arguments->port = arg ? atoi (arg) : DEFAULT_OPC_UA_PORT; 
-	    //printf("got arg port=%s\n", arg);
 	    break;
     case 'd': 
 	    arguments->device = arg; 
-	    //printf("got arg device=%s\n", arg);
 	    break;
     case 's': 
 	    arguments->slave_address_list = arg; 
-	    //printf("got arg slave_address_list=%s\n", arg);
 	    break;
     case 'm': 
 	    arguments->mode = arg ? atoi (arg) : DEFAULT_MODE; 
 	    break;
+    case 'u': 
+	    arguments->username = arg; 
+	    break;
+    case 'w': 
+	    arguments->password = arg; 
+	    break;   
     case ARGP_KEY_ARG: 
 	    return 0;
     default: 
@@ -462,6 +470,8 @@ int main(int argc, char **argv) {
     printf("Listening port=%d\n", arguments.port);
     printf("Block device=%s\n", arguments.device);
     printf("Slave address list=%s\n", arguments.slave_address_list);
+    printf("Username=%s\n", arguments.username);
+    printf("Password=%s\n", arguments.password);
 
     // transfer to global variables (CLI input) 
     I2C_VIRTUAL_MODE = arguments.mode;
@@ -489,11 +499,24 @@ int main(int argc, char **argv) {
     UA_ServerConfig* config = UA_Server_getConfig(server);
     config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
 
+    // add variables representing physical relarys / inputs, etc
     addVariable(server);
     addValueCallbackToCurrentTimeVariable(server);
 
-    UA_StatusCode retval = UA_Server_run(server, &running);
+    /* Disable anonymous logins, enable two user/password logins */
+    if (strlen(arguments.username) > 0 && strlen(arguments.password) > 0){
+      char *username = arguments.username;
+      char *password = arguments.password;
+      static UA_UsernamePasswordLogin logins[1] = {
+          {UA_STRING(username), UA_STRING(password)},
+      };
 
+      config->accessControl.clear(&config->accessControl);
+      UA_StatusCode retval1 = UA_AccessControl_default(config, false, NULL,
+               &config->securityPolicies[config->securityPoliciesSize-1].policyUri, 1, logins);
+    }
+    // run server
+    UA_StatusCode retval = UA_Server_run(server, &running);
     UA_Server_delete(server);
 
     // always leave attached slaves to a known safe shutdown state

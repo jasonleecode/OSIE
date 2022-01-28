@@ -507,7 +507,7 @@ int main(int argc, char **argv) {
     if (strlen(arguments.username) > 0 && strlen(arguments.password) > 0){
       char *username = arguments.username;
       char *password = arguments.password;
-      static UA_UsernamePasswordLogin logins[1] = {
+      UA_UsernamePasswordLogin logins[1] = {
           {UA_STRING(username), UA_STRING(password)},
       };
 

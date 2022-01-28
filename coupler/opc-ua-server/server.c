@@ -465,13 +465,13 @@ int main(int argc, char **argv) {
     arguments.mode = DEFAULT_MODE;
     arguments.device = DEFAULT_I2C_BLOCK_DEVICE_NAME;
     arguments.slave_address_list = DEFAULT_I2C_0_ADDR;
+    arguments.username = "";
+    arguments.password = "";
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
     printf("Mode=%d\n", arguments.mode);
     printf("Listening port=%d\n", arguments.port);
     printf("Block device=%s\n", arguments.device);
     printf("Slave address list=%s\n", arguments.slave_address_list);
-    printf("Username=%s\n", arguments.username);
-    printf("Password=%s\n", arguments.password);
 
     // transfer to global variables (CLI input) 
     I2C_VIRTUAL_MODE = arguments.mode;
@@ -508,7 +508,7 @@ int main(int argc, char **argv) {
       char *username = arguments.username;
       char *password = arguments.password;
       UA_UsernamePasswordLogin logins[1] = {
-          {UA_STRING(username), UA_STRING(password)},
+          {UA_STRING(arguments.username), UA_STRING(arguments.password)},
       };
 
       config->accessControl.clear(&config->accessControl);

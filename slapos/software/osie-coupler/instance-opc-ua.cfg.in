@@ -21,7 +21,7 @@ extends = {{ template_monitor }}
 recipe = slapos.cookbook:wrapper
 # start with defaults
 command-line =
-    {{ buildout['bin-directory'] }}/server -d ${instance-parameter:configuration.coupler_block_device} -s ${instance-parameter:configuration.coupler_i2c_slave_list} -p ${instance-parameter:configuration.opc_ua_port}
+    {{ buildout['bin-directory'] }}/server -d ${instance-parameter:configuration.coupler_block_device} -s ${instance-parameter:configuration.coupler_i2c_slave_list} -p ${instance-parameter:configuration.opc_ua_port} -u ${instance-parameter:username} -w ${instance-parameter:password}
 
 wrapper-path = ${directory:service}/coupler-opc-ua
 
@@ -42,6 +42,8 @@ cert = ${slap-connection:cert-file}
 
 configuration.coupler_block_device = /dev/i2c-1
 configuration.coupler_i2c_slave_list = 0x58
+configuration.username =
+configuration.password =
 
 # Define default parameter(s) that will be used later, in case user didn't
 # specify it.

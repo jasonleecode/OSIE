@@ -224,7 +224,7 @@ static int getDigitalInputState(int i2c_addr, char **digital_input)
     close(file);
 }
 
-static int getAnalogInputStateAIN0(int i2c_addr, int **analog_input)
+static int getAnalogInputStateAIN(int i2c_addr, int **analog_input, uint8_t read_reg)
 {
     /*
      *  get digital input state over I2C
@@ -256,7 +256,7 @@ static int getAnalogInputStateAIN0(int i2c_addr, int **analog_input)
     }
 
     // step 3: write command over I2c
-    __u8 read_reg = 0x30; /* Device register to access */
+    //__u8 read_reg = 0x30; /* Device register to access */
     char read_buf[10];
     read_buf[0] = read_reg;
     if (write(file, read_buf, 1) != 1)
@@ -287,194 +287,6 @@ the following */
     close(file);
 }
 
-static int getAnalogInputStateAIN1(int i2c_addr, int **analog_input)
-{
-    /*
-     *  get digital input state over I2C
-     */
-    int file;
-    char filename[20];
-    if (I2C_VIRTUAL_MODE)
-    {
-        // we're in a virtual mode, likely on x86 platform or without I2C support
-        // simply do nothing
-        return 0;
-    }
-
-    // step 1: open device
-    file = open(I2C_BLOCK_DEVICE_NAME, O_RDWR);
-    if (file < 0)
-    {
-        /* ERROR HANDLING; you can check errno to see what went wrong */
-        printf("Error opening i2c device (0x%x).\n", i2c_addr);
-        exit(1);
-    }
-
-    // step 2: address the slave by its address
-    if (ioctl(file, I2C_SLAVE, i2c_addr) < 0)
-    {
-        /* ERROR HANDLING; you can check errno to see what went wrong */
-        printf("Error addressing i2c slave (0x%x).\n", i2c_addr);
-        exit(1);
-    }
-
-    // step 3: write command over I2c
-    __u8 read_reg = 0x31; /* Device register to access */
-    char read_buf[10];
-    read_buf[0] = read_reg;
-    if (write(file, read_buf, 1) != 1)
-    {
-        /* ERROR HANDLING: i2c transaction failed */
-        printf("Error writing to i2c slave (0x%x).\n", i2c_addr);
-    }
-    if (read(file, read_buf, 1) != 1)
-    {
-        /* ERROR HANDLING: i2c transaction failed */
-        printf("Error reading Analog input from i2c slave (0x%x).\n", i2c_addr);
-    }
-    else
-    {
-        /* Since read_buf[0] is (LSB:MSB) we need to convert it to (MSB:LSB). To swap bits one by one do
-the following */
-        int analog_data = 0;
-        for (int index = 0; index < 8; index++)
-        {
-            analog_data |= ((read_buf[0] & 0x80) ? 1 : 0) << index;
-            read_buf[0] <<= 1;
-        }
-        /* Now add the high 2 bit to the value */
-        analog_data |= ((read_buf[1] & 0x02) ? 1 : 0) << 8;
-        analog_data |= ((read_buf[1] & 0x01) ? 1 : 0) << 9;
-        *analog_input = &analog_data;
-    }
-    close(file);
-}
-
-static int getAnalogInputStateAIN2(int i2c_addr, int **analog_input)
-{
-    /*
-     *  get digital input state over I2C
-     */
-    int file;
-    char filename[20];
-    if (I2C_VIRTUAL_MODE)
-    {
-        // we're in a virtual mode, likely on x86 platform or without I2C support
-        // simply do nothing
-        return 0;
-    }
-
-    // step 1: open device
-    file = open(I2C_BLOCK_DEVICE_NAME, O_RDWR);
-    if (file < 0)
-    {
-        /* ERROR HANDLING; you can check errno to see what went wrong */
-        printf("Error opening i2c device (0x%x).\n", i2c_addr);
-        exit(1);
-    }
-
-    // step 2: address the slave by its address
-    if (ioctl(file, I2C_SLAVE, i2c_addr) < 0)
-    {
-        /* ERROR HANDLING; you can check errno to see what went wrong */
-        printf("Error addressing i2c slave (0x%x).\n", i2c_addr);
-        exit(1);
-    }
-
-    // step 3: write command over I2c
-    __u8 read_reg = 0x32; /* Device register to access */
-    char read_buf[10];
-    read_buf[0] = read_reg;
-    if (write(file, read_buf, 1) != 1)
-    {
-        /* ERROR HANDLING: i2c transaction failed */
-        printf("Error writing to i2c slave (0x%x).\n", i2c_addr);
-    }
-    if (read(file, read_buf, 1) != 1)
-    {
-        /* ERROR HANDLING: i2c transaction failed */
-        printf("Error reading Analog input from i2c slave (0x%x).\n", i2c_addr);
-    }
-    else
-    {
-        /* Since read_buf[0] is (LSB:MSB) we need to convert it to (MSB:LSB). To swap bits one by one do
-the following */
-        int analog_data = 0;
-        for (int index = 0; index < 8; index++)
-        {
-            analog_data |= ((read_buf[0] & 0x80) ? 1 : 0) << index;
-            read_buf[0] <<= 1;
-        }
-        /* Now add the high 2 bit to the value */
-        analog_data |= ((read_buf[1] & 0x02) ? 1 : 0) << 8;
-        analog_data |= ((read_buf[1] & 0x01) ? 1 : 0) << 9;
-        *analog_input = &analog_data;
-    }
-    close(file);
-}
-
-static int getAnalogInputStateAIN3(int i2c_addr, int **analog_input)
-{
-    /*
-     *  get digital input state over I2C
-     */
-    int file;
-    char filename[20];
-    if (I2C_VIRTUAL_MODE)
-    {
-        // we're in a virtual mode, likely on x86 platform or without I2C support
-        // simply do nothing
-        return 0;
-    }
-
-    // step 1: open device
-    file = open(I2C_BLOCK_DEVICE_NAME, O_RDWR);
-    if (file < 0)
-    {
-        /* ERROR HANDLING; you can check errno to see what went wrong */
-        printf("Error opening i2c device (0x%x).\n", i2c_addr);
-        exit(1);
-    }
-
-    // step 2: address the slave by its address
-    if (ioctl(file, I2C_SLAVE, i2c_addr) < 0)
-    {
-        /* ERROR HANDLING; you can check errno to see what went wrong */
-        printf("Error addressing i2c slave (0x%x).\n", i2c_addr);
-        exit(1);
-    }
-
-    // step 3: write command over I2c
-    __u8 read_reg = 0x33; /* Device register to access */
-    char read_buf[10];
-    read_buf[0] = read_reg;
-    if (write(file, read_buf, 1) != 1)
-    {
-        /* ERROR HANDLING: i2c transaction failed */
-        printf("Error writing to i2c slave (0x%x).\n", i2c_addr);
-    }
-    if (read(file, read_buf, 1) != 1)
-    {
-        /* ERROR HANDLING: i2c transaction failed */
-        printf("Error reading Analog input from i2c slave (0x%x).\n", i2c_addr);
-    }
-    else
-    {
-        /* Since read_buf[0] is (LSB:MSB) we need to convert it to (MSB:LSB). To swap bits one by one do
-the following */
-        int analog_data = 0;
-        for (int index = 0; index < 8; index++)
-        {
-            analog_data |= ((read_buf[0] & 0x80) ? 1 : 0) << index;
-            read_buf[0] <<= 1;
-        }
-        /* Now add the high 2 bit to the value */
-        analog_data |= ((read_buf[1] & 0x02) ? 1 : 0) << 8;
-        analog_data |= ((read_buf[1] & 0x01) ? 1 : 0) << 9;
-        *analog_input = &analog_data;
-    }
-    close(file);
-}
 
 void addIntegerVariableNode(UA_Server *server, char *node_id, char *node_description)
 {
@@ -589,7 +401,8 @@ static void beforeReadTimeI2C0Ain0(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[0];
     int *data_input = 0;
-    getAnalogInputStateAIN0(addr, &data_input);
+    uint8_t read_addr =0x30;
+    getAnalogInputStateAIN(addr, &data_input, read_addr);
     if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
     {
         *(UA_UInt32 *)data->value.data = *data_input;
@@ -603,7 +416,8 @@ static void beforeReadTimeI2C0Ain1(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[0];
     int *data_input = 0;
-    getAnalogInputStateAIN1(addr, &data_input);
+    uint8_t read_addr =0x31;
+    getAnalogInputStateAIN(addr, &data_input, read_addr);
     if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
     {
         *(UA_UInt32 *)data->value.data = *data_input;
@@ -617,7 +431,8 @@ static void beforeReadTimeI2C0Ain2(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[0];
     int *data_input = 0;
-    getAnalogInputStateAIN2(addr, &data_input);
+    uint8_t read_addr =0x32;
+    getAnalogInputStateAIN(addr, &data_input, read_addr);
     if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
     {
         *(UA_UInt32 *)data->value.data = *data_input;
@@ -631,7 +446,8 @@ static void beforeReadTimeI2C0Ain3(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[0];
     int *data_input = 0;
-    getAnalogInputStateAIN3(addr, &data_input);
+    uint8_t read_addr =0x33;
+    getAnalogInputStateAIN(addr, &data_input, read_addr);
     if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
     {
         *(UA_UInt32 *)data->value.data = *data_input;
@@ -644,7 +460,8 @@ static void beforeReadTimeI2C1Ain0(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[1];
     int *data_input = 0;
-    getAnalogInputStateAIN0(addr, &data_input);
+    uint8_t read_addr =0x30;
+    getAnalogInputStateAIN(addr, &data_input, read_addr);
     if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
     {
         *(UA_UInt32 *)data->value.data = *data_input;
@@ -657,8 +474,9 @@ static void beforeReadTimeI2C1Ain1(UA_Server *server,
                                    const UA_NumericRange *range, const UA_DataValue *data)
 {
     int addr = I2C_SLAVE_ADDR_LIST[1];
-    int *data_input = 0;
-    getAnalogInputStateAIN1(addr, &data_input);
+    int *data_input = 0;    
+    uint8_t read_addr =0x31;
+    getAnalogInputStateAIN(addr, &data_input, read_addr);
     if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
     {
         *(UA_UInt32 *)data->value.data = *data_input;
@@ -672,7 +490,8 @@ static void beforeReadTimeI2C1Ain2(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[1];
     int *data_input = 0;
-    getAnalogInputStateAIN2(addr, &data_input);
+    uint8_t read_addr =0x32;
+    getAnalogInputStateAIN(addr, &data_input, read_addr);
     if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
     {
         *(UA_UInt32 *)data->value.data = *data_input;
@@ -686,7 +505,8 @@ static void beforeReadTimeI2C1Ain3(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[1];
     int *data_input = 0;
-    getAnalogInputStateAIN3(addr, &data_input);
+    uint8_t read_addr =0x33;
+    getAnalogInputStateAIN(addr, &data_input, read_addr);
     if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
     {
         *(UA_UInt32 *)data->value.data = *data_input;

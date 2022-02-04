@@ -23,6 +23,8 @@
 #include "open62541.h"
 #include <argp.h>
 #include <string.h>
+#include "common.h"
+
 
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
@@ -54,6 +56,8 @@ struct arguments
     char *slave_address_list;
     char *username;
     char *password;
+    char *key;
+    char *certificate;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
@@ -78,6 +82,12 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     case 'w': 
 	    arguments->password = arg; 
 	    break;   
+    case 'c': 
+	    arguments->certificate = arg; 
+	    break; 
+    case 'k': 
+	    arguments->key = arg; 
+	    break; 
     case ARGP_KEY_ARG: 
 	    return 0;
     default: 
@@ -1113,11 +1123,15 @@ int main(int argc, char **argv)
     arguments.slave_address_list = DEFAULT_I2C_0_ADDR;
     arguments.username = "";
     arguments.password = "";
+    arguments.key = "";
+    arguments.certificate = "";
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
     printf("Mode=%d\n", arguments.mode);
     printf("Listening port=%d\n", arguments.port);
     printf("Block device=%s\n", arguments.device);
     printf("Slave address list=%s\n", arguments.slave_address_list);
+    printf("key=%s\n", arguments.key);
+    printf("certificate=%s\n", arguments.certificate);
 
     // transfer to global variables (CLI input)
     I2C_VIRTUAL_MODE = arguments.mode;
@@ -1161,6 +1175,38 @@ int main(int argc, char **argv)
       UA_StatusCode retval1 = UA_AccessControl_default(config, false, NULL,
                &config->securityPolicies[config->securityPoliciesSize-1].policyUri, 1, logins);
     }
+
+    /* Enable x509 */
+    if (strlen(arguments.key) > 0 && strlen(arguments.certificate) > 0){
+      char *key_filename = arguments.key;
+      char *certificate_filename = arguments.certificate;
+      printf("XXX ");
+      /* Load certificate and private key */
+      UA_ByteString certificate = loadFile(certificate_filename);
+      UA_ByteString privateKey  = loadFile(key_filename);
+   
+      /* Load the trustlist - not used thus 0 */
+      size_t trustListSize = 0;
+      UA_STACKARRAY(UA_ByteString, trustList, trustListSize);
+      
+      /* Loading of a issuer list, not used in this application */
+      size_t issuerListSize = 0;
+      UA_ByteString *issuerList = NULL;
+      
+      /* Loading of a revocation list currently unsupported */
+      UA_ByteString *revocationList = NULL;
+      size_t revocationListSize = 0;
+      UA_StatusCode retval =
+        UA_ServerConfig_setDefaultWithSecurityPolicies(config, 4840,
+                                                       &certificate, &privateKey,
+                                                       trustList, trustListSize,
+                                                       issuerList, issuerListSize,
+                                                       revocationList, revocationListSize);
+      //The place to fill the hole is very important
+      config->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:open62541.server.application");
+      printf("YYYY");
+    } 
+
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);
     UA_Server_delete(server);

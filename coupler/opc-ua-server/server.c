@@ -39,9 +39,11 @@ static struct argp_option options[] = {
     {"slave-address-list", 's', "0x58", 0, "Comma separated list of slave I2C addresses."},
     {"mode", 'm', "0", 0, "Set different modes of operation of coupler. Default (0) is set attached \
 	                  I2C's state state. Virtual (1) which does NOT set any I2C slaves' state."},
-    { "username", 'u', "", 0, "Username."},
-    { "password", 'w', "", 0, "Password."},
-    { 0 } 
+    {"username", 'u', "", 0, "Username."},
+    {"password", 'w', "", 0, "Password."},
+    {"key", 'k', "", 0, "x509 key."},
+    {"certificate", 'c', "", 0, "X509 certificate."},
+    {0} 
 };
 
 struct arguments

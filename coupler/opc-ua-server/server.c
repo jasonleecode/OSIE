@@ -1180,7 +1180,6 @@ int main(int argc, char **argv)
     if (strlen(arguments.key) > 0 && strlen(arguments.certificate) > 0){
       char *key_filename = arguments.key;
       char *certificate_filename = arguments.certificate;
-      printf("XXX ");
       /* Load certificate and private key */
       UA_ByteString certificate = loadFile(certificate_filename);
       UA_ByteString privateKey  = loadFile(key_filename);
@@ -1197,16 +1196,15 @@ int main(int argc, char **argv)
       UA_ByteString *revocationList = NULL;
       size_t revocationListSize = 0;
       UA_StatusCode retval =
-        UA_ServerConfig_setDefaultWithSecurityPolicies(config, 4840,
+        UA_ServerConfig_setDefaultWithSecurityPolicies(config, 4841, // XXX: why not use 4840 ?
                                                        &certificate, &privateKey,
                                                        trustList, trustListSize,
                                                        issuerList, issuerListSize,
                                                        revocationList, revocationListSize);
       //The place to fill the hole is very important
       config->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:open62541.server.application");
-      printf("YYYY");
     } 
-
+    
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);
     UA_Server_delete(server);

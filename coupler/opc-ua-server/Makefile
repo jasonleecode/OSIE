@@ -1,6 +1,6 @@
 CC=$(C_COMPILER)
 CFLAGS= -I $(OPEN62541_SOURCE_HOME) 
-LDFLAGS= -L $(OPEN62541_HOME)/lib
+LDFLAGS= -L $(OPEN62541_HOME)/lib -lmbedcrypto  -lmbedx509
 OUT_DIR= $(BINARY_OUT_DIR)
 
 server: server.c

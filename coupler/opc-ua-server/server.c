@@ -23,6 +23,8 @@
 #include "open62541.h"
 #include <argp.h>
 #include <string.h>
+#include "common.h"
+
 
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
@@ -39,9 +41,11 @@ static struct argp_option options[] = {
     {"slave-address-list", 's', "0x58", 0, "Comma separated list of slave I2C addresses."},
     {"mode", 'm', "0", 0, "Set different modes of operation of coupler. Default (0) is set attached \
 	                  I2C's state state. Virtual (1) which does NOT set any I2C slaves' state."},
-    { "username", 'u', "", 0, "Username."},
-    { "password", 'w', "", 0, "Password."},
-    { 0 } 
+    {"username", 'u', "", 0, "Username."},
+    {"password", 'w', "", 0, "Password."},
+    {"key", 'k', "", 0, "x509 key."},
+    {"certificate", 'c', "", 0, "X509 certificate."},
+    {0} 
 };
 
 struct arguments
@@ -52,6 +56,8 @@ struct arguments
     char *slave_address_list;
     char *username;
     char *password;
+    char *key;
+    char *certificate;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
@@ -76,6 +82,12 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     case 'w': 
 	    arguments->password = arg; 
 	    break;   
+    case 'c': 
+	    arguments->certificate = arg; 
+	    break; 
+    case 'k': 
+	    arguments->key = arg; 
+	    break; 
     case ARGP_KEY_ARG: 
 	    return 0;
     default: 
@@ -178,12 +190,6 @@ static int getDigitalInputState(int i2c_addr, char **digital_input)
      */
     int file;
     char filename[20];
-    if (I2C_VIRTUAL_MODE)
-    {
-        // we're in a virtual mode, likely on x86 platform or without I2C support
-        // simply do nothing
-        return 0;
-    }
 
     // step 1: open device
     file = open(I2C_BLOCK_DEVICE_NAME, O_RDWR);
@@ -231,12 +237,6 @@ static int getAnalogInputStateAIN(int i2c_addr, int **analog_input, uint8_t read
      */
     int file;
     char filename[20];
-    if (I2C_VIRTUAL_MODE)
-    {
-        // we're in a virtual mode, likely on x86 platform or without I2C support
-        // simply do nothing
-        return 0;
-    }
 
     // step 1: open device
     file = open(I2C_BLOCK_DEVICE_NAME, O_RDWR);
@@ -402,10 +402,12 @@ static void beforeReadTimeI2C0Ain0(UA_Server *server,
     int addr = I2C_SLAVE_ADDR_LIST[0];
     int *data_input = 0;
     uint8_t read_addr =0x30;
-    getAnalogInputStateAIN(addr, &data_input, read_addr);
-    if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getAnalogInputStateAIN(addr, &data_input, read_addr);
+      if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
+      {
         *(UA_UInt32 *)data->value.data = *data_input;
+      }
     }
 }
 
@@ -417,10 +419,12 @@ static void beforeReadTimeI2C0Ain1(UA_Server *server,
     int addr = I2C_SLAVE_ADDR_LIST[0];
     int *data_input = 0;
     uint8_t read_addr =0x31;
-    getAnalogInputStateAIN(addr, &data_input, read_addr);
-    if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getAnalogInputStateAIN(addr, &data_input, read_addr);
+      if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
+      {
         *(UA_UInt32 *)data->value.data = *data_input;
+      }
     }
 }
 
@@ -432,10 +436,12 @@ static void beforeReadTimeI2C0Ain2(UA_Server *server,
     int addr = I2C_SLAVE_ADDR_LIST[0];
     int *data_input = 0;
     uint8_t read_addr =0x32;
-    getAnalogInputStateAIN(addr, &data_input, read_addr);
-    if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getAnalogInputStateAIN(addr, &data_input, read_addr);
+      if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
+      {
         *(UA_UInt32 *)data->value.data = *data_input;
+      }
     }
 }
 
@@ -447,10 +453,12 @@ static void beforeReadTimeI2C0Ain3(UA_Server *server,
     int addr = I2C_SLAVE_ADDR_LIST[0];
     int *data_input = 0;
     uint8_t read_addr =0x33;
-    getAnalogInputStateAIN(addr, &data_input, read_addr);
-    if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getAnalogInputStateAIN(addr, &data_input, read_addr);
+      if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
+      {
         *(UA_UInt32 *)data->value.data = *data_input;
+      }
     }
 }
 static void beforeReadTimeI2C1Ain0(UA_Server *server,
@@ -461,10 +469,12 @@ static void beforeReadTimeI2C1Ain0(UA_Server *server,
     int addr = I2C_SLAVE_ADDR_LIST[1];
     int *data_input = 0;
     uint8_t read_addr =0x30;
-    getAnalogInputStateAIN(addr, &data_input, read_addr);
-    if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getAnalogInputStateAIN(addr, &data_input, read_addr);
+      if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
+      {
         *(UA_UInt32 *)data->value.data = *data_input;
+      }
     }
 }
 
@@ -476,10 +486,12 @@ static void beforeReadTimeI2C1Ain1(UA_Server *server,
     int addr = I2C_SLAVE_ADDR_LIST[1];
     int *data_input = 0;    
     uint8_t read_addr =0x31;
-    getAnalogInputStateAIN(addr, &data_input, read_addr);
-    if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getAnalogInputStateAIN(addr, &data_input, read_addr);
+      if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
+      {
         *(UA_UInt32 *)data->value.data = *data_input;
+      }
     }
 }
 
@@ -491,10 +503,12 @@ static void beforeReadTimeI2C1Ain2(UA_Server *server,
     int addr = I2C_SLAVE_ADDR_LIST[1];
     int *data_input = 0;
     uint8_t read_addr =0x32;
-    getAnalogInputStateAIN(addr, &data_input, read_addr);
-    if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getAnalogInputStateAIN(addr, &data_input, read_addr);
+      if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
+      {
         *(UA_UInt32 *)data->value.data = *data_input;
+      }
     }
 }
 
@@ -506,12 +520,15 @@ static void beforeReadTimeI2C1Ain3(UA_Server *server,
     int addr = I2C_SLAVE_ADDR_LIST[1];
     int *data_input = 0;
     uint8_t read_addr =0x33;
-    getAnalogInputStateAIN(addr, &data_input, read_addr);
-    if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getAnalogInputStateAIN(addr, &data_input, read_addr);
+      if (data->value.type == &UA_TYPES[UA_TYPES_UINT32])
+      {
         *(UA_UInt32 *)data->value.data = *data_input;
+      }
     }
 }
+
 static void beforeReadTimeI2C0In0(UA_Server *server,
                                   const UA_NodeId *sessionId, void *sessionContext,
                                   const UA_NodeId *nodeid, void *nodeContext,
@@ -519,20 +536,22 @@ static void beforeReadTimeI2C0In0(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[0];
     char *data_input = 0;
-    getDigitalInputState(addr, &data_input);
-    if ((*data_input) & (1UL << 0))
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getDigitalInputState(addr, &data_input);
+      if ((*data_input) & (1UL << 0))
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = true;
         }
-    }
-    else
-    {
+      }
+      else
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = false;
         }
+      }
     }
 }
 
@@ -543,20 +562,22 @@ static void beforeReadTimeI2C0In1(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[0];
     char *data_input = 0;
-    getDigitalInputState(addr, &data_input);
-    if ((*data_input) & (1UL << 1))
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getDigitalInputState(addr, &data_input);
+      if ((*data_input) & (1UL << 1))
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = true;
         }
-    }
-    else
-    {
+      }
+      else
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = false;
         }
+      }
     }
 }
 
@@ -567,20 +588,22 @@ static void beforeReadTimeI2C0In2(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[0];
     char *data_input = 0;
-    getDigitalInputState(addr, &data_input);
-    if ((*data_input) & (1UL << 2))
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getDigitalInputState(addr, &data_input);
+      if ((*data_input) & (1UL << 2))
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = true;
         }
-    }
-    else
-    {
+      }
+      else
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = false;
         }
+      }
     }
 }
 
@@ -591,20 +614,22 @@ static void beforeReadTimeI2C0In3(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[0];
     char *data_input = 0;
-    getDigitalInputState(addr, &data_input);
-    if ((*data_input) & (1UL << 3))
-    {
+    if (!I2C_VIRTUAL_MODE) {     
+      getDigitalInputState(addr, &data_input);
+      if ((*data_input) & (1UL << 3))
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = true;
         }
-    }
-    else
-    {
+      }
+      else
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = false;
         }
+      }
     }
 }
 static void beforeReadTimeI2C1In0(UA_Server *server,
@@ -614,20 +639,22 @@ static void beforeReadTimeI2C1In0(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[1];
     char *data_input = 0;
-    getDigitalInputState(addr, &data_input);
-    if ((*data_input) & (1UL << 0))
-    {
+    if (!I2C_VIRTUAL_MODE) {   
+      getDigitalInputState(addr, &data_input);
+      if ((*data_input) & (1UL << 0))
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = true;
         }
-    }
-    else
-    {
+      }
+      else
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = false;
         }
+      }
     }
 }
 
@@ -638,20 +665,22 @@ static void beforeReadTimeI2C1In1(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[1];
     char *data_input = 0;
-    getDigitalInputState(addr, &data_input);
-    if ((*data_input) & (1UL << 1))
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getDigitalInputState(addr, &data_input);
+      if ((*data_input) & (1UL << 1))
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = true;
         }
-    }
-    else
-    {
+      }
+      else
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = false;
         }
+      }
     }
 }
 
@@ -662,20 +691,22 @@ static void beforeReadTimeI2C1In2(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[1];
     char *data_input = 0;
-    getDigitalInputState(addr, &data_input);
-    if ((*data_input) & (1UL << 2))
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getDigitalInputState(addr, &data_input);
+      if ((*data_input) & (1UL << 2))
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = true;
         }
-    }
-    else
-    {
+      }
+      else
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = false;
         }
+      }
     }
 }
 
@@ -686,20 +717,22 @@ static void beforeReadTimeI2C1In3(UA_Server *server,
 {
     int addr = I2C_SLAVE_ADDR_LIST[1];
     char *data_input = 0;
-    getDigitalInputState(addr, &data_input);
-    if ((*data_input) & (1UL << 3))
-    {
+    if (!I2C_VIRTUAL_MODE) {
+      getDigitalInputState(addr, &data_input);
+      if ((*data_input) & (1UL << 3))
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = true;
         }
-    }
-    else
-    {
+      }
+      else
+      {
         if (data->value.type == &UA_TYPES[UA_TYPES_BOOLEAN])
         {
             *(UA_Boolean *)data->value.data = false;
         }
+      }
     }
 }
 
@@ -1111,11 +1144,15 @@ int main(int argc, char **argv)
     arguments.slave_address_list = DEFAULT_I2C_0_ADDR;
     arguments.username = "";
     arguments.password = "";
+    arguments.key = "";
+    arguments.certificate = "";
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
     printf("Mode=%d\n", arguments.mode);
     printf("Listening port=%d\n", arguments.port);
     printf("Block device=%s\n", arguments.device);
     printf("Slave address list=%s\n", arguments.slave_address_list);
+    printf("key=%s\n", arguments.key);
+    printf("certificate=%s\n", arguments.certificate);
 
     // transfer to global variables (CLI input)
     I2C_VIRTUAL_MODE = arguments.mode;
@@ -1159,6 +1196,36 @@ int main(int argc, char **argv)
       UA_StatusCode retval1 = UA_AccessControl_default(config, false, NULL,
                &config->securityPolicies[config->securityPoliciesSize-1].policyUri, 1, logins);
     }
+
+    /* Enable x509 */
+    if (strlen(arguments.key) > 0 && strlen(arguments.certificate) > 0){
+      char *key_filename = arguments.key;
+      char *certificate_filename = arguments.certificate;
+      /* Load certificate and private key */
+      UA_ByteString certificate = loadFile(certificate_filename);
+      UA_ByteString privateKey  = loadFile(key_filename);
+   
+      /* Load the trustlist - not used thus 0 */
+      size_t trustListSize = 0;
+      UA_STACKARRAY(UA_ByteString, trustList, trustListSize);
+      
+      /* Loading of a issuer list, not used in this application */
+      size_t issuerListSize = 0;
+      UA_ByteString *issuerList = NULL;
+      
+      /* Loading of a revocation list currently unsupported */
+      UA_ByteString *revocationList = NULL;
+      size_t revocationListSize = 0;
+      UA_StatusCode retval =
+        UA_ServerConfig_setDefaultWithSecurityPolicies(config, 4841, // XXX: why not use 4840 ?
+                                                       &certificate, &privateKey,
+                                                       trustList, trustListSize,
+                                                       issuerList, issuerListSize,
+                                                       revocationList, revocationListSize);
+      //The place to fill the hole is very important
+      config->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:open62541.server.application");
+    } 
+    
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);
     UA_Server_delete(server);

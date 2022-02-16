@@ -1198,6 +1198,7 @@ int main(int argc, char **argv)
     }
 
     /* Enable x509 */
+#ifdef UA_ENABLE_ENCRYPTION
     if (strlen(arguments.key) > 0 && strlen(arguments.certificate) > 0){
       char *key_filename = arguments.key;
       char *certificate_filename = arguments.certificate;
@@ -1224,7 +1225,8 @@ int main(int argc, char **argv)
                                                        revocationList, revocationListSize);
       //The place to fill the hole is very important
       config->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:open62541.server.application");
-    } 
+    }
+#endif
     
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);

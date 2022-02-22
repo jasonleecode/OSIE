@@ -264,25 +264,20 @@ static int getAnalogInputStateAIN(int i2c_addr, int **analog_input, uint8_t read
         /* ERROR HANDLING: i2c transaction failed */
         printf("Error writing to i2c slave (0x%x).\n", i2c_addr);
     }
-    if (read(file, read_buf, 1) != 1)
+    if (read(file, read_buf, 2) != 2)
     {
         /* ERROR HANDLING: i2c transaction failed */
         printf("Error reading analog input from i2c slave (0x%x).\n", i2c_addr);
     }
     else
     {
-        /* Since read_buf[0] is (LSB:MSB) we need to convert it to (MSB:LSB). To swap bits one by one do
-the following */
         int analog_data = 0;
-        for (int index = 0; index < 8; index++)
-        {
-            analog_data |= ((read_buf[0] & 0x80) ? 1 : 0) << index;
-            read_buf[0] <<= 1;
-        }
-        /* Now add the high 2 bit to the value */
-        analog_data |= ((read_buf[1] & 0x02) ? 1 : 0) << 8;
-        analog_data |= ((read_buf[1] & 0x01) ? 1 : 0) << 9;
-        *analog_input = &analog_data;
+	// based on https://github.com/OLIMEX/OLINUXINO/blob/master/SOFTWARE/A13/MOD-IO/main.c
+	// since ADC is 10 bit we need to read and convert accordingly 2 bytes
+	analog_data = read_buf[1];
+	analog_data <<= 8;
+	analog_data |= read_buf[0];
+	*analog_input = &analog_data;
     }
     close(file);
 }

@@ -181,3 +181,24 @@ static int getAnalogInputStateAIN(int i2c_addr, int **analog_input, uint8_t read
     }
     close(file);
 }
+
+void safeShutdownI2CSlaveList()
+{
+    /*
+     * Perform a safe shutdown of all known I2C slaves
+     */
+    int i;
+    int length;
+    int addr;
+    length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
+
+    for (i = 0; i < length; i++)
+    {
+        addr = I2C_SLAVE_ADDR_LIST[i];
+        if (addr != 0)
+        {
+            // properly initialized from CLI
+            setRelayState(0x00, addr);
+        }
+    }
+}

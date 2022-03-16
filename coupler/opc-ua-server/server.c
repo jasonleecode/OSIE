@@ -100,28 +100,6 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 
 static struct argp argp = {options, parse_opt, args_doc, doc, 0, 0, 0};
 
-
-void safeShutdownI2CSlaveList()
-{
-    /*
-     * Perform a safe shutdown of all known I2C slaves
-     */
-    int i;
-    int length;
-    int addr;
-    length = sizeof(I2C_SLAVE_ADDR_LIST) / sizeof(int);
-
-    for (i = 0; i < length; i++)
-    {
-        addr = I2C_SLAVE_ADDR_LIST[i];
-        if (addr != 0)
-        {
-            // properly initialized from CLI
-            setRelayState(0x00, addr);
-        }
-    }
-}
-
 static volatile UA_Boolean running = true;
 
 static void stopHandler(int sign)

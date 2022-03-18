@@ -26,11 +26,30 @@
 #include "common.h"
 #include "mod_io_i2c.h"
 #include "mod_io_opc_ua.h"
+#include <time.h>
 
 
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
+
+
+char *randomString(size_t length)
+{
+    static char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    char *randomString = NULL;
+    if (length) {
+        randomString = malloc(sizeof(char) * (length +1));
+        if (randomString) {
+            for (int n = 0;n < length;n++) {
+                int key = rand() % (int)(sizeof(charset) -1);
+                randomString[n] = charset[key];
+            }
+            randomString[length] = '\0';
+        }
+    }
+    return randomString;
+}
 
 // CLI arguments handling
 const char *argp_program_version = "OSIE OPC-UA coupler 0.0.1";
@@ -38,16 +57,17 @@ const char *argp_program_bug_address = "ivan@nexedi.com";
 static char doc[] = "OPC-UA server which controls MOD-IO's relays' state over OPC-UA protocol.";
 static char args_doc[] = "...";
 static struct argp_option options[] = {
-    {"port", 'p', "4840", 0, "Port to bind to."},
-    {"device", 'd', "/dev/i2c-1", 0, "Linux block device path."},
-    {"slave-address-list", 's', "0x58", 0, "Comma separated list of slave I2C addresses."},
-    {"mode", 'm', "0", 0, "Set different modes of operation of coupler. Default (0) is set attached \
+  {"port",        'p', "4840", 0, "Port to bind to."},
+  {"device",      'd', "/dev/i2c-1", 0, "Linux block device path."},
+  {"slave-address-list", 's', "0x58", 0, "Comma separated list of slave I2C addresses."},
+  {"mode",        'm', "0", 0, "Set different modes of operation of coupler. Default (0) is set attached \
 	                  I2C's state state. Virtual (1) which does NOT set any I2C slaves' state."},
-    {"username", 'u', "", 0, "Username."},
-    {"password", 'w', "", 0, "Password."},
-    {"key", 'k', "", 0, "x509 key."},
-    {"certificate", 'c', "", 0, "X509 certificate."},
-    {0} 
+  {"username",    'u', "", 0, "Username."},
+  {"password",    'w', "", 0, "Password."},
+  {"key",         'k', "", 0, "x509 key."},
+  {"certificate", 'c', "", 0, "X509 certificate."},
+  {"uuid",        'i', "", 0, "UUID of coupler"},
+  {0}
 };
 
 struct arguments
@@ -60,41 +80,45 @@ struct arguments
     char *password;
     char *key;
     char *certificate;
+    char *uuid;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
     struct arguments *arguments = state->input;
     switch (key) {
-    case 'p': 
-	    arguments->port = arg ? atoi (arg) : DEFAULT_OPC_UA_PORT; 
+    case 'p':
+	    arguments->port = arg ? atoi (arg) : DEFAULT_OPC_UA_PORT;
 	    break;
-    case 'd': 
-	    arguments->device = arg; 
+    case 'd':
+	    arguments->device = arg;
 	    break;
-    case 's': 
-	    arguments->slave_address_list = arg; 
+    case 's':
+	    arguments->slave_address_list = arg;
 	    break;
-    case 'm': 
-	    arguments->mode = arg ? atoi (arg) : DEFAULT_MODE; 
+    case 'm':
+	    arguments->mode = arg ? atoi (arg) : DEFAULT_MODE;
 	    break;
-    case 'u': 
-	    arguments->username = arg; 
+    case 'u':
+	    arguments->username = arg;
 	    break;
-    case 'w': 
-	    arguments->password = arg; 
-	    break;   
-    case 'c': 
-	    arguments->certificate = arg; 
-	    break; 
-    case 'k': 
-	    arguments->key = arg; 
-	    break; 
-    case ARGP_KEY_ARG: 
+    case 'w':
+	    arguments->password = arg;
+	    break;
+    case 'c':
+	    arguments->certificate = arg;
+	    break;
+    case 'k':
+	    arguments->key = arg;
+	    break;
+    case 'i':
+	    arguments->uuid = arg;
+	    break;
+    case ARGP_KEY_ARG:
 	    return 0;
     default: 
 	    return ARGP_ERR_UNKNOWN;
-    }   
+    }
     return 0;
 }
 
@@ -125,13 +149,22 @@ int main(int argc, char **argv)
     arguments.password = "";
     arguments.key = "";
     arguments.certificate = "";
+    arguments.uuid = "";
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
+
+    // if no uuid define, generate a random one
+    if (!strlen(arguments.uuid)) {
+      arguments.uuid = randomString(12);
+    }
+
     printf("Mode=%d\n", arguments.mode);
     printf("Listening port=%d\n", arguments.port);
     printf("Block device=%s\n", arguments.device);
     printf("Slave address list=%s\n", arguments.slave_address_list);
     printf("key=%s\n", arguments.key);
     printf("certificate=%s\n", arguments.certificate);
+    printf("UUID=%s\n", arguments.uuid);
+
 
     // transfer to global variables (CLI input)
     I2C_VIRTUAL_MODE = arguments.mode;

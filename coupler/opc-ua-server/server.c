@@ -217,15 +217,15 @@ int main(int argc, char **argv)
       /* Load certificate and private key */
       UA_ByteString certificate = loadFile(certificate_filename);
       UA_ByteString privateKey  = loadFile(key_filename);
-   
+
       /* Load the trustlist - not used thus 0 */
       size_t trustListSize = 0;
       UA_STACKARRAY(UA_ByteString, trustList, trustListSize);
-      
+
       /* Loading of a issuer list, not used in this application */
       size_t issuerListSize = 0;
       UA_ByteString *issuerList = NULL;
-      
+
       /* Loading of a revocation list currently unsupported */
       UA_ByteString *revocationList = NULL;
       size_t revocationListSize = 0;
@@ -239,7 +239,7 @@ int main(int argc, char **argv)
       config->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:open62541.server.application");
     }
     #endif
-    
+
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);
     UA_Server_delete(server);

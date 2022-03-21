@@ -187,6 +187,9 @@ int main(int argc, char **argv)
     signal(SIGINT, stopHandler);
     signal(SIGTERM, stopHandler);
 
+    bool addx509 = strlen(arguments.key) > 0 && strlen(arguments.certificate);
+    bool addUserNamePasswordAuthentication = strlen(arguments.username) > 0 && strlen(arguments.password) > 0;
+
     UA_Server *server = UA_Server_new();
     UA_ServerConfig_setMinimal(UA_Server_getConfig(server), arguments.port, NULL);
     UA_ServerConfig *config = UA_Server_getConfig(server);
@@ -197,7 +200,7 @@ int main(int argc, char **argv)
     addValueCallbackToCurrentTimeVariable(server);
 
     /* Disable anonymous logins, enable two user/password logins */
-    if (strlen(arguments.username) > 0 && strlen(arguments.password) > 0){
+    if (addUserNamePasswordAuthentication){
       char *username = arguments.username;
       char *password = arguments.password;
       UA_UsernamePasswordLogin logins[1] = {
@@ -211,7 +214,7 @@ int main(int argc, char **argv)
 
     /* Enable x509 */
     #ifdef UA_ENABLE_ENCRYPTION
-    if (strlen(arguments.key) > 0 && strlen(arguments.certificate) > 0){
+    if (addx509){
       char *key_filename = arguments.key;
       char *certificate_filename = arguments.certificate;
       /* Load certificate and private key */

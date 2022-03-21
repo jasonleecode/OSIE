@@ -3,9 +3,9 @@
  * Current format of exposed OPC-UA node variables is:
  * <mod-io_number>.<relay_number>
  * For example:
- * i2c0.relay0
- * i2c0.relay1
- * i2c1.relay0 
+ *   - i2c0.relay0..3
+ *   - i2c0.in0..3
+ *   - i2c0.ain0..3
  * Based on 
  *   https://www.kernel.org/doc/Documentation/i2c/dev-interface
  *   https://github.com/open62541/open62541/blob/master/examples/tutorial_server_variable.c
@@ -161,8 +161,8 @@ int main(int argc, char **argv)
     printf("Listening port=%d\n", arguments.port);
     printf("Block device=%s\n", arguments.device);
     printf("Slave address list=%s\n", arguments.slave_address_list);
-    printf("key=%s\n", arguments.key);
-    printf("certificate=%s\n", arguments.certificate);
+    printf("Key=%s\n", arguments.key);
+    printf("Certificate=%s\n", arguments.certificate);
     printf("UUID=%s\n", arguments.uuid);
 
 
@@ -210,7 +210,7 @@ int main(int argc, char **argv)
     }
 
     /* Enable x509 */
-#ifdef UA_ENABLE_ENCRYPTION
+    #ifdef UA_ENABLE_ENCRYPTION
     if (strlen(arguments.key) > 0 && strlen(arguments.certificate) > 0){
       char *key_filename = arguments.key;
       char *certificate_filename = arguments.certificate;
@@ -238,7 +238,7 @@ int main(int argc, char **argv)
       //The place to fill the hole is very important
       config->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:open62541.server.application");
     }
-#endif
+    #endif
     
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);

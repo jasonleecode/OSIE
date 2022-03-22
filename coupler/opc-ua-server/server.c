@@ -33,24 +33,6 @@
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
 
-
-char *randomString(size_t length)
-{
-    static char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    char *randomString = NULL;
-    if (length) {
-        randomString = malloc(sizeof(char) * (length +1));
-        if (randomString) {
-            for (int n = 0;n < length;n++) {
-                int key = rand() % (int)(sizeof(charset) -1);
-                randomString[n] = charset[key];
-            }
-            randomString[length] = '\0';
-        }
-    }
-    return randomString;
-}
-
 // CLI arguments handling
 const char *argp_program_version = "OSIE OPC-UA coupler 0.0.1";
 const char *argp_program_bug_address = "ivan@nexedi.com";
@@ -151,11 +133,6 @@ int main(int argc, char **argv)
     arguments.certificate = "";
     arguments.uuid = "";
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
-
-    // if no uuid define, generate a random one
-    if (!strlen(arguments.uuid)) {
-      arguments.uuid = randomString(12);
-    }
 
     printf("Mode=%d\n", arguments.mode);
     printf("Listening port=%d\n", arguments.port);

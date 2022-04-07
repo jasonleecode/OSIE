@@ -20,14 +20,18 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <signal.h>
-#include "open62541.h"
 #include <argp.h>
 #include <string.h>
 #include "common.h"
 #include "mod_io_i2c.h"
 #include "mod_io_opc_ua.h"
 #include <time.h>
-
+#include <open62541/plugin/log_stdout.h>
+#include <open62541/server.h>
+#include <open62541/server_config_default.h>
+#include <open62541/plugin/accesscontrol_default.h>
+#include <open62541/plugin/pubsub_ethernet.h>
+#include <open62541/plugin/pubsub_udp.h>
 
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;

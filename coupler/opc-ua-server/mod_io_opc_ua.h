@@ -2,6 +2,8 @@
  * OPC-UA code representation of MOD-IOs connected to a Lime2
  */
 
+#include <open62541/server.h>
+
 void addIntegerVariableNode(UA_Server *server, char *node_id, char *node_description)
 {
     UA_Int32 myInteger = 0;

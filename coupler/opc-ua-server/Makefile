@@ -5,7 +5,7 @@ EXTRA_FLAGS=$(C_COMPILER_EXTRA_FLAGS)
 OUT_DIR= $(BINARY_OUT_DIR)
 
 server: server.c
-	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) -std=c99 $(OPEN62541_SOURCE_HOME)/open62541.c $(EXTRA_FLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) -std=c99 $(EXTRA_FLAGS)
 
 install:
 	@cp server $(OUT_DIR)

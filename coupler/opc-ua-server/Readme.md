@@ -4,7 +4,17 @@
 
 ### Installing Beremiz
 
-Run beremiz_install.sh file under Init folder
+Request a Beremiz IDE instance via SlapOS
+
+    release="https://lab.nexedi.com/nexedi/slapos/raw/beremiz/software/beremiz-ide/software.cfg"
+    supply(release, "COMP-XXXX")
+    partition_parameter_kw = {}
+    filter_kw = {"computer_guid": "COMP-XXXX"}
+    request(
+        software_release = release,
+        partition_reference = 'OSIE.k2-osie.Beremiz.IDE-1',
+        partition_parameter_kw = partition_parameter_kw,
+        filter_kw = filter_kw)
 
 ### Compile and install open62541
 

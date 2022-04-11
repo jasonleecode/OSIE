@@ -6,19 +6,30 @@
 
 Run beremiz_install.sh file under Init folder
 
-### Installing open62541
+### Compile and install open62541
 
-Run open62541_install.sh file under Init folder
+    ivan@k2-osie:~/open62541/build$ cmake -DBUILD_SHARED_LIBS=ON \
+                                          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+                                          -DUA_ENABLE_PUBSUB=ON \
+                                          -DUA_ENABLE_PUBSUB_MONITORING=ON \
+                                          -DUA_ENABLE_PUBSUB_ETH_UADP=ON \
+                                          -DUA_NAMESPACE_ZERO=REDUCED \
+                                          -DUA_ENABLE_ENCRYPTION=MBEDTLS \
+                                          -DUA_ENABLE_ENCRYPTION_MBEDTLS=ON \
+                                          ..
+    ivan@k2-osie:~/open62541/build$ make
 
-### Copy the open62541.h and open62541.c
+    # install system wide in /usr/local/lib
+    ivan@k2-osie:~/open62541/build$ sudo make install
 
-If you are developing OPC UA application for LIME2 controller with MOD-IO, then your OPC UA location will be ~/osie/coupler/opc-ua-server/
+    # update system wide libraries
+    ivan@k2-osie:~/open62541/build$ sudo ldconfig
 
-$ cp ~/open62541/build/open62541.* ~/osie/coupler/opc-ua-server/
 
 ### Building your OPC UA server (Cross compilation to ARM architecture from Ubuntu)
 
-$ arm-linux-gnueabihf-gcc open62541.c server.c -o server
+    # compile coupler application with a shared library and UA_ENABLE_AMALGAMATION=OFF
+    ivan@k2-osie:~/open62541/build$ gcc -I /usr/local/include/ -std=c99 ~/osie/coupler/opc-ua-server/server.c -o server -l:libopen62541.so -L/usr/local/lib -lmbedcrypto  -lmbedx509
 
 ### If one wants to run coupler on a x86 platform then one needs to run server in virtual environment
 

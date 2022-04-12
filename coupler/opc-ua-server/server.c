@@ -225,6 +225,23 @@ int main(int argc, char **argv)
     }
     #endif
 
+    // enable keep-alive
+    UA_String transportProfile =
+        UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
+    UA_NetworkAddressUrlDataType networkAddressUrl =
+        {UA_STRING_NULL , UA_STRING("opc.udp://224.0.0.22:4840/")};
+
+    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
+    #ifdef UA_ENABLE_PUBSUB_ETH_UADP
+    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerEthernet());
+    #endif
+
+    addPubSubConnection(server, &transportProfile, &networkAddressUrl);
+    addPublishedDataSet(server);
+    addDataSetField(server);
+    addWriterGroup(server);
+    addDataSetWriter(server);
+
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);
     UA_Server_delete(server);

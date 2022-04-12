@@ -1,10 +1,6 @@
-#include <open62541/plugin/log_stdout.h>
-#include <open62541/plugin/pubsub_ethernet.h>
-#include <open62541/plugin/pubsub_udp.h>
-#include <open62541/server.h>
-#include <open62541/server_config_default.h>
-#include <signal.h>
-
+/*
+Keep alive implementation for couplers based on OPC UA's pub/sub mechanism
+*/
 
 UA_NodeId connectionIdent, publishedDataSetIdent, writerGroupIdent;
 
@@ -116,50 +112,3 @@ static void addDataSetWriter(UA_Server *server) {
     UA_Server_addDataSetWriter(server, writerGroupIdent, publishedDataSetIdent,
                                &dataSetWriterConfig, &dataSetWriterIdent);
 }
-
-/**
- * That's it! You're now publishing the selected fields. Open a packet
- * inspection tool of trust e.g. wireshark and take a look on the outgoing
- * packages. The following graphic figures out the packages created by this
- * tutorial.
- *
- * .. figure:: ua-wireshark-pubsub.png
- *     :figwidth: 100 %
- *     :alt: OPC UA PubSub communication in wireshark
- *
- * The open62541 subscriber API will be released later. If you want to process
- * the the datagrams, take a look on the ``ua_network_pubsub_networkmessage.c``
- * which already contains the decoding code for UADP messages.
- *
- * It follows the main server code, making use of the above definitions. */
-
-/*
-static int run(UA_String *transportProfile,
-               UA_NetworkAddressUrlDataType *networkAddressUrl) {
-    signal(SIGINT, stopHandler);
-    signal(SIGTERM, stopHandler);
-
-    UA_Server *server = UA_Server_new();
-    UA_ServerConfig *config = UA_Server_getConfig(server);
-    UA_ServerConfig_setDefault(config);
-/*
-    /* Details about the connection configuration and handling are located in
-     * the pubsub connection tutorial */
-/*
-    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
-#ifdef UA_ENABLE_PUBSUB_ETH_UADP
-    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerEthernet());
-#endif
-
-    addPubSubConnection(server, transportProfile, networkAddressUrl);
-    addPublishedDataSet(server);
-    addDataSetField(server);
-    addWriterGroup(server);
-    addDataSetWriter(server);
-
-    UA_StatusCode retval = UA_Server_run(server, &running);
-
-    UA_Server_delete(server);
-    return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
-}
-*/

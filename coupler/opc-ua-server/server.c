@@ -25,6 +25,7 @@
 #include "common.h"
 #include "mod_io_i2c.h"
 #include "mod_io_opc_ua.h"
+#include "keep_alive.h"
 #include <time.h>
 #include <open62541/plugin/log_stdout.h>
 #include <open62541/server.h>

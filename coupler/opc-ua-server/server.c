@@ -34,6 +34,8 @@
 #include <open62541/plugin/pubsub_ethernet.h>
 #include <open62541/plugin/pubsub_udp.h>
 
+#define countof(a) (sizeof(a)/sizeof(*(a)))
+
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
@@ -226,6 +228,29 @@ int main(int argc, char **argv)
     #endif
 
     // enable keep-alive
+    UA_Float defaultFloat = 0;
+    UA_Double defaultDouble = 0;
+    const PublishedVariable publishedVariableArray[] = {
+        {
+            .name = "lattitude",
+            .description = "Lattitude",
+            .pdefaultValue = &defaultDouble,
+            .type = UA_TYPES[UA_TYPES_DOUBLE],
+        },
+        {
+            .name = "longitude",
+            .description = "Longitude",
+            .pdefaultValue = &defaultDouble,
+            .type = UA_TYPES[UA_TYPES_DOUBLE],
+        },
+        {
+            .name = "altitude",
+            .description = "Altitude",
+            .pdefaultValue = &defaultFloat,
+            .type = UA_TYPES[UA_TYPES_FLOAT],
+        },
+    };
+
     UA_String transportProfile =
         UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
     UA_NetworkAddressUrlDataType networkAddressUrl =
@@ -238,7 +263,11 @@ int main(int argc, char **argv)
 
     addPubSubConnection(server, &transportProfile, &networkAddressUrl);
     addPublishedDataSet(server);
-    addDataSetField(server);
+    //addDataSetField(server);
+    for(i = 0; i < countof(publishedVariableArray); i++) {
+        addPubSubVariable(server, publishedVariableArray[i]);
+        addPubSubDataSetField(server, publishedVariableArray[i]);
+    }
     addWriterGroup(server);
     addDataSetWriter(server);
 

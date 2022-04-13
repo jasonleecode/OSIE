@@ -112,3 +112,42 @@ static void addDataSetWriter(UA_Server *server) {
     UA_Server_addDataSetWriter(server, writerGroupIdent, publishedDataSetIdent,
                                &dataSetWriterConfig, &dataSetWriterIdent);
 }
+
+// XXX: work of LEO which to integrate above
+
+typedef struct PublishedVariable {
+    char *name;
+    char *description;
+    void * UA_RESTRICT pdefaultValue;
+    UA_DataType type;
+} PublishedVariable;
+
+static void addPubSubVariable(UA_Server *server, PublishedVariable varDetails) {
+    UA_VariableAttributes attr = UA_VariableAttributes_default;
+    UA_Variant_setScalar(&attr.value, varDetails.pdefaultValue, &varDetails.type);
+    attr.description = UA_LOCALIZEDTEXT("en-US", varDetails.description);
+    attr.displayName = UA_LOCALIZEDTEXT("en-US", varDetails.description);
+    attr.dataType = varDetails.type.typeId;
+    attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+
+    UA_Server_addVariableNode(server, UA_NODEID_STRING(1, varDetails.name),
+                                      UA_NODEID_NUMERIC(0, UA_NS0ID_OBJECTSFOLDER),
+                                      UA_NODEID_NUMERIC(0, UA_NS0ID_ORGANIZES),
+                                      UA_QUALIFIEDNAME(1, varDetails.description),
+                                      UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
+                                      attr, NULL, NULL);
+}
+
+static void addPubSubDataSetField(UA_Server *server, PublishedVariable varDetails) {
+    UA_NodeId dataSetFieldIdent;
+    UA_DataSetFieldConfig dataSetFieldConfig;
+    memset(&dataSetFieldConfig, 0, sizeof(UA_DataSetFieldConfig));
+    dataSetFieldConfig.dataSetFieldType = UA_PUBSUB_DATASETFIELD_VARIABLE;
+    dataSetFieldConfig.field.variable.fieldNameAlias = UA_STRING(varDetails.description);
+    dataSetFieldConfig.field.variable.promotedField = UA_FALSE;
+    dataSetFieldConfig.field.variable.publishParameters.publishedVariable =
+    UA_NODEID_STRING(1, varDetails.name);
+    dataSetFieldConfig.field.variable.publishParameters.attributeId = UA_ATTRIBUTEID_VALUE;
+    UA_Server_addDataSetField(server, publishedDataSetIdent,
+                              &dataSetFieldConfig, &dataSetFieldIdent);
+}

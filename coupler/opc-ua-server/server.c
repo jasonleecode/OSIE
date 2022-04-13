@@ -232,22 +232,10 @@ int main(int argc, char **argv)
     UA_Double defaultDouble = 0;
     const PublishedVariable publishedVariableArray[] = {
         {
-            .name = "lattitude",
-            .description = "Lattitude",
+            .name = "heart_beat",
+            .description = "Heart beat",
             .pdefaultValue = &defaultDouble,
             .type = UA_TYPES[UA_TYPES_DOUBLE],
-        },
-        {
-            .name = "longitude",
-            .description = "Longitude",
-            .pdefaultValue = &defaultDouble,
-            .type = UA_TYPES[UA_TYPES_DOUBLE],
-        },
-        {
-            .name = "altitude",
-            .description = "Altitude",
-            .pdefaultValue = &defaultFloat,
-            .type = UA_TYPES[UA_TYPES_FLOAT],
         },
     };
 
@@ -257,9 +245,6 @@ int main(int argc, char **argv)
         {UA_STRING_NULL , UA_STRING("opc.udp://224.0.0.22:4840/")};
 
     UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
-    #ifdef UA_ENABLE_PUBSUB_ETH_UADP
-    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerEthernet());
-    #endif
 
     addPubSubConnection(server, &transportProfile, &networkAddressUrl);
     addPublishedDataSet(server);

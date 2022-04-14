@@ -228,14 +228,15 @@ int main(int argc, char **argv)
     #endif
 
     // enable keep-alive
-    UA_Float defaultFloat = 0;
-    UA_Double defaultDouble = 0;
+    //UA_Float defaultFloat = 0;
+    //UA_Double defaultDouble = 0;
+    UA_Int64  defaultInt64 = 0;
     const PublishedVariable publishedVariableArray[] = {
         {
             .name = "heart_beat",
             .description = "Heart beat",
-            .pdefaultValue = &defaultDouble,
-            .type = UA_TYPES[UA_TYPES_DOUBLE],
+            .pdefaultValue = &defaultInt64,
+            .type = UA_TYPES[UA_TYPES_INT64],
         },
     };
 

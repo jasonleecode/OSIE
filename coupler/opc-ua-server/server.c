@@ -228,8 +228,8 @@ int main(int argc, char **argv)
     #endif
 
     // enable keep-alive
-    //UA_Float defaultFloat = 0;
-    //UA_Double defaultDouble = 0;
+    UA_Float defaultFloat = 0;
+    UA_Double defaultDouble = 0;
     UA_Int64  defaultInt64 = 0;
     const PublishedVariable publishedVariableArray[] = {
         {
@@ -244,7 +244,7 @@ int main(int argc, char **argv)
         UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
     UA_NetworkAddressUrlDataType networkAddressUrl =
         {UA_STRING_NULL , UA_STRING("opc.udp://224.0.0.22:4840/")};
-
+/*
     UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
 
     addPubSubConnection(server, &transportProfile, &networkAddressUrl);
@@ -256,7 +256,7 @@ int main(int argc, char **argv)
     }
     addWriterGroup(server);
     addDataSetWriter(server);
-
+*/
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);
     UA_Server_delete(server);

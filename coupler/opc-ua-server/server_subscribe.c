@@ -55,8 +55,7 @@ UA_DataSetReaderConfig readerConfig;
 static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData);
 
 /* Add new connection to the server */
-static UA_StatusCode
-addPubSubConnection(UA_Server *server, UA_String *transportProfile,
+static UA_StatusCode addPubSubConnection(UA_Server *server, UA_String *transportProfile,
                     UA_NetworkAddressUrlDataType *networkAddressUrl) {
     if((server == NULL) || (transportProfile == NULL) ||
         (networkAddressUrl == NULL)) {
@@ -88,8 +87,7 @@ addPubSubConnection(UA_Server *server, UA_String *transportProfile,
  * created within a PubSubConnection and automatically deleted if the connection
  * is removed. All network message related filters are only available in the DataSetReader. */
 /* Add ReaderGroup to the created connection */
-static UA_StatusCode
-addReaderGroup(UA_Server *server) {
+static UA_StatusCode addReaderGroup(UA_Server *server) {
     if(server == NULL) {
         return UA_STATUSCODE_BADINTERNALERROR;
     }
@@ -113,8 +111,7 @@ addReaderGroup(UA_Server *server) {
  * on the Subscriber side. DataSetReader must be linked with a
  * SubscribedDataSet and be contained within a ReaderGroup. */
 /* Add DataSetReader to the ReaderGroup */
-static UA_StatusCode
-addDataSetReader(UA_Server *server) {
+static UA_StatusCode addDataSetReader(UA_Server *server) {
     if(server == NULL) {
         return UA_STATUSCODE_BADINTERNALERROR;
     }
@@ -146,8 +143,7 @@ addDataSetReader(UA_Server *server) {
  *
  * Set SubscribedDataSet type to TargetVariables data type.
  * Add subscribedvariables to the DataSetReader */
-static UA_StatusCode
-addSubscribedVariables (UA_Server *server, UA_NodeId dataSetReaderId) {
+static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSetReaderId) {
     if(server == NULL)
         return UA_STATUSCODE_BADINTERNALERROR;
 

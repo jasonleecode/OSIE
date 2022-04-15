@@ -210,12 +210,12 @@ static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData) {
     pMetaData->fields[0].name =  UA_STRING ("Heartbeat (subscribed)");
     pMetaData->fields[0].valueRank = -1; /* scalar */
 
-    // UUID
+    // ID
     UA_FieldMetaData_init (&pMetaData->fields[1]);
     UA_NodeId_copy (&UA_TYPES[UA_TYPES_INT64].typeId,
                     &pMetaData->fields[1].dataType);
     pMetaData->fields[1].builtInType = UA_NS0ID_INT64;
-    pMetaData->fields[1].name =  UA_STRING ("UUID (subscribed)");
+    pMetaData->fields[1].name =  UA_STRING ("ID (subscribed)");
     pMetaData->fields[1].valueRank = -1; /* scalar */
 }
 

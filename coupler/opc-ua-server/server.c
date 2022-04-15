@@ -237,10 +237,10 @@ int main(int argc, char **argv)
             .pdefaultValue = &defaultInt64,
             .type = UA_TYPES[UA_TYPES_INT64]
         },
-        // represnting the UUID of the coupler
+        // representing the ID of the coupler
         {
-            .name = "uuid",
-            .description = "UUID",
+            .name = "id",
+            .description = "ID",
             .pdefaultValue = &defaultInt64,
             .type = UA_TYPES[UA_TYPES_INT64]
         }

@@ -236,7 +236,7 @@ int main(int argc, char **argv)
             .name = "heart_beat",
             .description = "Heart beat",
             .pdefaultValue = &defaultInt64,
-            .type = UA_TYPES[UA_TYPES_INT64],
+            .type = UA_TYPES[UA_TYPES_INT64]
         }
     };
 
@@ -247,7 +247,6 @@ int main(int argc, char **argv)
     UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
     addPubSubConnection(server, &transportProfile, &networkAddressUrl);
     addPublishedDataSet(server);
-    //addDataSetField(server);
     for(i = 0; i < countof(publishedVariableArray); i++) {
         addPubSubVariable(server, publishedVariableArray[i]);
         addPubSubDataSetField(server, publishedVariableArray[i]);

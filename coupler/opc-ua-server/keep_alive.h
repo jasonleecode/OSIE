@@ -124,10 +124,12 @@ typedef struct PublishedVariable {
 
 static void addPubSubVariable(UA_Server *server, PublishedVariable varDetails) {
     UA_VariableAttributes attr = UA_VariableAttributes_default;
-    UA_Variant_setScalar(&attr.value, varDetails.pdefaultValue, &varDetails.type);
+    //UA_Variant_setScalar(&attr.value, varDetails.pdefaultValue, &UA_TYPES[varDetails.type]);
+    UA_Variant_setScalar(&attr.value, varDetails.pdefaultValue, &UA_TYPES[UA_TYPES_INT64]);
     attr.description = UA_LOCALIZEDTEXT("en-US", varDetails.description);
     attr.displayName = UA_LOCALIZEDTEXT("en-US", varDetails.description);
-    attr.dataType = varDetails.type.typeId;
+    //attr.dataType = UA_TYPES[varDetails.type].typeId;
+    attr.dataType = UA_TYPES[UA_TYPES_INT64].typeId;
     attr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
 
     UA_Server_addVariableNode(server, UA_NODEID_STRING(1, varDetails.name),

@@ -228,13 +228,19 @@ int main(int argc, char **argv)
     #endif
 
     // enable keep-alive
-    UA_Float defaultFloat = 0;
-    UA_Double defaultDouble = 0;
     UA_Int64  defaultInt64 = 0;
     const PublishedVariable publishedVariableArray[] = {
+        // representing time in millis since start of process
         {
             .name = "heart_beat",
             .description = "Heart beat",
+            .pdefaultValue = &defaultInt64,
+            .type = UA_TYPES[UA_TYPES_INT64]
+        },
+        // represnting the UUID of the coupler
+        {
+            .name = "uuid",
+            .description = "UUID",
             .pdefaultValue = &defaultInt64,
             .type = UA_TYPES[UA_TYPES_INT64]
         }

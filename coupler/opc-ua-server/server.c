@@ -237,7 +237,7 @@ int main(int argc, char **argv)
             .description = "Heart beat",
             .pdefaultValue = &defaultInt64,
             .type = UA_TYPES[UA_TYPES_INT64],
-        },
+        }
     };
 
     UA_String transportProfile =

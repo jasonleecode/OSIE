@@ -1,35 +1,3 @@
-/* This work is licensed under a Creative Commons CCZero 1.0 Universal License.
- * See http://creativecommons.org/publicdomain/zero/1.0/ for more information.
- *
- * Copyright (c) 2019 Kalycito Infotech Private Limited
- */
-
-/**
- * .. _pubsub-subscribe-tutorial:
- *
- * **IMPORTANT ANNOUNCEMENT**
- *
- * The PubSub Subscriber API is currently not finished. This Tutorial will be
- * continuously extended during the next PubSub batches. More details about the
- * PubSub extension and corresponding open62541 API are located here: :ref:`pubsub`.
- *
- * Subscribing Fields
- * ^^^^^^^^^^^^^^^^^^
- * The PubSub subscribe example demonstrates the simplest way to receive
- * information over two transport layers such as UDP and Ethernet, that are
- * published by tutorial_pubsub_publish example and update values in the
- * TargetVariables of Subscriber Information Model.
- *
- * Run step of the application is as mentioned below:
- *
- * ./bin/examples/tutorial_pubsub_subscribe
- *
- * **Connection handling**
- *
- * PubSubConnections can be created and deleted on runtime. More details about
- * the system preconfiguration and connection can be found in
- * ``tutorial_pubsub_connection.c``. */
-
 #include <open62541/plugin/log_stdout.h>
 #include <open62541/plugin/pubsub_udp.h>
 #include <open62541/server.h>

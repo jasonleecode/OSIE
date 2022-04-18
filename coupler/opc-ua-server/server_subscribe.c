@@ -1,3 +1,4 @@
+#include <open62541/client_subscriptions.h>
 #include <open62541/plugin/log_stdout.h>
 #include <open62541/plugin/pubsub_udp.h>
 #include <open62541/server.h>
@@ -21,6 +22,18 @@ UA_NodeId readerIdentifier;
 UA_DataSetReaderConfig readerConfig;
 
 static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData);
+
+/* callback to handle change notifications */
+static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitoredItemId,
+                               void *monitoredItemContext, const UA_NodeId *nodeId,
+                               void *nodeContext, UA_UInt32 attributeId,
+                               const UA_DataValue *var) {
+    if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_INT64])) {
+        UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,
+                    "Received Notification with value %ld",
+                    *(UA_Int64*) var->value.data);
+    }
+}
 
 /* Add new connection to the server */
 static UA_StatusCode addPubSubConnection(UA_Server *server, UA_String *transportProfile,
@@ -162,6 +175,10 @@ static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSet
                                            UA_QUALIFIEDNAME(1, (char *)readerConfig.dataSetMetaData.fields[i].name.data),
                                            UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
                                            vAttr, NULL, &newNode);
+        /*monitor variable*/
+        UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(newNode);
+        UA_Server_createDataChangeMonitoredItem(server, UA_TIMESTAMPSTORETURN_SOURCE,
+                                                monRequest, NULL, dataChangeNotificationCallback);
 
         /* For creating Targetvariables */
         UA_FieldTargetDataType_init(&targetVars[i].targetVariable);

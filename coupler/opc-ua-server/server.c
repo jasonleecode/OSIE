@@ -55,7 +55,7 @@ static struct argp_option options[] = {
   {"password",    'w', "", 0, "Password."},
   {"key",         'k', "", 0, "x509 key."},
   {"certificate", 'c', "", 0, "X509 certificate."},
-  {"uuid",        'i', "", 0, "UUID of coupler"},
+  {"id",          'i', "", 0, "ID of coupler."},
   {0}
 };
 
@@ -69,7 +69,7 @@ struct arguments
     char *password;
     char *key;
     char *certificate;
-    char *uuid;
+    char *id;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
@@ -101,7 +101,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 	    arguments->key = arg;
 	    break;
     case 'i':
-	    arguments->uuid = arg;
+	    arguments->id = arg;
 	    break;
     case ARGP_KEY_ARG:
 	    return 0;
@@ -138,7 +138,7 @@ int main(int argc, char **argv)
     arguments.password = "";
     arguments.key = "";
     arguments.certificate = "";
-    arguments.uuid = "";
+    arguments.id = "";
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
     printf("Mode=%d\n", arguments.mode);
@@ -147,7 +147,7 @@ int main(int argc, char **argv)
     printf("Slave address list=%s\n", arguments.slave_address_list);
     printf("Key=%s\n", arguments.key);
     printf("Certificate=%s\n", arguments.certificate);
-    printf("UUID=%s\n", arguments.uuid);
+    printf("ID=%s\n", arguments.id);
 
 
     // transfer to global variables (CLI input)
@@ -229,6 +229,7 @@ int main(int argc, char **argv)
 
     // enable keep-alive
     UA_Int64  defaultInt64 = 0;
+    UA_Int64  couplerID = atoi(arguments.id);
     const PublishedVariable publishedVariableArray[] = {
         // representing time in millis since start of process
         {
@@ -241,7 +242,7 @@ int main(int argc, char **argv)
         {
             .name = "id",
             .description = "ID",
-            .pdefaultValue = &defaultInt64,
+            .pdefaultValue = &couplerID,
             .type = UA_TYPES[UA_TYPES_INT64]
         }
     };

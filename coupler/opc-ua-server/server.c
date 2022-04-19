@@ -228,22 +228,22 @@ int main(int argc, char **argv)
     #endif
 
     // enable keep-alive
-    UA_Int64  defaultInt64 = 0;
-    UA_Int64  couplerID = atoi(arguments.id);
+    UA_Int32  defaultInt32 = 0;
+    UA_Int32  couplerID = atoi(arguments.id);
     const PublishedVariable publishedVariableArray[] = {
         // representing time in millis since start of process
         {
             .name = "heart_beat",
             .description = "Heart beat",
-            .pdefaultValue = &defaultInt64,
-            .type = UA_TYPES[UA_TYPES_INT64]
+            .pdefaultValue = &defaultInt32,
+            .type = UA_TYPES[UA_TYPES_INT32]
         },
         // representing the ID of the coupler
         {
             .name = "id",
             .description = "ID",
             .pdefaultValue = &couplerID,
-            .type = UA_TYPES[UA_TYPES_INT64]
+            .type = UA_TYPES[UA_TYPES_INT32]
         }
     };
 

@@ -34,8 +34,6 @@
 #include <open62541/plugin/pubsub_ethernet.h>
 #include <open62541/plugin/pubsub_udp.h>
 
-#define countof(a) (sizeof(a)/sizeof(*(a)))
-
 // global Id of coupler
 static int COUPLER_ID = 0;
 

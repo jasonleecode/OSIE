@@ -36,6 +36,9 @@
 
 #define countof(a) (sizeof(a)/sizeof(*(a)))
 
+// global Id of coupler
+static int COUPLER_ID = 0;
+
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
@@ -55,7 +58,7 @@ static struct argp_option options[] = {
   {"password",    'w', "", 0, "Password."},
   {"key",         'k', "", 0, "x509 key."},
   {"certificate", 'c', "", 0, "X509 certificate."},
-  {"id",          'i', "", 0, "ID of coupler."},
+  {"id",          'i', "0", 0, "ID of coupler."},
   {0}
 };
 
@@ -69,7 +72,7 @@ struct arguments
     char *password;
     char *key;
     char *certificate;
-    char *id;
+    int id;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
@@ -101,7 +104,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 	    arguments->key = arg;
 	    break;
     case 'i':
-	    arguments->id = arg;
+	    arguments->id = arg ? atoi (arg) : 0;
 	    break;
     case ARGP_KEY_ARG:
 	    return 0;
@@ -138,7 +141,7 @@ int main(int argc, char **argv)
     arguments.password = "";
     arguments.key = "";
     arguments.certificate = "";
-    arguments.id = "";
+    arguments.id = 0;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
     printf("Mode=%d\n", arguments.mode);
@@ -147,10 +150,10 @@ int main(int argc, char **argv)
     printf("Slave address list=%s\n", arguments.slave_address_list);
     printf("Key=%s\n", arguments.key);
     printf("Certificate=%s\n", arguments.certificate);
-    printf("ID=%s\n", arguments.id);
-
+    printf("ID=%d\n", arguments.id);
 
     // transfer to global variables (CLI input)
+    COUPLER_ID = arguments.id;
     I2C_VIRTUAL_MODE = arguments.mode;
     I2C_BLOCK_DEVICE_NAME = arguments.device;
 
@@ -229,7 +232,7 @@ int main(int argc, char **argv)
 
     // enable keep-alive
     UA_Int32  defaultInt32 = 0;
-    UA_Int32  couplerID = atoi(arguments.id);
+    UA_Int32  couplerID = COUPLER_ID;
     const PublishedVariable publishedVariableArray[] = {
         // representing time in millis since start of process
         {

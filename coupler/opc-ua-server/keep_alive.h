@@ -1,6 +1,8 @@
 /*
 Keep alive implementation for couplers based on OPC UA's pub/sub mechanism
 */
+// both publisher and subscriber should use same publisher id
+const int PUBLISHER_ID = 2234;
 
 UA_NodeId connectionIdent, publishedDataSetIdent, writerGroupIdent;
 
@@ -17,7 +19,7 @@ static void addPubSubConnection(UA_Server *server, UA_String *transportProfile,
                          &UA_TYPES[UA_TYPES_NETWORKADDRESSURLDATATYPE]);
     /* Changed to static publisherId from random generation to identify
      * the publisher on Subscriber side */
-    connectionConfig.publisherId.numeric = 2234;
+    connectionConfig.publisherId.numeric = PUBLISHER_ID;
     UA_Server_addPubSubConnection(server, &connectionConfig, &connectionIdent);
 }
 
@@ -112,8 +114,6 @@ static void addDataSetWriter(UA_Server *server) {
     UA_Server_addDataSetWriter(server, writerGroupIdent, publishedDataSetIdent,
                                &dataSetWriterConfig, &dataSetWriterIdent);
 }
-
-// XXX: work of LEO which to integrate above
 
 typedef struct PublishedVariable {
     char *name;

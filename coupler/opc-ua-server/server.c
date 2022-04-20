@@ -42,6 +42,10 @@ static int HEART_BEATS = 0;
 
 // the heart beat interval
 static int HEART_BEAT_INTERVAL = 250;
+
+// global server
+UA_Server *server;
+
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
@@ -132,7 +136,14 @@ void callbackTicHeartBeat()
     /* Increase periodically heart beats of the server */ 
     HEART_BEATS += 1;
     UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat %d", HEART_BEATS);
-    // XXX: set OPC ua's heat_beat value
+
+    // set OPC UA's heat_beat node value
+    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "heart_beat");
+    UA_Int32 myInteger = HEART_BEATS;
+    UA_Variant myVar;
+    UA_Variant_init(&myVar);
+    UA_Variant_setScalar(&myVar, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
+    UA_Server_writeValue(server, myIntegerNodeId, myVar);
 }
 
 int main(int argc, char **argv)
@@ -188,7 +199,8 @@ int main(int argc, char **argv)
     bool addx509 = strlen(arguments.key) > 0 && strlen(arguments.certificate);
     bool addUserNamePasswordAuthentication = strlen(arguments.username) > 0 && strlen(arguments.password) > 0;
 
-    UA_Server *server = UA_Server_new();
+    //UA_Server *server = UA_Server_new();
+    server = UA_Server_new();
     UA_ServerConfig_setMinimal(UA_Server_getConfig(server), arguments.port, NULL);
     UA_ServerConfig *config = UA_Server_getConfig(server);
     config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;

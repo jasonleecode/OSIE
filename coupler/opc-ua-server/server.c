@@ -37,6 +37,11 @@
 // global Id of coupler
 static int COUPLER_ID = 0;
 
+// global HEART BEATs of coupler
+static int HEART_BEATS = 0;
+
+// the heart beat interval
+static int HEART_BEAT_INTERVAL = 250;
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
@@ -51,7 +56,7 @@ static struct argp_option options[] = {
   {"device",      'd', "/dev/i2c-1", 0, "Linux block device path."},
   {"slave-address-list", 's', "0x58", 0, "Comma separated list of slave I2C addresses."},
   {"mode",        'm', "0", 0, "Set different modes of operation of coupler. Default (0) is set attached \
-	                  I2C's state state. Virtual (1) which does NOT set any I2C slaves' state."},
+                  I2C's state state. Virtual (1) which does NOT set any I2C slaves' state."},
   {"username",    'u', "", 0, "Username."},
   {"password",    'w', "", 0, "Password."},
   {"key",         'k', "", 0, "x509 key."},
@@ -78,36 +83,36 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     struct arguments *arguments = state->input;
     switch (key) {
     case 'p':
-	    arguments->port = arg ? atoi (arg) : DEFAULT_OPC_UA_PORT;
-	    break;
+      arguments->port = arg ? atoi (arg) : DEFAULT_OPC_UA_PORT;
+      break;
     case 'd':
-	    arguments->device = arg;
-	    break;
+      arguments->device = arg;
+      break;
     case 's':
-	    arguments->slave_address_list = arg;
-	    break;
+      arguments->slave_address_list = arg;
+      break;
     case 'm':
-	    arguments->mode = arg ? atoi (arg) : DEFAULT_MODE;
-	    break;
+      arguments->mode = arg ? atoi (arg) : DEFAULT_MODE;
+      break;
     case 'u':
-	    arguments->username = arg;
-	    break;
+      arguments->username = arg;
+      break;
     case 'w':
-	    arguments->password = arg;
-	    break;
+      arguments->password = arg;
+      break;
     case 'c':
-	    arguments->certificate = arg;
-	    break;
+      arguments->certificate = arg;
+      break;
     case 'k':
-	    arguments->key = arg;
-	    break;
+      arguments->key = arg;
+      break;
     case 'i':
-	    arguments->id = arg ? atoi (arg) : 0;
-	    break;
+      arguments->id = arg ? atoi (arg) : 0;
+      break;
     case ARGP_KEY_ARG:
-	    return 0;
+      return 0;
     default: 
-	    return ARGP_ERR_UNKNOWN;
+      return ARGP_ERR_UNKNOWN;
     }
     return 0;
 }
@@ -120,6 +125,14 @@ static void stopHandler(int sign)
 {
     UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_SERVER, "received ctrl-c");
     running = false;
+}
+
+void callbackTicHeartBeat()
+{
+    /* Increase periodically heart beats of the server */ 
+    HEART_BEATS += 1;
+    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat %d", HEART_BEATS);
+    // XXX: set OPC ua's heat_beat value
 }
 
 int main(int argc, char **argv)
@@ -180,7 +193,7 @@ int main(int argc, char **argv)
     UA_ServerConfig *config = UA_Server_getConfig(server);
     config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
 
-    // add variables representing physical relarys / inputs, etc
+    // add variables representing physical relaray / inputs, etc
     addVariable(server);
     addValueCallbackToCurrentTimeVariable(server);
 
@@ -229,8 +242,13 @@ int main(int argc, char **argv)
     #endif
 
     // enable keep-alive
-    UA_Int32  defaultInt32 = 0;
-    UA_Int32  couplerID = COUPLER_ID;
+
+    // add a callback which will increment heart beat tics
+    UA_UInt64 callbackId = 1;
+    UA_Server_addRepeatedCallback(server, callbackTicHeartBeat, NULL, HEART_BEAT_INTERVAL, &callbackId);
+
+    UA_Int32  defaultInt32 = 0; //XXX: use unsigned int
+    UA_Int32  couplerID = COUPLER_ID; //XXX: use unsigned int
     const PublishedVariable publishedVariableArray[] = {
         // representing time in millis since start of process
         {

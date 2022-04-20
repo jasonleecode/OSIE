@@ -267,14 +267,14 @@ int main(int argc, char **argv)
             .name = "heart_beat",
             .description = "Heart beat",
             .pdefaultValue = &defaultInt32,
-            .type = UA_TYPES[UA_TYPES_INT32]
+            .type = UA_TYPES_INT32
         },
         // representing the ID of the coupler
         {
             .name = "id",
             .description = "ID",
             .pdefaultValue = &couplerID,
-            .type = UA_TYPES[UA_TYPES_INT32]
+            .type = UA_TYPES_INT32
         }
     };
 

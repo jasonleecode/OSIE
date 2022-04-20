@@ -38,7 +38,7 @@
 static int COUPLER_ID = 0;
 
 // global HEART BEATs of coupler
-static int HEART_BEATS = 0;
+static unsigned int HEART_BEATS = 0;
 
 // the heart beat interval
 static int HEART_BEAT_INTERVAL = 250;
@@ -139,10 +139,10 @@ void callbackTicHeartBeat()
 
     // set OPC UA's heat_beat node value
     UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "heart_beat");
-    UA_Int32 myInteger = HEART_BEATS;
+    UA_UInt32 myInteger = HEART_BEATS;
     UA_Variant myVar;
     UA_Variant_init(&myVar);
-    UA_Variant_setScalar(&myVar, &myInteger, &UA_TYPES[UA_TYPES_INT32]);
+    UA_Variant_setScalar(&myVar, &myInteger, &UA_TYPES[UA_TYPES_UINT32]);
     UA_Server_writeValue(server, myIntegerNodeId, myVar);
 }
 
@@ -259,22 +259,22 @@ int main(int argc, char **argv)
     UA_UInt64 callbackId = 1;
     UA_Server_addRepeatedCallback(server, callbackTicHeartBeat, NULL, HEART_BEAT_INTERVAL, &callbackId);
 
-    UA_Int32  defaultInt32 = 0; //XXX: use unsigned int
-    UA_Int32  couplerID = COUPLER_ID; //XXX: use unsigned int
+    UA_UInt32  defaultUInt32 = 0;
+    UA_UInt32  couplerID = COUPLER_ID;
     const PublishedVariable publishedVariableArray[] = {
         // representing time in millis since start of process
         {
             .name = "heart_beat",
             .description = "Heart beat",
-            .pdefaultValue = &defaultInt32,
-            .type = UA_TYPES_INT32
+            .pdefaultValue = &defaultUInt32,
+            .type = UA_TYPES_UINT32
         },
         // representing the ID of the coupler
         {
             .name = "id",
             .description = "ID",
             .pdefaultValue = &couplerID,
-            .type = UA_TYPES_INT32
+            .type = UA_TYPES_UINT32
         }
     };
 

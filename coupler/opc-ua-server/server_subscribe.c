@@ -28,10 +28,10 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
                                void *monitoredItemContext, const UA_NodeId *nodeId,
                                void *nodeContext, UA_UInt32 attributeId,
                                const UA_DataValue *var) {
-    if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_INT32])) {
+    if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_UINT32])) {
         UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,
                     "Received Notification with value %d",
-                    *(UA_Int32*) var->value.data);
+                    *(UA_UInt32*) var->value.data);
     }
 }
 
@@ -221,17 +221,17 @@ static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData) {
 
     /* heartbeat */
     UA_FieldMetaData_init (&pMetaData->fields[0]);
-    UA_NodeId_copy (&UA_TYPES[UA_TYPES_INT32].typeId,
+    UA_NodeId_copy (&UA_TYPES[UA_TYPES_UINT32].typeId,
                     &pMetaData->fields[0].dataType);
-    pMetaData->fields[0].builtInType = UA_NS0ID_INT32;
+    pMetaData->fields[0].builtInType = UA_NS0ID_UINT32;
     pMetaData->fields[0].name =  UA_STRING ("Heartbeat (subscribed)");
     pMetaData->fields[0].valueRank = -1; /* scalar */
 
     // ID
     UA_FieldMetaData_init (&pMetaData->fields[1]);
-    UA_NodeId_copy (&UA_TYPES[UA_TYPES_INT32].typeId,
+    UA_NodeId_copy (&UA_TYPES[UA_TYPES_UINT32].typeId,
                     &pMetaData->fields[1].dataType);
-    pMetaData->fields[1].builtInType = UA_NS0ID_INT32;
+    pMetaData->fields[1].builtInType = UA_NS0ID_UINT32;
     pMetaData->fields[1].name =  UA_STRING ("ID (subscribed)");
     pMetaData->fields[1].valueRank = -1; /* scalar */
 }

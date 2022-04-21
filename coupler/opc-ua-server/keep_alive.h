@@ -1,6 +1,13 @@
 /*
 Keep alive implementation for couplers based on OPC UA's pub/sub mechanism
 */
+
+// global HEART BEATs of coupler$
+static unsigned int HEART_BEATS = 0;
+
+// the heart beat interval$
+static int HEART_BEAT_INTERVAL = 250;
+
 // both publisher and subscriber should use same publisher id
 const int PUBLISHER_ID = 2234;
 
@@ -136,4 +143,61 @@ static void addPubSubDataSetField(UA_Server *server, PublishedVariable varDetail
     dataSetFieldConfig.field.variable.publishParameters.attributeId = UA_ATTRIBUTEID_VALUE;
     UA_Server_addDataSetField(server, publishedDataSetIdent,
                               &dataSetFieldConfig, &dataSetFieldIdent);
+}
+
+
+void callbackTicHeartBeat()
+{
+    /* Increase periodically heart beats of the server */
+    HEART_BEATS += 1;
+    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat %d", HEART_BEATS);
+
+    // set OPC UA's heat_beat node value
+    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "heart_beat");
+    UA_UInt32 myInteger = HEART_BEATS;
+    UA_Variant myVar;
+    UA_Variant_init(&myVar);
+    UA_Variant_setScalar(&myVar, &myInteger, &UA_TYPES[UA_TYPES_UINT32]);
+    UA_Server_writeValue(server, myIntegerNodeId, myVar);
+}
+
+
+static void enablePublishHeartBeat(UA_Server *erver, UA_ServerConfig *config){
+    int i;
+    // add a callback which will increment heart beat tics
+    UA_UInt64 callbackId = 1;
+    UA_Server_addRepeatedCallback(server, callbackTicHeartBeat, NULL, HEART_BEAT_INTERVAL, &callbackId);
+
+    UA_UInt32  defaultUInt32 = 0;
+    UA_UInt32  couplerID = COUPLER_ID;
+    const PublishedVariable publishedVariableArray[] = {
+        // representing time in millis since start of process
+        {
+            .name = "heart_beat",
+            .description = "Heart beat",
+            .pdefaultValue = &defaultUInt32,
+            .type = UA_TYPES_UINT32
+        },
+        // representing the ID of the coupler
+        {
+            .name = "id",
+            .description = "ID",
+            .pdefaultValue = &couplerID,
+            .type = UA_TYPES_UINT32
+        }
+    };
+
+    UA_String transportProfile =
+        UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
+    UA_NetworkAddressUrlDataType networkAddressUrl =
+        {UA_STRING_NULL , UA_STRING("opc.udp://224.0.0.22:4840/")};
+    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
+    addPubSubConnection(server, &transportProfile, &networkAddressUrl);
+    addPublishedDataSet(server);
+    for(i = 0; i < countof(publishedVariableArray); i++) {
+        addPubSubVariable(server, publishedVariableArray[i]);
+        addPubSubDataSetField(server, publishedVariableArray[i]);
+    }
+    addWriterGroup(server);
+    addDataSetWriter(server);
 }

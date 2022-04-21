@@ -4,6 +4,12 @@ Keep alive implementation for couplers based on OPC UA's pub/sub mechanism
 // both publisher and subscriber should use same publisher id
 const int PUBLISHER_ID = 2234;
 
+// the interval for publishing messages
+const int PUBLISHING_INTERVAL = 100;
+
+// a hard coded writer group (should be same for publisher / subscriber)
+const int WRITER_GROUP_ID = 100;
+
 UA_NodeId connectionIdent, publishedDataSetIdent, writerGroupIdent;
 
 static void addPubSubConnection(UA_Server *server, UA_String *transportProfile,
@@ -52,9 +58,9 @@ static void addWriterGroup(UA_Server *server) {
     UA_WriterGroupConfig writerGroupConfig;
     memset(&writerGroupConfig, 0, sizeof(UA_WriterGroupConfig));
     writerGroupConfig.name = UA_STRING("Demo WriterGroup");
-    writerGroupConfig.publishingInterval = 100;
+    writerGroupConfig.publishingInterval = PUBLISHING_INTERVAL;
     writerGroupConfig.enabled = UA_FALSE;
-    writerGroupConfig.writerGroupId = 100;
+    writerGroupConfig.writerGroupId = WRITER_GROUP_ID;
     writerGroupConfig.encodingMimeType = UA_PUBSUB_ENCODING_UADP;
     writerGroupConfig.messageSettings.encoding             = UA_EXTENSIONOBJECT_DECODED;
     writerGroupConfig.messageSettings.content.decoded.type = &UA_TYPES[UA_TYPES_UADPWRITERGROUPMESSAGEDATATYPE];

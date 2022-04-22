@@ -259,9 +259,6 @@ run(UA_String *transportProfile, UA_NetworkAddressUrlDataType *networkAddressUrl
      * on runtime. Details about the PubSubTransportLayer can be found inside the
      * tutorial_pubsub_connection */
     UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
-#ifdef UA_ENABLE_PUBSUB_ETH_UADP
-    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerEthernet());
-#endif
 
     /* API calls */
     /* Add PubSubConnection */

@@ -61,6 +61,10 @@ static struct argp_option options[] = {
   {"key",         'k', "", 0, "x509 key."},
   {"certificate", 'c', "", 0, "X509 certificate."},
   {"id",          'i', "0", 0, "ID of coupler."},
+  {"heart-beat",  'b', "0", 0, "Publish heart beat to other couplers."},
+  {"heart-beat-interval",  't', "500", 0, "Heart beat interval in ms."},
+  {"heart-beat-id-list",  'l', "", 0, "Comma separated list of IDs of couplers to watch for heart beats. \
+If heart beat is missing coupler goes to safe mode."},
   {0}
 };
 

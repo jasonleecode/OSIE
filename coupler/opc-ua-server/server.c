@@ -44,6 +44,7 @@ UA_Server *server;
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
+const int DEFAULT_ID = 0;
 
 // CLI arguments handling
 const char *argp_program_version = "OSIE OPC-UA coupler 0.0.1";
@@ -79,6 +80,9 @@ struct arguments
     char *key;
     char *certificate;
     int id;
+    bool heart_beat;
+    int heart_beat_interval;
+    char *heart_beat_id_list;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
@@ -110,7 +114,16 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
       arguments->key = arg;
       break;
     case 'i':
-      arguments->id = arg ? atoi (arg) : 0;
+      arguments->id = arg ? atoi (arg) : DEFAULT_ID;
+      break;
+    case 'b':
+      arguments->heart_beat = atoi (arg);
+      break;
+    case 't':
+      arguments->heart_beat_interval = atoi (arg);
+      break;
+    case 'l':
+      arguments->heart_beat_id_list = arg;
       break;
     case ARGP_KEY_ARG:
       return 0;
@@ -158,6 +171,9 @@ int main(int argc, char **argv)
     printf("Key=%s\n", arguments.key);
     printf("Certificate=%s\n", arguments.certificate);
     printf("ID=%d\n", arguments.id);
+    printf("Heart beat=%d\n", arguments.heart_beat);
+    printf("Heart beat interval=%d ms\n", arguments.heart_beat_interval);
+    printf("Heart beat ID list=%s\n", arguments.heart_beat_id_list);
 
     // transfer to global variables (CLI input)
     COUPLER_ID = arguments.id;
@@ -239,7 +255,9 @@ int main(int argc, char **argv)
     #endif
 
     // enable keep-alive
-    enablePublishHeartBeat(server, config);
+    if (arguments.heart_beat) {
+      enablePublishHeartBeat(server, config);
+    }
 
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);

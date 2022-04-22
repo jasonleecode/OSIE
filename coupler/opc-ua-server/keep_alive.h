@@ -8,6 +8,9 @@ static unsigned int HEART_BEATS = 0;
 // the heart beat interval$
 static int HEART_BEAT_INTERVAL = 250;
 
+// the list of couplers onto which we depend for properly running
+static char *HEART_BEAT_ID_LIST[20];
+
 // the interval for publishing messages
 const int PUBLISHING_INTERVAL = 100;
 

@@ -8,14 +8,14 @@ static unsigned int HEART_BEATS = 0;
 // the heart beat interval$
 static int HEART_BEAT_INTERVAL = 250;
 
-// both publisher and subscriber should use same publisher id
-const int PUBLISHER_ID = 2234;
-
 // the interval for publishing messages
 const int PUBLISHING_INTERVAL = 100;
 
-// a hard coded writer group (should be same for publisher / subscriber)
+// a hard coded writer group, data set and publisher ID
+// (should be same for publisher / subscriber)
 const int WRITER_GROUP_ID = 100;
+const int DATASET_WRITER_ID = 62541;
+const int PUBLISHER_ID = 2234;
 
 UA_NodeId connectionIdent, publishedDataSetIdent, writerGroupIdent;
 
@@ -102,7 +102,7 @@ static void addDataSetWriter(UA_Server *server) {
     UA_DataSetWriterConfig dataSetWriterConfig;
     memset(&dataSetWriterConfig, 0, sizeof(UA_DataSetWriterConfig));
     dataSetWriterConfig.name = UA_STRING("Demo DataSetWriter");
-    dataSetWriterConfig.dataSetWriterId = 62541;
+    dataSetWriterConfig.dataSetWriterId = DATASET_WRITER_ID;
     dataSetWriterConfig.keyFrameCount = 10;
     UA_Server_addDataSetWriter(server, writerGroupIdent, publishedDataSetIdent,
                                &dataSetWriterConfig, &dataSetWriterIdent);

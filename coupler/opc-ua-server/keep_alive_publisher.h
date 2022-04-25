@@ -154,7 +154,7 @@ void callbackTicHeartBeat()
 {
     /* Increase periodically heart beats of the server */
     HEART_BEATS += 1;
-    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat %d", HEART_BEATS);
+    //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat %d", HEART_BEATS);
 
     // set OPC UA's heat_beat node value
     UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "heart_beat");
@@ -162,7 +162,7 @@ void callbackTicHeartBeat()
     UA_Variant myVar;
     UA_Variant_init(&myVar);
     UA_Variant_setScalar(&myVar, &myInteger, &UA_TYPES[UA_TYPES_UINT32]);
-    UA_Server_writeValue(server, myIntegerNodeId, myVar);
+    //UA_Server_writeValue(server, myIntegerNodeId, myVar);
 }
 
 

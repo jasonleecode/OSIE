@@ -235,3 +235,20 @@ static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData) {
     pMetaData->fields[1].name =  UA_STRING ("ID (subscribed)");
     pMetaData->fields[1].valueRank = -1; /* scalar */
 }
+
+static int enableSubscribeToHeartBeat(UA_Server *erver, UA_ServerConfig *config){
+    // enable subscribe to keep-alive messages
+    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
+    UA_String transportProfile = UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
+    UA_NetworkAddressUrlDataType networkAddressUrl = {UA_STRING_NULL , UA_STRING("opc.udp://224.0.0.22:4840/")};
+    addPubSubConnectionXXX(server, &transportProfile, &networkAddressUrl);
+
+    /* Add ReaderGroup to the created PubSubConnection */
+    addReaderGroup(server);
+
+    /* Add DataSetReader to the created ReaderGroup */
+    addDataSetReader(server);
+
+    /* Add SubscribedVariables to the created DataSetReader */
+    addSubscribedVariables(server, readerIdentifier);
+}

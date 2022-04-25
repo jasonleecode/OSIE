@@ -257,34 +257,13 @@ int main(int argc, char **argv)
     }
     #endif
 
-    // enable publish keep-alive
+    // enable publish keep-alive messages
     if (arguments.heart_beat) {
       enablePublishHeartBeat(server, config);
     }
 
     // enable subscribe to keep-alive messages
-    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
-    UA_StatusCode return_value = UA_STATUSCODE_GOOD;
-    UA_String transportProfile = UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
-    UA_NetworkAddressUrlDataType networkAddressUrl = {UA_STRING_NULL , UA_STRING("opc.udp://224.0.0.22:4840/")};
-    return_value |= addPubSubConnectionXXX(server, &transportProfile, &networkAddressUrl);
-    if ( return_value!= UA_STATUSCODE_GOOD)
-        return EXIT_FAILURE;
-
-    /* Add ReaderGroup to the created PubSubConnection */
-    return_value |= addReaderGroup(server);
-    if (return_value!= UA_STATUSCODE_GOOD)
-        return EXIT_FAILURE;
-
-    /* Add DataSetReader to the created ReaderGroup */
-    return_value |= addDataSetReader(server);
-    if (return_value != UA_STATUSCODE_GOOD)
-        return EXIT_FAILURE;
-
-    /* Add SubscribedVariables to the created DataSetReader */
-    return_value |= addSubscribedVariables(server, readerIdentifier);
-    if (return_value != UA_STATUSCODE_GOOD)
-        return EXIT_FAILURE;
+    enableSubscribeToHeartBeat(server, config);
 
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);

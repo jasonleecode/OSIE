@@ -162,7 +162,7 @@ void callbackTicHeartBeat()
     UA_Variant myVar;
     UA_Variant_init(&myVar);
     UA_Variant_setScalar(&myVar, &myInteger, &UA_TYPES[UA_TYPES_UINT32]);
-    //UA_Server_writeValue(server, myIntegerNodeId, myVar);
+    UA_Server_writeValue(server, myIntegerNodeId, myVar);
 }
 
 

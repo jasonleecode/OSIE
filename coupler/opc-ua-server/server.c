@@ -40,6 +40,7 @@ static int COUPLER_ID = 0;
 UA_Server *server;
 
 #include "keep_alive_publisher.h"
+#include "keep_alive_subscriber.h"
 
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
@@ -260,6 +261,33 @@ int main(int argc, char **argv)
     if (arguments.heart_beat) {
       enablePublishHeartBeat(server, config);
     }
+
+    // XXX: subscribe part
+    /* Add PubSubConnection */
+    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
+    UA_StatusCode return_value = UA_STATUSCODE_GOOD;
+    UA_String transportProfile = UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
+    UA_NetworkAddressUrlDataType networkAddressUrl = {UA_STRING_NULL , UA_STRING("opc.udp://224.0.0.22:4840/")};
+    return_value |= addPubSubConnectionXXX(server, &transportProfile, &networkAddressUrl);
+    if ( return_value!= UA_STATUSCODE_GOOD)
+        return EXIT_FAILURE;
+
+    /* Add ReaderGroup to the created PubSubConnection */
+    return_value |= addReaderGroup(server);
+    if (return_value!= UA_STATUSCODE_GOOD)
+        return EXIT_FAILURE;
+
+    /* Add DataSetReader to the created ReaderGroup */
+    return_value |= addDataSetReader(server);
+    if (return_value != UA_STATUSCODE_GOOD)
+        return EXIT_FAILURE;
+
+    /* Add SubscribedVariables to the created DataSetReader */
+    return_value |= addSubscribedVariables(server, readerIdentifier);
+    if (return_value != UA_STATUSCODE_GOOD)
+        return EXIT_FAILURE;
+
+    // EOF: subscribe
 
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);

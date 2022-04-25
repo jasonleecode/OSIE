@@ -257,6 +257,9 @@ int main(int argc, char **argv)
     }
     #endif
 
+    // enable protocol for Pub/Sub
+    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
+ 
     // enable publish keep-alive messages
     if (arguments.heart_beat) {
       enablePublishHeartBeat(server, config);

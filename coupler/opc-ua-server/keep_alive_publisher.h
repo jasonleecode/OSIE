@@ -166,7 +166,7 @@ void callbackTicHeartBeat()
 }
 
 
-static void enablePublishHeartBeat(UA_Server *erver, UA_ServerConfig *config){
+static void enablePublishHeartBeat(UA_Server *server, UA_ServerConfig *config){
     int i;
     // add a callback which will increment heart beat tics
     UA_UInt64 callbackId = 1;
@@ -195,7 +195,6 @@ static void enablePublishHeartBeat(UA_Server *erver, UA_ServerConfig *config){
         UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
     UA_NetworkAddressUrlDataType networkAddressUrl =
         {UA_STRING_NULL , UA_STRING("opc.udp://224.0.0.22:4840/")};
-    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
     addPubSubConnection(server, &transportProfile, &networkAddressUrl);
     addPublishedDataSet(server);
     for(i = 0; i < countof(publishedVariableArray); i++) {

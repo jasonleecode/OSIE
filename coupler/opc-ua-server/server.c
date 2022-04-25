@@ -120,7 +120,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
       arguments->heart_beat = atoi (arg);
       break;
     case 't':
-      arguments->heart_beat_interval = atoi (arg);
+      arguments->heart_beat_interval = arg ? atoi (arg) : DEFAULT_HEART_BEAT_INTERVAL;
       break;
     case 'l':
       arguments->heart_beat_id_list = arg;
@@ -161,7 +161,8 @@ int main(int argc, char **argv)
     arguments.password = "";
     arguments.key = "";
     arguments.certificate = "";
-    arguments.id = 0;
+    arguments.id = DEFAULT_ID;
+    arguments.heart_beat_interval = DEFAULT_HEART_BEAT_INTERVAL;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
     printf("Mode=%d\n", arguments.mode);

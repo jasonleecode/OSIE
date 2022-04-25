@@ -39,7 +39,7 @@ static int COUPLER_ID = 0;
 // global server
 UA_Server *server;
 
-#include "keep_alive.h"
+#include "keep_alive_publisher.h"
 
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;

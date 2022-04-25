@@ -194,6 +194,17 @@ int main(int argc, char **argv)
         token = strtok(NULL, ",");
     }
 
+    // convert arguments.heart_beat_id_list -> HEART_BEAT_ID_LIST
+    i = 0;
+    char *tk= strtok(arguments.heart_beat_id_list, ",");
+    while (tk != NULL)
+    {
+        // from CLI we get a  comma separated list on INTs representing coupler' ID
+        result = strtol(tk, &eptr, 16);
+        HEART_BEAT_ID_LIST[i++] = result;
+        tk = strtok(NULL, ",");
+    }
+
     // always start attached slaves from a know safe shutdown state
     safeShutdownI2CSlaveList();
 

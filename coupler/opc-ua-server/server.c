@@ -39,13 +39,17 @@ static int COUPLER_ID = 0;
 // global server
 UA_Server *server;
 
-#include "keep_alive_publisher.h"
-#include "keep_alive_subscriber.h"
-
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
 const int DEFAULT_ID = 0;
+
+// OPC UA's Pub/Sub profile
+char *DEFAULT_TRANSPORT_PROFILE = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+char *DEFAULT_NETWORK_ADDRESS_URL = "opc.udp://224.0.0.22:4840/";
+
+#include "keep_alive_publisher.h"
+#include "keep_alive_subscriber.h"
 
 // CLI arguments handling
 const char *argp_program_version = "OSIE OPC-UA coupler 0.0.1";

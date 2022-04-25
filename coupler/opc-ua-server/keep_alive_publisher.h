@@ -191,10 +191,9 @@ static void enablePublishHeartBeat(UA_Server *server, UA_ServerConfig *config){
         }
     };
 
-    UA_String transportProfile =
-        UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
+    UA_String transportProfile = UA_STRING(DEFAULT_TRANSPORT_PROFILE);
     UA_NetworkAddressUrlDataType networkAddressUrl =
-        {UA_STRING_NULL , UA_STRING("opc.udp://224.0.0.22:4840/")};
+        {UA_STRING_NULL , UA_STRING(DEFAULT_NETWORK_ADDRESS_URL)};
     addPubSubConnection(server, &transportProfile, &networkAddressUrl);
     addPublishedDataSet(server);
     for(i = 0; i < countof(publishedVariableArray); i++) {

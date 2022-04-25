@@ -257,13 +257,12 @@ int main(int argc, char **argv)
     }
     #endif
 
-    // enable keep-alive
+    // enable publish keep-alive
     if (arguments.heart_beat) {
       enablePublishHeartBeat(server, config);
     }
 
-    // XXX: subscribe part
-    /* Add PubSubConnection */
+    // enable subscribe to keep-alive messages
     UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
     UA_StatusCode return_value = UA_STATUSCODE_GOOD;
     UA_String transportProfile = UA_STRING("http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp");
@@ -286,8 +285,6 @@ int main(int argc, char **argv)
     return_value |= addSubscribedVariables(server, readerIdentifier);
     if (return_value != UA_STATUSCODE_GOOD)
         return EXIT_FAILURE;
-
-    // EOF: subscribe
 
     // run server
     UA_StatusCode retval = UA_Server_run(server, &running);

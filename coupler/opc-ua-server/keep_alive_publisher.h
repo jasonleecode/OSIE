@@ -157,12 +157,12 @@ void callbackTicHeartBeat()
     //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat %d", HEART_BEATS);
 
     // set OPC UA's heat_beat node value
-    UA_NodeId myIntegerNodeId = UA_NODEID_STRING(1, "heart_beat");
-    UA_UInt32 myInteger = HEART_BEATS;
+    UA_NodeId myFloatNodeId = UA_NODEID_STRING(1, "heart_beat");
+    UA_Float myFloat = HEART_BEATS;
     UA_Variant myVar;
     UA_Variant_init(&myVar);
-    UA_Variant_setScalar(&myVar, &myInteger, &UA_TYPES[UA_TYPES_UINT32]);
-    UA_Server_writeValue(server, myIntegerNodeId, myVar);
+    UA_Variant_setScalar(&myVar, &myFloat, &UA_TYPES[UA_TYPES_FLOAT]);
+    UA_Server_writeValue(server, myFloatNodeId, myVar);
 }
 
 
@@ -174,13 +174,14 @@ static void enablePublishHeartBeat(UA_Server *server, UA_ServerConfig *config){
 
     UA_UInt32  defaultUInt32 = 0;
     UA_UInt32  couplerID = COUPLER_ID;
+    UA_Float   defaultFloat = 0.0;
     const PublishedVariable publishedVariableArray[] = {
         // representing time in millis since start of process
         {
             .name = "heart_beat",
             .description = "Heart beat",
-            .pdefaultValue = &defaultUInt32,
-            .type = UA_TYPES_UINT32
+            .pdefaultValue = &defaultFloat,
+            .type = UA_TYPES_FLOAT
         },
         // representing the ID of the coupler
         {

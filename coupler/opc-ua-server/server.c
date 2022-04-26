@@ -39,6 +39,9 @@ static int COUPLER_ID = 0;
 // global server
 UA_Server *server;
 
+// global dictionary of subscribers
+dict_t *SUBSCRIBER_DICT;
+
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
@@ -155,6 +158,11 @@ int main(int argc, char **argv)
     int length;
     long result;
     char *eptr;
+
+    // init dictionary only once$
+    if (SUBSCRIBER_DICT==NULL){
+      SUBSCRIBER_DICT = *dictAlloc();
+    }
 
     // handle command line arguments
     struct arguments arguments;

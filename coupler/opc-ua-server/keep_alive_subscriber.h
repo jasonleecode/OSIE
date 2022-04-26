@@ -35,6 +35,7 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
         unsigned int coupler_id = *(UA_UInt32*) var->value.data;
         if (coupler_id!=COUPLER_ID) {
           // care for other coupler_id NOT ourselves
+          addItem(&SUBSCRIBER_DICT, "foo", "bar");
           UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "ID = %d, microseconds=%ld", coupler_id, micro_seconds);
         }
     }

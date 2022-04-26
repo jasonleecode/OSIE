@@ -31,9 +31,12 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
     // filter out ID from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_UINT32])) {
         unsigned int coupler_id = *(UA_UInt32*) var->value.data;
-        UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,
-                    "ID = %d", coupler_id);
+        if (coupler_id!=COUPLER_ID) {
+          // care for other coupler_id NOT ourselves
+          UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "ID = %d", coupler_id);
+        }
     }
+
     // filter out heart_beat  from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_FLOAT])) {
         float heart_beat = *(UA_Float*) var->value.data;

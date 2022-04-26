@@ -2,7 +2,18 @@
  * See http://creativecommons.org/publicdomain/zero/1.0/for more information. */
 #define countof(a) (sizeof(a)/sizeof(*(a)))
 
+#include <sys/time.h>
+#include <stdio.h>
+
 #include <open62541/server.h>
+
+
+int getMicroSeconds() {
+  struct timeval current_time;
+  gettimeofday(&current_time, NULL);
+  long int ms = current_time.tv_sec * 1000 + current_time.tv_usec / 1000;
+  return ms;
+}
 
 /* loadFile parses the certificate file.
  *

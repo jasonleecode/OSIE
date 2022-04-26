@@ -28,12 +28,14 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
                                void *monitoredItemContext, const UA_NodeId *nodeId,
                                void *nodeContext, UA_UInt32 attributeId,
                                const UA_DataValue *var) {
+    long int micro_seconds = getMicroSeconds();
+
     // filter out ID from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_UINT32])) {
         unsigned int coupler_id = *(UA_UInt32*) var->value.data;
         if (coupler_id!=COUPLER_ID) {
           // care for other coupler_id NOT ourselves
-          UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "ID = %d", coupler_id);
+          UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "ID = %d, microseconds=%ld", coupler_id, micro_seconds);
         }
     }
 

@@ -2,6 +2,8 @@
 Keep alive implementation for couplers based on OPC UA's pub/sub mechanism
 */
 
+#include "keep_alive.h"
+
 // global HEART BEATs of coupler$
 static unsigned int HEART_BEATS = 0;
 
@@ -14,12 +16,6 @@ unsigned int HEART_BEAT_ID_LIST[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 // the interval for publishing messages
 const int PUBLISHING_INTERVAL = 100;
-
-// a hard coded writer group, data set and publisher ID
-// (should be same for publisher / subscriber)
-const int WRITER_GROUP_ID = 100;
-const int DATASET_WRITER_ID = 62541;
-const int PUBLISHER_ID = 2234;
 
 UA_NodeId connectionIdent, publishedDataSetIdent, writerGroupIdent;
 

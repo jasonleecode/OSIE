@@ -40,8 +40,7 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
     // filter out heart_beat  from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_FLOAT])) {
         float heart_beat = *(UA_Float*) var->value.data;
-        UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND,
-                    "heart_beat = %f", heart_beat);
+        //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat = %f", heart_beat);
     }
 }
 
@@ -115,11 +114,11 @@ static UA_StatusCode addDataSetReader(UA_Server *server) {
     /* The following parameters are used to show that the data published by
      * tutorial_pubsub_publish.c is being subscribed and is being updated in
      * the information model */
-    UA_UInt16 publisherIdentifier = 2234;
+    UA_UInt16 publisherIdentifier = PUBLISHER_ID;
     readerConfig.publisherId.type = &UA_TYPES[UA_TYPES_UINT16];
     readerConfig.publisherId.data = &publisherIdentifier;
-    readerConfig.writerGroupId    = 100;
-    readerConfig.dataSetWriterId  = 62541;
+    readerConfig.writerGroupId    = WRITER_GROUP_ID;
+    readerConfig.dataSetWriterId  = DATASET_WRITER_ID;
 
     /* Setting up Meta data configuration in DataSetReader */
     fillTestDataSetMetaData(&readerConfig.dataSetMetaData);

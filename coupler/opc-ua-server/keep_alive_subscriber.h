@@ -55,7 +55,7 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
               char* id_str = malloc(length + 1);
               snprintf(id_str, length + 1, "%d", id);
               char *last_seen_timestamp = getItem(SUBSCRIBER_DICT, id_str);
-              UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "\tcheck id_str=%s, last_seen=%s", id_str, last_seen_timestamp);
+              UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "\tcheck ID=%s, last_seen=%s", id_str, last_seen_timestamp);
               if (last_seen_timestamp!=NULL){
                 // we do have timestamp for this coupler ID
                 int last_seen_timestamp_int = atoi(last_seen_timestamp);

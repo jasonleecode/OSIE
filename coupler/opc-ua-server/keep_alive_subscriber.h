@@ -7,10 +7,6 @@
 
 #include "ua_pubsub.h"
 
-#if defined (UA_ENABLE_PUBSUB_ETH_UADP)
-#include <open62541/plugin/pubsub_ethernet.h>
-#endif
-
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -35,21 +31,43 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
         unsigned int coupler_id = *(UA_UInt32*) var->value.data;
         // care for other coupler_id NOT ourselves
         if (coupler_id!=COUPLER_ID) {
-
-          // convert coupler_id to str
+          //HEART_BEAT_ID_LIST
+          UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "Got heart beat from ID = %d, timestamp=%ld", coupler_id, micro_seconds);
+ 
+          // convert coupler_id to str (XXX: define as a function)
           int length = snprintf( NULL, 0, "%d", coupler_id);
           char* coupler_id_str = malloc(length + 1);
           snprintf(coupler_id_str, length + 1, "%d", coupler_id);
 
-          // convert micro seconds to str
+          // convert micro seconds to str (XXX: define as afunction)
           length = snprintf( NULL, 0, "%ld", micro_seconds);
           char* micro_seconds_str = malloc(length + 1);
           snprintf(micro_seconds_str, length + 1, "%ld", micro_seconds);
 
+          // XXX: implement check for dead couplers using asynchronous callbacks from open62541
+          int i, id;
+          size_t n = sizeof(HEART_BEAT_ID_LIST)/sizeof(HEART_BEAT_ID_LIST[0]);
+          for (int i = 0; i < n; i++) {
+            id = HEART_BEAT_ID_LIST[i];
+            if (id > 0) {
+              // XXX: define as a function
+              length = snprintf( NULL, 0, "%d", id);
+              char* id_str = malloc(length + 1);
+              snprintf(id_str, length + 1, "%d", id);
+              char *last_seen_timestamp = getItem(SUBSCRIBER_DICT, id_str);
+              UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "\tcheck id_str=%s, last_seen=%s", id_str, last_seen_timestamp);
+              if (last_seen_timestamp!=NULL){
+                // we do have timestamp for this coupler ID
+                int last_seen_timestamp_int = atoi(last_seen_timestamp);
+                int timestamp_delta = micro_seconds - last_seen_timestamp_int;
+                UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "\t\tdelta=%d", timestamp_delta);
+              }
+            }
+          }
+
           // Add to our local linked list
           addItem(&SUBSCRIBER_DICT, coupler_id_str, micro_seconds_str);
 
-          UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "ID = %d, microseconds=%ld", coupler_id, micro_seconds);
         }
     }
 

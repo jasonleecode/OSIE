@@ -33,9 +33,22 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
     // filter out ID from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_UINT32])) {
         unsigned int coupler_id = *(UA_UInt32*) var->value.data;
+        // care for other coupler_id NOT ourselves
         if (coupler_id!=COUPLER_ID) {
-          // care for other coupler_id NOT ourselves
-          addItem(&SUBSCRIBER_DICT, "foo", "bar");
+
+          // convert coupler_id to str
+          int length = snprintf( NULL, 0, "%d", coupler_id);
+          char* coupler_id_str = malloc(length + 1);
+          snprintf(coupler_id_str, length + 1, "%d", coupler_id);
+
+          // convert micro seconds to str
+          length = snprintf( NULL, 0, "%ld", micro_seconds);
+          char* micro_seconds_str = malloc(length + 1);
+          snprintf(micro_seconds_str, length + 1, "%ld", micro_seconds);
+
+          // Add to our local linked list
+          addItem(&SUBSCRIBER_DICT, coupler_id_str, micro_seconds_str);
+
           UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "ID = %d, microseconds=%ld", coupler_id, micro_seconds);
         }
     }

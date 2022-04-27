@@ -60,7 +60,8 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
                 // we do have timestamp for this coupler ID
                 int last_seen_timestamp_int = atoi(last_seen_timestamp);
                 int timestamp_delta = micro_seconds - last_seen_timestamp_int;
-                UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "\t\tdelta=%d", timestamp_delta);
+                bool is_down = (timestamp_delta > 1000);
+                UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "\t\tdelta=%d, is_down=%d", timestamp_delta, is_down);
               }
             }
           }

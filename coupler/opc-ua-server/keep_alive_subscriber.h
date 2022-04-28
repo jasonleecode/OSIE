@@ -19,6 +19,7 @@ UA_DataSetReaderConfig readerConfig;
 
 static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData);
 
+
 /* callback to handle change notifications */
 static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitoredItemId,
                                void *monitoredItemContext, const UA_NodeId *nodeId,
@@ -34,15 +35,11 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
           //HEART_BEAT_ID_LIST
           UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "Got heart beat from ID = %d, timestamp=%ld", coupler_id, micro_seconds);
  
-          // convert coupler_id to str (XXX: define as a function)
-          int length = snprintf( NULL, 0, "%d", coupler_id);
-          char* coupler_id_str = malloc(length + 1);
-          snprintf(coupler_id_str, length + 1, "%d", coupler_id);
+          // convert coupler_id to str
+          char* coupler_id_str = convertInt2Str(coupler_id);
 
-          // convert micro seconds to str (XXX: define as afunction)
-          length = snprintf( NULL, 0, "%ld", micro_seconds);
-          char* micro_seconds_str = malloc(length + 1);
-          snprintf(micro_seconds_str, length + 1, "%ld", micro_seconds);
+          // convert micro seconds to str
+          char* micro_seconds_str = convertLongInt2Str(micro_seconds);
 
           // XXX: implement check for dead couplers using asynchronous callbacks from open62541
           int i, id;
@@ -50,10 +47,8 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
           for (int i = 0; i < n; i++) {
             id = HEART_BEAT_ID_LIST[i];
             if (id > 0) {
-              // XXX: define as a function
-              length = snprintf( NULL, 0, "%d", id);
-              char* id_str = malloc(length + 1);
-              snprintf(id_str, length + 1, "%d", id);
+              // convert to str as this is the hash key
+              char* id_str = convertInt2Str(id);
               char *last_seen_timestamp = getItem(SUBSCRIBER_DICT, id_str);
               UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "\tcheck ID=%s, last_seen=%s", id_str, last_seen_timestamp);
               if (last_seen_timestamp!=NULL){

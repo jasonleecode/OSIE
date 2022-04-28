@@ -64,6 +64,24 @@ char *randomString(size_t length)
     return randomString;
 }
 
+char *convertInt2Str(int my_int){
+  /* Convert integer to string */
+  int length = snprintf( NULL, 0, "%d", my_int);
+  char *my_str = malloc(length + 1);
+  snprintf(my_str, length + 1, "%d", my_int);
+  return my_str;
+}
+
+char *convertLongInt2Str(long int my_int){
+  /* Convert integer to string */
+  int length = snprintf( NULL, 0, "%ld", my_int);
+  char *my_str = malloc(length + 1);
+  snprintf(my_str, length + 1, "%ld", my_int);
+  return my_str;
+}
+
+
+
 // XXX: dictionary implementation based on https://gist.github.com/kylef/86784/fe97567ec9baf5c0dce3c7fcbec948e21dfcce09
 
 typedef struct dict_t_struct {

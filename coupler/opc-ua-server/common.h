@@ -7,13 +7,13 @@
 #include <open62541/server.h>
 
 
-int getMilliSecondsSinceEpoch() {
+unsigned long int getMilliSecondsSinceEpoch() {
   /*
-   * Return milli seconds since epoch
+   * Return milli seconds since epoch.
   */
   struct timeval current_time;
   gettimeofday(&current_time, NULL);
-  long int ms = current_time.tv_sec * 1000 + current_time.tv_usec / 1000;
+  unsigned long int ms = current_time.tv_sec * 1000 + current_time.tv_usec / 1000;
   return ms;
 }
 

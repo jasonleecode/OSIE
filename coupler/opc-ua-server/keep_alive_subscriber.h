@@ -25,15 +25,16 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
                                void *monitoredItemContext, const UA_NodeId *nodeId,
                                void *nodeContext, UA_UInt32 attributeId,
                                const UA_DataValue *var) {
-    long int milli_seconds_now = getMilliSecondsSinceEpoch();
+    unsigned long int milli_seconds_now = getMilliSecondsSinceEpoch();
 
     // filter out ID from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_UINT32])) {
         unsigned int coupler_id = *(UA_UInt32*) var->value.data;
         // care for other coupler_id NOT ourselves
         if (coupler_id!=COUPLER_ID) {
-          //HEART_BEAT_ID_LIST
-          UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "Got heart beat from ID = %d, timestamp=%ld", coupler_id, milli_seconds_now);
+          UA_LOG_INFO(UA_Log_Stdout, \
+                     UA_LOGCATEGORY_USERLAND, \
+                     "Got heart beat from ID = %d, timestamp=%ld", coupler_id, milli_seconds_now);
 
           // convert coupler_id to str
           char* coupler_id_str = convertInt2Str(coupler_id);
@@ -258,7 +259,7 @@ static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData) {
 
 void callbackCheckHeartBeat() {
   int i, coupler_id;
-  long int milli_seconds = getMilliSecondsSinceEpoch();
+  unsigned long int milli_seconds = getMilliSecondsSinceEpoch();
   size_t n = sizeof(HEART_BEAT_ID_LIST)/sizeof(HEART_BEAT_ID_LIST[0]);
   for (int i = 0; i < n; i++) {
     coupler_id = HEART_BEAT_ID_LIST[i];

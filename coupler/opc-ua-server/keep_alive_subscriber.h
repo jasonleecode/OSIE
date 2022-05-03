@@ -25,7 +25,7 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
                                void *monitoredItemContext, const UA_NodeId *nodeId,
                                void *nodeContext, UA_UInt32 attributeId,
                                const UA_DataValue *var) {
-    long int micro_seconds = getMicroSeconds();
+    long int milli_seconds_now = getMilliSecondsSinceEpoch();
 
     // filter out ID from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_UINT32])) {
@@ -33,16 +33,16 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
         // care for other coupler_id NOT ourselves
         if (coupler_id!=COUPLER_ID) {
           //HEART_BEAT_ID_LIST
-          UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "Got heart beat from ID = %d, timestamp=%ld", coupler_id, micro_seconds);
+          UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "Got heart beat from ID = %d, timestamp=%ld", coupler_id, milli_seconds_now);
 
           // convert coupler_id to str
           char* coupler_id_str = convertInt2Str(coupler_id);
 
           // convert micro seconds to str
-          char* micro_seconds_str = convertLongInt2Str(micro_seconds);
+          char* milli_seconds_now_str = convertLongInt2Str(milli_seconds_now);
 
           // Add to our local linked list
-          addItem(&SUBSCRIBER_DICT, coupler_id_str, micro_seconds_str);
+          addItem(&SUBSCRIBER_DICT, coupler_id_str, milli_seconds_now_str);
 
         }
     }
@@ -258,7 +258,7 @@ static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData) {
 
 void callbackCheckHeartBeat() {
   int i, coupler_id;
-  long int micro_seconds = getMicroSeconds();
+  long int milli_seconds = getMilliSecondsSinceEpoch();
   size_t n = sizeof(HEART_BEAT_ID_LIST)/sizeof(HEART_BEAT_ID_LIST[0]);
   for (int i = 0; i < n; i++) {
     coupler_id = HEART_BEAT_ID_LIST[i];
@@ -270,7 +270,7 @@ void callbackCheckHeartBeat() {
       if (last_seen_timestamp != NULL){
         // we do have timestamp for this coupler ID
         int last_seen_timestamp_int = atoi(last_seen_timestamp);
-        int timestamp_delta = micro_seconds - last_seen_timestamp_int;
+        int timestamp_delta = milli_seconds - last_seen_timestamp_int;
         bool is_down = (timestamp_delta > 1000);
         UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "\tdelta=%d, is_down=%d", timestamp_delta, is_down);
       }

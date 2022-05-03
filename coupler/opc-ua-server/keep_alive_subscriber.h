@@ -34,7 +34,7 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
         if (coupler_id!=COUPLER_ID) {
           UA_LOG_INFO(UA_Log_Stdout, \
                      UA_LOGCATEGORY_USERLAND, \
-                     "Got heart beat from ID = %d, timestamp=%ld", coupler_id, milli_seconds_now);
+                     "HEART BEAT: %d", coupler_id);
 
           // convert coupler_id to str
           char* coupler_id_str = convertInt2Str(coupler_id);
@@ -258,6 +258,10 @@ static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData) {
 
 
 void callbackCheckHeartBeat() {
+  /*
+   * Check if for liveness of related couplers. Called upon a certain interval.
+   * If a related coupler is down got to safe mode.
+   */
   int i, coupler_id;
   unsigned long int milli_seconds = getMilliSecondsSinceEpoch();
   size_t n = sizeof(HEART_BEAT_ID_LIST)/sizeof(HEART_BEAT_ID_LIST[0]);
@@ -267,13 +271,17 @@ void callbackCheckHeartBeat() {
       // convert to str as this is the hash key
       char* coupler_id_str = convertInt2Str(coupler_id);
       char *last_seen_timestamp = getItem(SUBSCRIBER_DICT, coupler_id_str);
-      UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "Check ID=%s, last_seen=%s", coupler_id_str, last_seen_timestamp);
+      //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "Check ID=%s, last_seen=%s", coupler_id_str, last_seen_timestamp);
       if (last_seen_timestamp != NULL){
         // we do have timestamp for this coupler ID
         int last_seen_timestamp_int = atoi(last_seen_timestamp);
         int timestamp_delta = milli_seconds - last_seen_timestamp_int;
         bool is_down = (timestamp_delta > 1000);
-        UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "\tdelta=%d, is_down=%d", timestamp_delta, is_down);
+        if (is_down) {
+          UA_LOG_INFO(UA_Log_Stdout, \
+                      UA_LOGCATEGORY_USERLAND, \
+                      "DOWN: %s (delta=%d)", coupler_id_str, timestamp_delta);
+        }
       }
     }
   }

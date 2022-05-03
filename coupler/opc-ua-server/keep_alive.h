@@ -6,6 +6,7 @@ const int DEFAULT_HEART_BEAT_INTERVAL = 250;
 static int HEART_BEAT_INTERVAL = DEFAULT_HEART_BEAT_INTERVAL;
 
 // the list of couplers onto which we depend for properly running$
+// XXX: assume ONLY 8 couplers!
 unsigned int HEART_BEAT_ID_LIST[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 // the interval for publishing messages$

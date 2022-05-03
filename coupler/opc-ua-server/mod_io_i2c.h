@@ -1,15 +1,15 @@
 // global relay state
 uint8_t I2C_0_RELAYS_STATE = 0; // state of 4 relays at I2C slave 0
 uint8_t I2C_1_RELAYS_STATE = 0; // state of 4 relays at I2C slave 1
-// XXX: what if we have more than 2 MOd-IOs / I2C slaves, we need better structure
 
 // the default addresses of MOD-IOs
 static char *DEFAULT_I2C_0_ADDR = "0x58";
 
 // the list of attached I2C slaves
 const int DEFAULT_I2C_SLAVE_ADDR = 0x58;
-// XXX: make dynamic array
-int I2C_SLAVE_ADDR_LIST[] = {0, 0, 0, 0, 0};
+
+// XXX:code assumes only 8 I2C slaves but it can be more
+int I2C_SLAVE_ADDR_LIST[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 // the block device at host machine
 static char *DEFAULT_I2C_BLOCK_DEVICE_NAME = "/dev/i2c-1";

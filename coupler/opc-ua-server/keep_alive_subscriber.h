@@ -56,7 +56,7 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
 }
 
 /* Add new connection to the server */
-static UA_StatusCode addPubSubConnectionXXX(UA_Server *server, UA_String *transportProfile,
+static UA_StatusCode addPubSubConnectionSubscriber(UA_Server *server, UA_String *transportProfile,
                     UA_NetworkAddressUrlDataType *networkAddressUrl) {
     if((server == NULL) || (transportProfile == NULL) ||
         (networkAddressUrl == NULL)) {
@@ -292,7 +292,7 @@ static int enableSubscribeToHeartBeat(UA_Server *server, UA_ServerConfig *config
     // enable subscribe to keep-alive messages
     UA_String transportProfile = UA_STRING(DEFAULT_TRANSPORT_PROFILE);
     UA_NetworkAddressUrlDataType networkAddressUrl = {UA_STRING_NULL , UA_STRING(NETWORK_ADDRESS_URL_DATA_TYPE)};
-    addPubSubConnectionXXX(server, &transportProfile, &networkAddressUrl);
+    addPubSubConnectionSubscriber(server, &transportProfile, &networkAddressUrl);
 
     /* Add ReaderGroup to the created PubSubConnection */
     addReaderGroup(server);

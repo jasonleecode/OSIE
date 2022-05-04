@@ -49,7 +49,7 @@ const int DEFAULT_ID = 0;
 
 // OPC UA's Pub/Sub profile
 char *DEFAULT_TRANSPORT_PROFILE = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
-char *DEFAULT_NETWORK_ADDRESS_URL = "opc.udp://224.0.0.22:4840/";
+char *NETWORK_ADDRESS_URL_DATA_TYPE = "opc.udp://224.0.0.22:4840/";
 
 #include "keep_alive_publisher.h"
 #include "keep_alive_subscriber.h"
@@ -74,6 +74,8 @@ static struct argp_option options[] = {
   {"heart-beat-interval",  't', "500", 0, "Heart beat interval in ms."},
   {"heart-beat-id-list",  'l', "", 0, "Comma separated list of IDs of couplers to watch for heart beats. \
 If heart beat is missing coupler goes to safe mode."},
+  {"network-address-url-data-type", 'n', "opc.udp://224.0.0.22:4840/", 0, "Netwrok address URL type used for Pub/Sub."},
+
   {0}
 };
 
@@ -91,6 +93,7 @@ struct arguments
     bool heart_beat;
     int heart_beat_interval;
     char *heart_beat_id_list;
+    char *network_address_url_data_type;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
@@ -132,6 +135,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
       break;
     case 'l':
       arguments->heart_beat_id_list = arg;
+      break;
+    case 'n':
+      arguments->network_address_url_data_type = arg;
       break;
     case ARGP_KEY_ARG:
       return 0;
@@ -176,6 +182,7 @@ int main(int argc, char **argv)
     arguments.certificate = "";
     arguments.id = DEFAULT_ID;
     arguments.heart_beat_interval = DEFAULT_HEART_BEAT_INTERVAL;
+    arguments.network_address_url_data_type = NETWORK_ADDRESS_URL_DATA_TYPE;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
     printf("Mode=%d\n", arguments.mode);
@@ -188,12 +195,14 @@ int main(int argc, char **argv)
     printf("Heart beat=%d\n", arguments.heart_beat);
     printf("Heart beat interval=%d ms\n", arguments.heart_beat_interval);
     printf("Heart beat ID list=%s\n", arguments.heart_beat_id_list);
+    printf("Network address URL data type=%s\n", arguments.network_address_url_data_type);
 
     // transfer to global variables (CLI input)
     COUPLER_ID = arguments.id;
     I2C_VIRTUAL_MODE = arguments.mode;
     I2C_BLOCK_DEVICE_NAME = arguments.device;
     HEART_BEAT_INTERVAL = arguments.heart_beat_interval;
+    NETWORK_ADDRESS_URL_DATA_TYPE = arguments.network_address_url_data_type;
 
     // convert arguments.slave_address_list -> I2C_SLAVE_ADDR_LIST
     i = 0;

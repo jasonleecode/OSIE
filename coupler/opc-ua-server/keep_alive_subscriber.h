@@ -291,7 +291,7 @@ void callbackCheckHeartBeat() {
 static int enableSubscribeToHeartBeat(UA_Server *server, UA_ServerConfig *config){
     // enable subscribe to keep-alive messages
     UA_String transportProfile = UA_STRING(DEFAULT_TRANSPORT_PROFILE);
-    UA_NetworkAddressUrlDataType networkAddressUrl = {UA_STRING_NULL , UA_STRING(DEFAULT_NETWORK_ADDRESS_URL)};
+    UA_NetworkAddressUrlDataType networkAddressUrl = {UA_STRING_NULL , UA_STRING(NETWORK_ADDRESS_URL_DATA_TYPE)};
     addPubSubConnectionXXX(server, &transportProfile, &networkAddressUrl);
 
     /* Add ReaderGroup to the created PubSubConnection */

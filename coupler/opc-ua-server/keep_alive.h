@@ -5,6 +5,9 @@ static unsigned int HEART_BEATS = 0;
 const int DEFAULT_HEART_BEAT_INTERVAL = 250;
 static int HEART_BEAT_INTERVAL = DEFAULT_HEART_BEAT_INTERVAL;
 
+// the timeout in millis after which a coupler is considered down
+const int DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL = 4 * DEFAULT_HEART_BEAT_INTERVAL;
+
 // the list of couplers onto which we depend for properly running$
 // XXX: assume ONLY 8 couplers!
 unsigned int HEART_BEAT_ID_LIST[] = {0, 0, 0, 0, 0, 0, 0, 0};

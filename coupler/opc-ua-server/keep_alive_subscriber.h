@@ -276,7 +276,7 @@ void callbackCheckHeartBeat() {
         // we do have timestamp for this coupler ID
         int last_seen_timestamp_int = atoi(last_seen_timestamp);
         int timestamp_delta = milli_seconds - last_seen_timestamp_int;
-        bool is_down = (timestamp_delta > 1000);
+        bool is_down = (timestamp_delta > DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL);
         if (is_down) {
           UA_LOG_INFO(UA_Log_Stdout, \
                       UA_LOGCATEGORY_USERLAND, \

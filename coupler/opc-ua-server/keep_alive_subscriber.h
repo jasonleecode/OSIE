@@ -262,7 +262,8 @@ void callbackCheckHeartBeat() {
    * Check if for liveness of related couplers. Called upon a certain interval.
    * If a related coupler is down got to safe mode.
    */
-  int i, coupler_id;
+  int i, coupler_id, last_seen_timestamp_int, timestamp_delta;
+  bool is_down;
   unsigned long int milli_seconds = getMilliSecondsSinceEpoch();
   size_t n = sizeof(HEART_BEAT_ID_LIST)/sizeof(HEART_BEAT_ID_LIST[0]);
   for (int i = 0; i < n; i++) {
@@ -274,14 +275,18 @@ void callbackCheckHeartBeat() {
       //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "Check ID=%s, last_seen=%s", coupler_id_str, last_seen_timestamp);
       if (last_seen_timestamp != NULL){
         // we do have timestamp for this coupler ID
-        int last_seen_timestamp_int = atoi(last_seen_timestamp);
-        int timestamp_delta = milli_seconds - last_seen_timestamp_int;
-        bool is_down = (timestamp_delta > DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL);
+        last_seen_timestamp_int = atoi(last_seen_timestamp);
+        timestamp_delta = milli_seconds - last_seen_timestamp_int;
+        is_down = (timestamp_delta > DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL);
         if (is_down) {
           UA_LOG_INFO(UA_Log_Stdout, \
                       UA_LOGCATEGORY_USERLAND, \
                       "DOWN: %s (delta=%d)", coupler_id_str, timestamp_delta);
         }
+      }
+      else {
+        // still no hear beat from this coupler ...
+        UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "NO INITIAL HEART BEAT: %s", coupler_id_str);
       }
     }
   }

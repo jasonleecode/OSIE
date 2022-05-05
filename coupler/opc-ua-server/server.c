@@ -47,12 +47,18 @@ const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
 const int DEFAULT_ID = 0;
 
+int OPC_UA_PORT;
+bool ENABLE_HEART_BEAT = false;
+bool ENABLE_X509 = false;
+bool ENABLE_USERNAME_PASSWORD_AUTHENTICATION = false;
+char *USERNAME;
+char *PASSWORD;
+char *X509_KEY_FILENAME;
+char *X509_CERTIFICATE_FILENAME;
+
 #include "keep_alive_publisher.h"
 #include "keep_alive_subscriber.h"
-
 #include "cli.h"
-
-static struct argp argp = {options, parse_opt, args_doc, doc, 0, 0, 0};
 
 static volatile UA_Boolean running = true;
 
@@ -75,61 +81,8 @@ int main(int argc, char **argv)
       SUBSCRIBER_DICT = *dictAlloc();
     }
 
-    // handle command line arguments
-    struct arguments arguments;
-    arguments.port = DEFAULT_OPC_UA_PORT;
-    arguments.mode = DEFAULT_MODE;
-    arguments.device = DEFAULT_I2C_BLOCK_DEVICE_NAME;
-    arguments.slave_address_list = DEFAULT_I2C_0_ADDR;
-    arguments.username = "";
-    arguments.password = "";
-    arguments.key = "";
-    arguments.certificate = "";
-    arguments.id = DEFAULT_ID;
-    arguments.heart_beat_interval = DEFAULT_HEART_BEAT_INTERVAL;
-    arguments.network_address_url_data_type = NETWORK_ADDRESS_URL_DATA_TYPE;
-    argp_parse(&argp, argc, argv, 0, 0, &arguments);
-
-    printf("Mode=%d\n", arguments.mode);
-    printf("Listening port=%d\n", arguments.port);
-    printf("Block device=%s\n", arguments.device);
-    printf("Slave address list=%s\n", arguments.slave_address_list);
-    printf("Key=%s\n", arguments.key);
-    printf("Certificate=%s\n", arguments.certificate);
-    printf("ID=%d\n", arguments.id);
-    printf("Heart beat=%d\n", arguments.heart_beat);
-    printf("Heart beat interval=%d ms\n", arguments.heart_beat_interval);
-    printf("Heart beat ID list=%s\n", arguments.heart_beat_id_list);
-    printf("Network address URL data type=%s\n", arguments.network_address_url_data_type);
-
-    // transfer to global variables (CLI input)
-    COUPLER_ID = arguments.id;
-    I2C_VIRTUAL_MODE = arguments.mode;
-    I2C_BLOCK_DEVICE_NAME = arguments.device;
-    HEART_BEAT_INTERVAL = arguments.heart_beat_interval;
-    NETWORK_ADDRESS_URL_DATA_TYPE = arguments.network_address_url_data_type;
-
-    // convert arguments.slave_address_list -> I2C_SLAVE_ADDR_LIST
-    i = 0;
-    char *token = strtok(arguments.slave_address_list, ",");
-    while (token != NULL)
-    {
-        // from CLI we get a hexidecimal string as a char (0x58 for example), convert to decimal
-        result = strtol(token, &eptr, 16);
-        I2C_SLAVE_ADDR_LIST[i++] = result;
-        token = strtok(NULL, ",");
-    }
-
-    // convert arguments.heart_beat_id_list -> HEART_BEAT_ID_LIST
-    i = 0;
-    char *tk= strtok(arguments.heart_beat_id_list, ",");
-    while (tk != NULL)
-    {
-        // from CLI we get a  comma separated list on INTs representing coupler' ID
-        result = strtol(tk, &eptr, 16);
-        HEART_BEAT_ID_LIST[i++] = result;
-        tk = strtok(NULL, ",");
-    }
+    // parse CLI
+    handleCLI(argc, argv);
 
     // always start attached slaves from a know safe shutdown state
     safeShutdownI2CSlaveList();
@@ -137,12 +90,8 @@ int main(int argc, char **argv)
     signal(SIGINT, stopHandler);
     signal(SIGTERM, stopHandler);
 
-    bool addx509 = strlen(arguments.key) > 0 && strlen(arguments.certificate);
-    bool addUserNamePasswordAuthentication = strlen(arguments.username) > 0 && strlen(arguments.password) > 0;
-
-    //UA_Server *server = UA_Server_new();
     server = UA_Server_new();
-    UA_ServerConfig_setMinimal(UA_Server_getConfig(server), arguments.port, NULL);
+    UA_ServerConfig_setMinimal(UA_Server_getConfig(server), OPC_UA_PORT, NULL);
     UA_ServerConfig *config = UA_Server_getConfig(server);
     config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
 
@@ -151,11 +100,9 @@ int main(int argc, char **argv)
     addValueCallbackToCurrentTimeVariable(server);
 
     /* Disable anonymous logins, enable two user/password logins */
-    if (addUserNamePasswordAuthentication){
-      char *username = arguments.username;
-      char *password = arguments.password;
+    if (ENABLE_USERNAME_PASSWORD_AUTHENTICATION){
       UA_UsernamePasswordLogin logins[1] = {
-          {UA_STRING(arguments.username), UA_STRING(arguments.password)},
+          {UA_STRING(USERNAME), UA_STRING(PASSWORD)},
       };
 
       config->accessControl.clear(&config->accessControl);
@@ -165,12 +112,10 @@ int main(int argc, char **argv)
 
     /* Enable x509 */
     #ifdef UA_ENABLE_ENCRYPTION
-    if (addx509){
-      char *key_filename = arguments.key;
-      char *certificate_filename = arguments.certificate;
+    if (ENABLE_X509){
       /* Load certificate and private key */
-      UA_ByteString certificate = loadFile(certificate_filename);
-      UA_ByteString privateKey  = loadFile(key_filename);
+      UA_ByteString certificate = loadFile(X509_CERTIFICATE_FILENAME);
+      UA_ByteString privateKey  = loadFile(X509_KEY_FILENAME);
 
       /* Load the trustlist - not used thus 0 */
       size_t trustListSize = 0;
@@ -198,7 +143,7 @@ int main(int argc, char **argv)
     UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
  
     // enable publish keep-alive messages
-    if (arguments.heart_beat) {
+    if (ENABLE_HEART_BEAT) {
       enablePublishHeartBeat(server, config);
     }
 

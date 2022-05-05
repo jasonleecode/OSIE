@@ -92,3 +92,78 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     }
     return 0;
 }
+
+void handleCLI(int argc, char **argv) {
+    // parse CLI
+    int i;
+    int length;
+    long result;
+    char *eptr;
+
+
+    static struct argp argp = {options, parse_opt, args_doc, doc, 0, 0, 0};
+
+    struct arguments arguments;
+    arguments.port = DEFAULT_OPC_UA_PORT;
+    arguments.mode = DEFAULT_MODE;
+    arguments.device = DEFAULT_I2C_BLOCK_DEVICE_NAME;
+    arguments.slave_address_list = DEFAULT_I2C_0_ADDR;
+    arguments.username = "";
+    arguments.password = "";
+    arguments.key = "";
+    arguments.certificate = "";
+    arguments.id = DEFAULT_ID;
+    arguments.heart_beat_interval = DEFAULT_HEART_BEAT_INTERVAL;
+    arguments.network_address_url_data_type = NETWORK_ADDRESS_URL_DATA_TYPE;
+    argp_parse(&argp, argc, argv, 0, 0, &arguments);
+
+    printf("Mode=%d\n", arguments.mode);
+    printf("Listening port=%d\n", arguments.port);
+    printf("Block device=%s\n", arguments.device);
+    printf("Slave address list=%s\n", arguments.slave_address_list);
+    printf("Key=%s\n", arguments.key);
+    printf("Certificate=%s\n", arguments.certificate);
+    printf("ID=%d\n", arguments.id);
+    printf("Heart beat=%d\n", arguments.heart_beat);
+    printf("Heart beat interval=%d ms\n", arguments.heart_beat_interval);
+    printf("Heart beat ID list=%s\n", arguments.heart_beat_id_list);
+    printf("Network address URL data type=%s\n", arguments.network_address_url_data_type);
+
+    // transfer to global variables (CLI input)
+    COUPLER_ID = arguments.id;
+    I2C_VIRTUAL_MODE = arguments.mode;
+    I2C_BLOCK_DEVICE_NAME = arguments.device;
+    HEART_BEAT_INTERVAL = arguments.heart_beat_interval;
+    NETWORK_ADDRESS_URL_DATA_TYPE = arguments.network_address_url_data_type;
+    USERNAME = arguments.username;
+    PASSWORD = arguments.password;
+    OPC_UA_PORT = arguments.port;
+    ENABLE_X509 = strlen(arguments.key) > 0 && strlen(arguments.certificate);
+    ENABLE_USERNAME_PASSWORD_AUTHENTICATION = strlen(arguments.username) > 0 && strlen(arguments.password) > 0;
+    ENABLE_HEART_BEAT = arguments.heart_beat;
+    X509_KEY_FILENAME = arguments.key;
+    X509_CERTIFICATE_FILENAME = arguments.certificate;
+
+    // convert arguments.slave_address_list -> I2C_SLAVE_ADDR_LIST
+    i = 0;
+    char *token = strtok(arguments.slave_address_list, ",");
+    while (token != NULL)
+    {
+        // from CLI we get a hexidecimal string as a char (0x58 for example), convert to decimal
+        result = strtol(token, &eptr, 16);
+        I2C_SLAVE_ADDR_LIST[i++] = result;
+        token = strtok(NULL, ",");
+    }
+
+    // convert arguments.heart_beat_id_list -> HEART_BEAT_ID_LIST
+    i = 0;
+    char *tk= strtok(arguments.heart_beat_id_list, ",");
+    while (tk != NULL)
+    {
+        // from CLI we get a  comma separated list on INTs representing coupler' ID
+        result = strtol(tk, &eptr, 16);
+        HEART_BEAT_ID_LIST[i++] = result;
+        tk = strtok(NULL, ",");
+    }
+}
+

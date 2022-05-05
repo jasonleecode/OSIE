@@ -33,7 +33,7 @@
 #include <open62541/plugin/pubsub_ethernet.h>
 #include <open62541/plugin/pubsub_udp.h>
 
-// global Id of coupler
+// global ID of coupler
 static int COUPLER_ID = 0;
 
 // global server
@@ -46,10 +46,6 @@ dict_t *SUBSCRIBER_DICT;
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
 const int DEFAULT_ID = 0;
-
-// OPC UA's Pub/Sub profile
-char *DEFAULT_TRANSPORT_PROFILE = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
-char *NETWORK_ADDRESS_URL_DATA_TYPE = "opc.udp://224.0.0.22:4840/";
 
 #include "keep_alive_publisher.h"
 #include "keep_alive_subscriber.h"

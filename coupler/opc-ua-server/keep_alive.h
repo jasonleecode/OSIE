@@ -1,3 +1,7 @@
+// OPC UA's Pub/Sub profile
+char *DEFAULT_TRANSPORT_PROFILE = "http://opcfoundation.org/UA-Profile/Transport/pubsub-udp-uadp";
+char *NETWORK_ADDRESS_URL_DATA_TYPE = "opc.udp://224.0.0.22:4840/";
+
 // global HEART BEATs of coupler
 static unsigned int HEART_BEATS = 0;
 

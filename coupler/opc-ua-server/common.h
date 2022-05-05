@@ -6,11 +6,10 @@
 #include <stdio.h>
 #include <open62541/server.h>
 
-
 unsigned long int getMilliSecondsSinceEpoch() {
   /*
    * Return milli seconds since epoch.
-  */
+   */
   struct timeval current_time;
   gettimeofday(&current_time, NULL);
   unsigned long int ms = current_time.tv_sec * 1000 + current_time.tv_usec / 1000;
@@ -21,8 +20,7 @@ unsigned long int getMilliSecondsSinceEpoch() {
  *
  * @param  path               specifies the file name given in argv[]
  * @return Returns the file content after parsing */
-static UA_INLINE UA_ByteString
-loadFile(const char *const path) {
+static UA_INLINE UA_ByteString loadFile(const char *const path) {
     UA_ByteString fileContents = UA_STRING_NULL;
 
     /* Open the file */
@@ -49,25 +47,29 @@ loadFile(const char *const path) {
     return fileContents;
 }
 
-char *randomString(size_t length)
-{
-    static char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    char *randomString = NULL;
-    if (length) {
-        randomString = malloc(sizeof(char) * (length +1));
-        if (randomString) {
-            for (int n = 0;n < length;n++) {
+char *randomString(size_t length) {
+  /*
+   * Generate a random string.
+   */
+  static char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  char *randomString = NULL;
+  if (length) {
+    randomString = malloc(sizeof(char) * (length +1));
+    if (randomString) {
+      for (int n = 0;n < length;n++) {
                 int key = rand() % (int)(sizeof(charset) -1);
                 randomString[n] = charset[key];
-            }
-            randomString[length] = '\0';
-        }
+      }
+      randomString[length] = '\0';
     }
-    return randomString;
+  }
+  return randomString;
 }
 
 char *convertInt2Str(int my_int){
-  /* Convert integer to string */
+  /* 
+   * Convert integer to string.
+   */
   int length = snprintf( NULL, 0, "%d", my_int);
   char *my_str = malloc(length + 1);
   snprintf(my_str, length + 1, "%d", my_int);
@@ -75,16 +77,18 @@ char *convertInt2Str(int my_int){
 }
 
 char *convertLongInt2Str(long int my_int){
-  /* Convert integer to string */
+  /* 
+   * Convert a long integer to string.
+   */
   int length = snprintf( NULL, 0, "%ld", my_int);
   char *my_str = malloc(length + 1);
   snprintf(my_str, length + 1, "%ld", my_int);
   return my_str;
 }
 
-
-
-// XXX: dictionary implementation based on https://gist.github.com/kylef/86784/fe97567ec9baf5c0dce3c7fcbec948e21dfcce09
+/*
+ * dictionary implementation based on https://gist.github.com/kylef/86784/fe97567ec9baf5c0dce3c7fcbec948e21dfcce09
+*/
 
 typedef struct dict_t_struct {
     char  *key;

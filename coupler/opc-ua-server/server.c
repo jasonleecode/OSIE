@@ -45,7 +45,7 @@ dict_t *SUBSCRIBER_DICT;
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
 const int DEFAULT_MODE = 0;
-const int DEFAULT_ID = 0;
+const int DEFAULT_COUPLER_ID = 0;
 
 int OPC_UA_PORT;
 bool ENABLE_HEART_BEAT = false;
@@ -71,11 +71,6 @@ static void stopHandler(int sign)
 
 int main(int argc, char **argv)
 {
-    int i;
-    int length;
-    long result;
-    char *eptr;
-
     // init dictionary only once$
     if (SUBSCRIBER_DICT==NULL){
       SUBSCRIBER_DICT = *dictAlloc();

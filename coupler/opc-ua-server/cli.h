@@ -71,7 +71,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
       arguments->key = arg;
       break;
     case 'i':
-      arguments->id = arg ? atoi (arg) : DEFAULT_ID;
+      arguments->id = arg ? atoi (arg) : DEFAULT_COUPLER_ID;
       break;
     case 'b':
       arguments->heart_beat = atoi (arg);
@@ -112,7 +112,7 @@ void handleCLI(int argc, char **argv) {
     arguments.password = "";
     arguments.key = "";
     arguments.certificate = "";
-    arguments.id = DEFAULT_ID;
+    arguments.id = DEFAULT_COUPLER_ID;
     arguments.heart_beat_interval = DEFAULT_HEART_BEAT_INTERVAL;
     arguments.network_address_url_data_type = NETWORK_ADDRESS_URL_DATA_TYPE;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);

@@ -36,5 +36,22 @@ void gotoSafeMode() {
 
   // do shutdown all attached I2C slaves (MOD-IO's relays).
   safeShutdownI2CSlaveList();
-  // XXX: should process exit ?
+  // set to virtual mode which means that coupler will mimic working but
+  // not set any related relays' state
+  I2C_VIRTUAL_MODE = 1;
+
+}
+
+void gotoNormalMode() {
+  /*
+   * In this mode coupler will set all
+   * relays of attached I2C slaves.
+   * This is the normal mode of operation (
+   * unless changed over CLI with "-m" switch.)
+   */
+  UA_LOG_INFO(UA_Log_Stdout, \
+              UA_LOGCATEGORY_USERLAND, \
+              "Go to NORMAL MODE");
+  I2C_VIRTUAL_MODE = 0;
+
 }

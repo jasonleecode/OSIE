@@ -196,10 +196,11 @@ static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSet
                                            UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
                                            vAttr, NULL, &newNode);
         /*monitor variable*/
-        UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(newNode);
-        UA_Server_createDataChangeMonitoredItem(server, UA_TIMESTAMPSTORETURN_SOURCE,
-                                                monRequest, NULL, dataChangeNotificationCallback);
-
+	if (ENABLE_HEART_BEAT_CHECK) {
+          UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(newNode);
+          UA_Server_createDataChangeMonitoredItem(server, UA_TIMESTAMPSTORETURN_SOURCE,
+                                                  monRequest, NULL, dataChangeNotificationCallback);
+	}
         /* For creating Targetvariables */
         UA_FieldTargetDataType_init(&targetVars[i].targetVariable);
         targetVars[i].targetVariable.attributeId  = UA_ATTRIBUTEID_VALUE;

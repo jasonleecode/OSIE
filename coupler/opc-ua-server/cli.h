@@ -19,7 +19,7 @@ static struct argp_option options[] = {
   {"heart-beat",  'b', "0", 0, "Publish heart beat to other couplers."},
   {"heart-beat-interval",  't', "500", 0, "Heart beat interval in ms."},
   {"heart-beat-id-list",  'l', "", 0, "Comma separated list of IDs of couplers to watch for heart beats. \
-If heart beat is missing coupler goes to safe mode."},
+                   If a heart beat is missing coupler goes to safe mode."},
   {"network-address-url-data-type", 'n', "opc.udp://224.0.0.22:4840/", 0, "Netwrok address URL type used for Pub/Sub."},
 
   {0}
@@ -114,6 +114,7 @@ void handleCLI(int argc, char **argv) {
     arguments.certificate = "";
     arguments.id = DEFAULT_COUPLER_ID;
     arguments.heart_beat_interval = DEFAULT_HEART_BEAT_INTERVAL;
+    arguments.heart_beat_id_list = "";
     arguments.network_address_url_data_type = NETWORK_ADDRESS_URL_DATA_TYPE;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
@@ -160,10 +161,12 @@ void handleCLI(int argc, char **argv) {
     char *tk= strtok(arguments.heart_beat_id_list, ",");
     while (tk != NULL)
     {
-        // from CLI we get a  comma separated list on INTs representing coupler' ID
-        result = strtol(tk, &eptr, 16);
-        HEART_BEAT_ID_LIST[i++] = result;
-        tk = strtok(NULL, ",");
-    }
+      // from CLI we get a  comma separated list on INTs representing coupler' ID
+      result = strtol(tk, &eptr, 16);
+      HEART_BEAT_ID_LIST[i++] = result;
+      // enable heart beat checks
+      ENABLE_HEART_BEAT_CHECK = true;
+      tk = strtok(NULL, ",");
+      }
 }
 

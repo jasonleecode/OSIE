@@ -49,6 +49,7 @@ const int DEFAULT_COUPLER_ID = 0;
 
 int OPC_UA_PORT;
 bool ENABLE_HEART_BEAT = false;
+bool ENABLE_HEART_BEAT_CHECK = false;
 bool ENABLE_X509 = false;
 bool ENABLE_USERNAME_PASSWORD_AUTHENTICATION = false;
 char *USERNAME;

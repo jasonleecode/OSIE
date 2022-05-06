@@ -25,3 +25,16 @@ const int WRITER_GROUP_ID = 100;
 const int DATASET_WRITER_ID = 62541;
 const int PUBLISHER_ID = 2234;
 
+void gotoSafeMode() {
+  /*
+   * In this mode coupler will shutdown all
+   * relays of attached I2C slaves
+   */
+   UA_LOG_INFO(UA_Log_Stdout, \
+               UA_LOGCATEGORY_USERLAND, \
+               "Go to SAFE MODE");
+
+  // do shutdown all attached I2C slaves (MOD-IO's relays).
+  safeShutdownI2CSlaveList();
+  // XXX: should process exit ?
+}

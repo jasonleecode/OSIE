@@ -283,6 +283,8 @@ void callbackCheckHeartBeat() {
           UA_LOG_INFO(UA_Log_Stdout, \
                       UA_LOGCATEGORY_USERLAND, \
                       "DOWN: %s (delta=%d)", coupler_id_str, timestamp_delta);
+	  // go to safe mode as a dependant coupler is DOWN.
+	  gotoSafeMode();
         }
       }
       else {

@@ -196,11 +196,11 @@ static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSet
                                            UA_NODEID_NUMERIC(0, UA_NS0ID_BASEDATAVARIABLETYPE),
                                            vAttr, NULL, &newNode);
         /*monitor variable*/
-	if (ENABLE_HEART_BEAT_CHECK) {
+        if (ENABLE_HEART_BEAT_CHECK) {
           UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(newNode);
           UA_Server_createDataChangeMonitoredItem(server, UA_TIMESTAMPSTORETURN_SOURCE,
                                                   monRequest, NULL, dataChangeNotificationCallback);
-	}
+        }
         /* For creating Targetvariables */
         UA_FieldTargetDataType_init(&targetVars[i].targetVariable);
         targetVars[i].targetVariable.attributeId  = UA_ATTRIBUTEID_VALUE;
@@ -283,8 +283,8 @@ void callbackCheckHeartBeat() {
           UA_LOG_INFO(UA_Log_Stdout, \
                       UA_LOGCATEGORY_USERLAND, \
                       "DOWN: %s (delta=%d)", coupler_id_str, timestamp_delta);
-	  // go to safe mode as a dependant coupler is DOWN.
-	  gotoSafeMode();
+        // go to safe mode as a dependant coupler is DOWN.
+        gotoSafeMode();
         }
       }
       else {

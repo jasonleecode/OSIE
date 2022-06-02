@@ -31,15 +31,17 @@ void gotoSafeMode() {
    * In this mode coupler will shutdown all
    * relays of attached I2C slaves
    */
-   UA_LOG_INFO(UA_Log_Stdout, \
-               UA_LOGCATEGORY_USERLAND, \
-               "Go to SAFE MODE");
+   if (!I2C_VIRTUAL_MODE) {
+     UA_LOG_INFO(UA_Log_Stdout, \
+                 UA_LOGCATEGORY_USERLAND, \
+                 "Go to SAFE MODE");
 
-  // do shutdown all attached I2C slaves (MOD-IO's relays).
-  safeShutdownI2CSlaveList();
-  // set to virtual mode which means that coupler will mimic working but
-  // not set any related relays' state
-  I2C_VIRTUAL_MODE = 1;
+    // do shutdown all attached I2C slaves (MOD-IO's relays).
+    safeShutdownI2CSlaveList();
+    // set to virtual mode which means that coupler will mimic working but
+    // not set any related relays' state
+    I2C_VIRTUAL_MODE = 1;
+  }
 
 }
 

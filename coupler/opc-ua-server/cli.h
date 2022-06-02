@@ -18,6 +18,7 @@ static struct argp_option options[] = {
   {"id",          'i', "0", 0, "ID of coupler."},
   {"heart-beat",  'b', "0", 0, "Publish heart beat to other couplers."},
   {"heart-beat-interval",  't', "500", 0, "Heart beat interval in ms."},
+  {"heart-beat-timeout-interval",  'o', "2000", 0, "Heart beat timeout interval in ms."},
   {"heart-beat-id-list",  'l', "", 0, "Comma separated list of IDs of couplers to watch for heart beats. \
                    If a heart beat is missing coupler goes to safe mode."},
   {"network-address-url-data-type", 'n', "opc.udp://224.0.0.22:4840/", 0, "Netwrok address URL type used for Pub/Sub."},
@@ -38,6 +39,7 @@ struct arguments
     int id;
     bool heart_beat;
     int heart_beat_interval;
+    int heart_beat_timeout_interval;
     char *heart_beat_id_list;
     char *network_address_url_data_type;
 };
@@ -79,6 +81,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     case 't':
       arguments->heart_beat_interval = arg ? atoi (arg) : DEFAULT_HEART_BEAT_INTERVAL;
       break;
+    case 'o':
+      arguments->heart_beat_timeout_interval = arg ? atoi (arg) : DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL;
+      break;
     case 'l':
       arguments->heart_beat_id_list = arg;
       break;
@@ -114,6 +119,7 @@ void handleCLI(int argc, char **argv) {
     arguments.certificate = "";
     arguments.id = DEFAULT_COUPLER_ID;
     arguments.heart_beat_interval = DEFAULT_HEART_BEAT_INTERVAL;
+    arguments.heart_beat_timeout_interval = DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL;
     arguments.heart_beat_id_list = "";
     arguments.network_address_url_data_type = NETWORK_ADDRESS_URL_DATA_TYPE;
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
@@ -127,6 +133,7 @@ void handleCLI(int argc, char **argv) {
     printf("ID=%d\n", arguments.id);
     printf("Heart beat=%d\n", arguments.heart_beat);
     printf("Heart beat interval=%d ms\n", arguments.heart_beat_interval);
+    printf("Heart beat timeout interval=%d ms\n", arguments.heart_beat_timeout_interval);
     printf("Heart beat ID list=%s\n", arguments.heart_beat_id_list);
     printf("Network address URL data type=%s\n", arguments.network_address_url_data_type);
 
@@ -135,6 +142,7 @@ void handleCLI(int argc, char **argv) {
     I2C_VIRTUAL_MODE = arguments.mode;
     I2C_BLOCK_DEVICE_NAME = arguments.device;
     HEART_BEAT_INTERVAL = arguments.heart_beat_interval;
+    HEART_BEAT_TIMEOUT_INTERVAL = arguments.heart_beat_timeout_interval;
     NETWORK_ADDRESS_URL_DATA_TYPE = arguments.network_address_url_data_type;
     USERNAME = arguments.username;
     PASSWORD = arguments.password;

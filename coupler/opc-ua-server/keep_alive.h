@@ -11,6 +11,7 @@ static int HEART_BEAT_INTERVAL = DEFAULT_HEART_BEAT_INTERVAL;
 
 // the timeout in millis after which a coupler is considered down
 const int DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL = 4 * DEFAULT_HEART_BEAT_INTERVAL;
+static int HEART_BEAT_TIMEOUT_INTERVAL = DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL;
 
 // the list of couplers onto which we depend for properly running$
 // XXX: assume ONLY 8 couplers!

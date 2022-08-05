@@ -91,7 +91,7 @@ int main(int argc, char **argv)
     UA_ServerConfig *config = UA_Server_getConfig(server);
     config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
 
-    // add variables representing physical relaray / inputs, etc
+    // add variables representing physical relays / inputs, etc
     addVariable(server);
     addValueCallbackToCurrentTimeVariable(server);
 

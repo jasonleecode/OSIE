@@ -32,9 +32,9 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
         unsigned int coupler_id = *(UA_UInt32*) var->value.data;
         // care for other coupler_id NOT ourselves
         if (coupler_id!=COUPLER_ID) {
-          UA_LOG_INFO(UA_Log_Stdout, \
-                     UA_LOGCATEGORY_USERLAND, \
-                     "HEART BEAT: %d", coupler_id);
+          //UA_LOG_INFO(UA_Log_Stdout, \
+          //           UA_LOGCATEGORY_USERLAND, \
+          //           "HEART BEAT: %d", coupler_id);
 
           // convert coupler_id to str
           char* coupler_id_str = convertInt2Str(coupler_id);

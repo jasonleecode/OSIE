@@ -7,6 +7,7 @@ static char doc[] = "OPC-UA server which controls MOD-IO's relays' state over OP
 static char args_doc[] = "...";
 static struct argp_option options[] = {
   {"port",        'p', "4840", 0, "Port to bind to."},
+  {"server-ip-address",     'a', "", 0, "Server address to bind to."},
   {"device",      'd', "/dev/i2c-1", 0, "Linux block device path."},
   {"slave-address-list", 's', "0x58", 0, "Comma separated list of slave I2C addresses."},
   {"mode",        'm', "0", 0, "Set different modes of operation of coupler. Default (0) is set attached \
@@ -30,6 +31,7 @@ struct arguments
 {
     int mode;
     int port;
+    char *server_ip_address;
     char *device;
     char *slave_address_list;
     char *username;
@@ -50,6 +52,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     switch (key) {
     case 'p':
       arguments->port = arg ? atoi (arg) : DEFAULT_OPC_UA_PORT;
+      break;
+    case 'a':
+      arguments->server_ip_address = arg;
       break;
     case 'd':
       arguments->device = arg;
@@ -110,6 +115,7 @@ void handleCLI(int argc, char **argv) {
 
     struct arguments arguments;
     arguments.port = DEFAULT_OPC_UA_PORT;
+    arguments.server_ip_address = "";
     arguments.mode = DEFAULT_MODE;
     arguments.device = DEFAULT_I2C_BLOCK_DEVICE_NAME;
     arguments.slave_address_list = DEFAULT_I2C_0_ADDR;
@@ -126,6 +132,7 @@ void handleCLI(int argc, char **argv) {
 
     printf("Mode=%d\n", arguments.mode);
     printf("Listening port=%d\n", arguments.port);
+    printf("server_ip_address=%s\n", arguments.server_ip_address);
     printf("Block device=%s\n", arguments.device);
     printf("Slave address list=%s\n", arguments.slave_address_list);
     printf("Key=%s\n", arguments.key);
@@ -147,6 +154,7 @@ void handleCLI(int argc, char **argv) {
     USERNAME = arguments.username;
     PASSWORD = arguments.password;
     OPC_UA_PORT = arguments.port;
+    OPC_UA_ADDRESS = arguments.server_ip_address;
     ENABLE_X509 = strlen(arguments.key) > 0 && strlen(arguments.certificate);
     ENABLE_USERNAME_PASSWORD_AUTHENTICATION = strlen(arguments.username) > 0 && strlen(arguments.password) > 0;
     ENABLE_HEART_BEAT = arguments.heart_beat;

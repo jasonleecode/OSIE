@@ -72,7 +72,7 @@ static UA_StatusCode addPubSubConnectionSubscriber(UA_Server *server, UA_String 
     connectionConfig.enabled = UA_TRUE;
     UA_Variant_setScalar(&connectionConfig.address, networkAddressUrl,
                          &UA_TYPES[UA_TYPES_NETWORKADDRESSURLDATATYPE]);
-    connectionConfig.publisherId.uint32 = UA_UInt32_random ();
+    connectionConfig.publisherId.numeric = UA_UInt32_random ();
     retval |= UA_Server_addPubSubConnection (server, &connectionConfig, &connectionIdentifier);
     if (retval != UA_STATUSCODE_GOOD) {
         return retval;

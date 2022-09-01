@@ -48,6 +48,7 @@ const int DEFAULT_MODE = 0;
 const int DEFAULT_COUPLER_ID = 0;
 
 int OPC_UA_PORT;
+char *OPC_UA_ADDRESS;
 bool ENABLE_HEART_BEAT = false;
 bool ENABLE_HEART_BEAT_CHECK = false;
 bool ENABLE_X509 = false;
@@ -72,86 +73,113 @@ static void stopHandler(int sign)
 
 int main(int argc, char **argv)
 {
-    // init dictionary only once$
-    if (SUBSCRIBER_DICT==NULL){
-      SUBSCRIBER_DICT = *dictAlloc();
+  // init dictionary only once$
+  if (SUBSCRIBER_DICT==NULL){
+    SUBSCRIBER_DICT = *dictAlloc();
+  }
+
+  // parse CLI
+  handleCLI(argc, argv);
+
+  // always start attached slaves from a know safe shutdown state
+  safeShutdownI2CSlaveList();
+
+  signal(SIGINT, stopHandler);
+  signal(SIGTERM, stopHandler);
+  UA_String serverUrls[1];
+  size_t serverUrlsSize = 0;
+  char serverUrlBuffer[1][512];
+
+  server = UA_Server_new();
+  UA_ServerConfig_setMinimal(UA_Server_getConfig(server), OPC_UA_PORT, NULL);
+  UA_ServerConfig *config = UA_Server_getConfig(server);
+  
+  // opc_ua server is listening to user input address else on all interfaces
+  // user input ip address should be added to any of the interface else no server socket will be created
+  if(OPC_UA_ADDRESS!= NULL){
+    // check whether the default url is already set
+    if(config->serverUrlsSize > 0) {
+      UA_LOG_WARNING(&config->logger, UA_LOGCATEGORY_USERLAND, "ServerUrls already set. Overriding.");
+      UA_Array_delete(config->serverUrls, config->serverUrlsSize, &UA_TYPES[UA_TYPES_STRING]);
+      config->serverUrls = NULL;
+      config->serverUrlsSize = 0;
     }
 
-    // parse CLI
-    handleCLI(argc, argv);
-
-    // always start attached slaves from a know safe shutdown state
-    safeShutdownI2CSlaveList();
-
-    signal(SIGINT, stopHandler);
-    signal(SIGTERM, stopHandler);
-
-    server = UA_Server_new();
-    UA_ServerConfig_setMinimal(UA_Server_getConfig(server), OPC_UA_PORT, NULL);
-    UA_ServerConfig *config = UA_Server_getConfig(server);
-    config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
-
-    // add variables representing physical relays / inputs, etc
-    addVariable(server);
-    addValueCallbackToCurrentTimeVariable(server);
-
-    /* Disable anonymous logins, enable two user/password logins */
-    if (ENABLE_USERNAME_PASSWORD_AUTHENTICATION){
-      UA_UsernamePasswordLogin logins[1] = {
-          {UA_STRING(USERNAME), UA_STRING(PASSWORD)},
-      };
-
-      config->accessControl.clear(&config->accessControl);
-      UA_StatusCode retval1 = UA_AccessControl_default(config, false, NULL,
-               &config->securityPolicies[config->securityPoliciesSize-1].policyUri, 1, logins);
+    // construct opc_ua server url based on input ip address
+    UA_snprintf(serverUrlBuffer[0], sizeof(serverUrlBuffer[0]), "opc.tcp://%s:%u", OPC_UA_ADDRESS, OPC_UA_PORT);
+    serverUrls[serverUrlsSize] = UA_STRING(serverUrlBuffer[0]);
+    serverUrlsSize++;
+    
+    // add the url into the config
+    UA_StatusCode ret_val = UA_Array_copy(serverUrls, serverUrlsSize, (void**)&config->serverUrls, &UA_TYPES[UA_TYPES_STRING]);
+    if(ret_val != UA_STATUSCODE_GOOD){
+      return ret_val;
     }
+    config->serverUrlsSize = serverUrlsSize;
+  }
+  config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
 
-    /* Enable x509 */
-    #ifdef UA_ENABLE_ENCRYPTION
-    if (ENABLE_X509){
-      /* Load certificate and private key */
-      UA_ByteString certificate = loadFile(X509_CERTIFICATE_FILENAME);
-      UA_ByteString privateKey  = loadFile(X509_KEY_FILENAME);
+  // add variables representing physical relays / inputs, etc
+  addVariable(server);
+  addValueCallbackToCurrentTimeVariable(server);
 
-      /* Load the trustlist - not used thus 0 */
-      size_t trustListSize = 0;
-      UA_STACKARRAY(UA_ByteString, trustList, trustListSize);
+  /* Disable anonymous logins, enable two user/password logins */
+  if (ENABLE_USERNAME_PASSWORD_AUTHENTICATION){
+    UA_UsernamePasswordLogin logins[1] = {
+        {UA_STRING(USERNAME), UA_STRING(PASSWORD)},
+    };
 
-      /* Loading of a issuer list, not used in this application */
-      size_t issuerListSize = 0;
-      UA_ByteString *issuerList = NULL;
+    config->accessControl.clear(&config->accessControl);
+    UA_StatusCode retval1 = UA_AccessControl_default(config, false, NULL,
+              &config->securityPolicies[config->securityPoliciesSize-1].policyUri, 1, logins);
+  }
 
-      /* Loading of a revocation list currently unsupported */
-      UA_ByteString *revocationList = NULL;
-      size_t revocationListSize = 0;
-      UA_StatusCode retval =
-        UA_ServerConfig_setDefaultWithSecurityPolicies(config, 4841, // XXX: why not use 4840 ?
-                                                       &certificate, &privateKey,
-                                                       trustList, trustListSize,
-                                                       issuerList, issuerListSize,
-                                                       revocationList, revocationListSize);
-      //The place to fill the hole is very important
-      config->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:open62541.server.application");
-    }
-    #endif
+  /* Enable x509 */
+  #ifdef UA_ENABLE_ENCRYPTION
+  if (ENABLE_X509){
+    /* Load certificate and private key */
+    UA_ByteString certificate = loadFile(X509_CERTIFICATE_FILENAME);
+    UA_ByteString privateKey  = loadFile(X509_KEY_FILENAME);
 
-    // enable protocol for Pub/Sub
-    UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
- 
-    // enable publish keep-alive messages
-    if (ENABLE_HEART_BEAT) {
-      enablePublishHeartBeat(server, config);
-    }
+    /* Load the trustlist - not used thus 0 */
+    size_t trustListSize = 0;
+    UA_STACKARRAY(UA_ByteString, trustList, trustListSize);
 
-    // enable subscribe to keep-alive messages
-    enableSubscribeToHeartBeat(server, config);
+    /* Loading of a issuer list, not used in this application */
+    size_t issuerListSize = 0;
+    UA_ByteString *issuerList = NULL;
 
-    // run server
-    UA_StatusCode retval = UA_Server_run(server, &running);
-    UA_Server_delete(server);
+    /* Loading of a revocation list currently unsupported */
+    UA_ByteString *revocationList = NULL;
+    size_t revocationListSize = 0;
+    UA_StatusCode retval =
+      UA_ServerConfig_setDefaultWithSecurityPolicies(config, 4841, // XXX: why not use 4840 ?
+                                                      &certificate, &privateKey,
+                                                      trustList, trustListSize,
+                                                      issuerList, issuerListSize,
+                                                      revocationList, revocationListSize);
+    //The place to fill the hole is very important
+    config->applicationDescription.applicationUri = UA_STRING_ALLOC("urn:open62541.server.application");
+  }
+  #endif
 
-    // always leave attached slaves to a known safe shutdown state
-    safeShutdownI2CSlaveList();
+  // enable protocol for Pub/Sub
+  UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
 
-    return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
+  // enable publish keep-alive messages
+  if (ENABLE_HEART_BEAT) {
+    enablePublishHeartBeat(server, config);
+  }
+
+  // enable subscribe to keep-alive messages
+  enableSubscribeToHeartBeat(server, config);
+
+  // run server
+  UA_StatusCode retval = UA_Server_run(server, &running);
+  UA_Server_delete(server);
+
+  // always leave attached slaves to a known safe shutdown state
+  safeShutdownI2CSlaveList();
+
+  return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
 }

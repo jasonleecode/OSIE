@@ -19,7 +19,7 @@ static void addPubSubConnection(UA_Server *server, UA_String *transportProfile,
                          &UA_TYPES[UA_TYPES_NETWORKADDRESSURLDATATYPE]);
     /* Changed to static publisherId from random generation to identify
      * the publisher on Subscriber side */
-    connectionConfig.publisherId.numeric = PUBLISHER_ID;
+    connectionConfig.publisherId.uint32 = PUBLISHER_ID;
     UA_Server_addPubSubConnection(server, &connectionConfig, &connectionIdent);
 }
 

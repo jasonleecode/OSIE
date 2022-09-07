@@ -93,7 +93,8 @@ int main(int argc, char **argv)
   server = UA_Server_new();
   UA_ServerConfig_setMinimal(UA_Server_getConfig(server), OPC_UA_PORT, NULL);
   UA_ServerConfig *config = UA_Server_getConfig(server);
-  
+
+  /*  Disable binding to all specified interface until this feature lands to a stable release.
   // opc_ua server is listening to user input address else on all interfaces
   // user input ip address should be added to any of the interface else no server socket will be created
   if(OPC_UA_ADDRESS!= NULL){
@@ -115,6 +116,7 @@ int main(int argc, char **argv)
     if(ret_val != UA_STATUSCODE_GOOD){
       return ret_val;
     }
+    */
     config->serverUrlsSize = serverUrlsSize;
   }
   config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;

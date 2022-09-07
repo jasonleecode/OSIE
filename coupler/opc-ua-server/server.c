@@ -116,9 +116,10 @@ int main(int argc, char **argv)
     if(ret_val != UA_STATUSCODE_GOOD){
       return ret_val;
     }
-    */
+ 
     config->serverUrlsSize = serverUrlsSize;
   }
+  */
   config->verifyRequestTimestamp = UA_RULEHANDLING_ACCEPT;
 
   // add variables representing physical relays / inputs, etc

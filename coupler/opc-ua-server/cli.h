@@ -7,7 +7,7 @@ static char doc[] = "OPC-UA server which controls MOD-IO's relays' state over OP
 static char args_doc[] = "...";
 static struct argp_option options[] = {
   {"port",        'p', "4840", 0, "Port to bind to."},
-  {"server-ip-address",     'a', "", 0, "Server address to bind to."},
+  {"server-ip-address",     'a', "", 0, "[not yet available] Server address to bind to."},
   {"device",      'd', "/dev/i2c-1", 0, "Linux block device path."},
   {"slave-address-list", 's', "0x58", 0, "Comma separated list of slave I2C addresses."},
   {"mode",        'm', "0", 0, "Set different modes of operation of coupler. Default (0) is set attached \

@@ -143,7 +143,7 @@ void callbackTicHeartBeat()
     UA_NodeId myFloatNodeId = UA_NODEID_STRING(1, "heart_beat");
     
     // XXX: implement heart_beat like <ID>.<heart_beats>
-    int len = snprintf(NULL, 0, "%f", HEART_BEATS);
+    int len = snprintf(NULL, 0, "%d", HEART_BEATS);
     char *result1 = malloc(len + 1);
     snprintf(result1, len + 1, "%d", HEART_BEATS);
 

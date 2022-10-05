@@ -157,7 +157,7 @@ void callbackTicHeartBeat()
    
     char * end_ptr;
     float final_result = strtof(result2, &end_ptr );
-    printf( "final_result: %f\n", final_result );
+    //printf( "final_result: %f\n", final_result );
 
     UA_Float myFloat = final_result;
     UA_Variant myVar;

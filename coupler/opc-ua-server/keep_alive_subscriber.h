@@ -56,8 +56,11 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
         float heart_beat = *(UA_Float*) var->value.data;
         // split <ID>.<heart_beats>, just converting to int is enough
 	coupler_id = (int) heart_beat;
-        UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat = %f, id=%d", heart_beat, coupler_id);
         if (coupler_id!=COUPLER_ID) {
+          UA_LOG_INFO(UA_Log_Stdout, \
+                     UA_LOGCATEGORY_USERLAND, \
+                     "HEART BEAT: %d", coupler_id);
+
 	  // convert coupler_id to str
           char* coupler_id_str = convertInt2Str(coupler_id);
 

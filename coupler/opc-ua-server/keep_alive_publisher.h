@@ -141,7 +141,25 @@ void callbackTicHeartBeat()
 
     // set OPC UA's heat_beat node value
     UA_NodeId myFloatNodeId = UA_NODEID_STRING(1, "heart_beat");
-    UA_Float myFloat = HEART_BEATS;
+    
+    // XXX: implement heart_beat like <ID>.<heart_beats>
+    int len = snprintf(NULL, 0, "%f", HEART_BEATS);
+    char *result1 = malloc(len + 1);
+    snprintf(result1, len + 1, "%d", HEART_BEATS);
+
+    int len1 = snprintf(NULL, 0, "%d", COUPLER_ID);
+    char *result2 = malloc(len1 + 1);
+    snprintf(result2, len1 + 1, "%d", COUPLER_ID);
+    
+    // concat
+    strcat(result2, ".");
+    strcat(result2, result1);
+   
+    char * end_ptr;
+    float final_result = strtof(result2, &end_ptr );
+    printf( "final_result: %f\n", final_result );
+
+    UA_Float myFloat = final_result;
     UA_Variant myVar;
     UA_Variant_init(&myVar);
     UA_Variant_setScalar(&myVar, &myFloat, &UA_TYPES[UA_TYPES_FLOAT]);

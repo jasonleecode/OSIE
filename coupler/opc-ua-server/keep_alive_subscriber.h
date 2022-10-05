@@ -32,9 +32,9 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
         unsigned int coupler_id = *(UA_UInt32*) var->value.data;
         // care for other coupler_id NOT ourselves
         if (coupler_id!=COUPLER_ID) {
-          //UA_LOG_INFO(UA_Log_Stdout, \
-          //           UA_LOGCATEGORY_USERLAND, \
-          //           "HEART BEAT: %d", coupler_id);
+          UA_LOG_INFO(UA_Log_Stdout, \
+                     UA_LOGCATEGORY_USERLAND, \
+                     "HEART BEAT: %d", coupler_id);
 
           // convert coupler_id to str
           char* coupler_id_str = convertInt2Str(coupler_id);
@@ -51,7 +51,7 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
     // filter out heart_beat from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_FLOAT])) {
         float heart_beat = *(UA_Float*) var->value.data;
-        //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat = %f", heart_beat);
+        UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat = %f", heart_beat);
     }
 }
 
@@ -198,6 +198,7 @@ static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSet
         /*monitor variable*/
         if (ENABLE_HEART_BEAT_CHECK) {
           UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(newNode);
+          //monRequest.requestedParameters.samplingInterval = 100.0; /* 100 ms interval */
           UA_Server_createDataChangeMonitoredItem(server, UA_TIMESTAMPSTORETURN_SOURCE,
                                                   monRequest, NULL, dataChangeNotificationCallback);
         }

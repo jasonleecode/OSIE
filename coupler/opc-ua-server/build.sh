@@ -1,5 +1,5 @@
 #!/bin/bash
-OPEN62541_SR=/opt/slapgrid/6c567f8750e604c805e3a25adbbd0e44/parts/open62541/
+OPEN62541_SR=/usr/local/lib
 rm -f server
 
 # build OPC UA server which publishes msgs

@@ -25,7 +25,7 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
                                void *monitoredItemContext, const UA_NodeId *nodeId,
                                void *nodeContext, UA_UInt32 attributeId,
                                const UA_DataValue *var) {
-    unsigned long int milli_seconds_now = getMilliSecondsSinceEpoch();
+    unsigned long int milli_seconds_now;
     unsigned int coupler_id;
 
     // filter out ID from Data Set
@@ -54,8 +54,9 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
     // filter out heart_beat from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_FLOAT])) {
         float heart_beat = *(UA_Float*) var->value.data;
+        milli_seconds_now = getMilliSecondsSinceEpoch();
         // split <ID>.<heart_beats>, just converting to int is enough
-	coupler_id = (int) heart_beat;
+        coupler_id = (int) heart_beat;
         if (coupler_id!=COUPLER_ID) {
           UA_LOG_INFO(UA_Log_Stdout, \
                      UA_LOGCATEGORY_USERLAND, \
@@ -217,7 +218,7 @@ static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSet
         if (ENABLE_HEART_BEAT_CHECK) {
           UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(newNode);
           //monRequest.requestedParameters.samplingInterval = 100.0; /* 100 ms interval */
-          UA_Server_createDataChangeMonitoredItem(server, UA_TIMESTAMPSTORETURN_SOURCE,
+          UA_Server_createDataChangeMonitoredItem(server, UA_TIMESTAMPSTORETURN_NEITHER,
                                                   monRequest, NULL, dataChangeNotificationCallback);
         }
         /* For creating Targetvariables */

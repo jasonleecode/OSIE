@@ -6,7 +6,7 @@ char *NETWORK_ADDRESS_URL_DATA_TYPE = "opc.udp://224.0.0.22:4840/";
 static unsigned int HEART_BEATS = 0;
 
 // the heart beat interval$$
-const int DEFAULT_HEART_BEAT_INTERVAL = 50;
+const int DEFAULT_HEART_BEAT_INTERVAL = 10;
 static int HEART_BEAT_INTERVAL = DEFAULT_HEART_BEAT_INTERVAL;
 
 // the timeout in millis after which a coupler is considered down

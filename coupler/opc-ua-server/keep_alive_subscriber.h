@@ -25,16 +25,18 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
                                void *monitoredItemContext, const UA_NodeId *nodeId,
                                void *nodeContext, UA_UInt32 attributeId,
                                const UA_DataValue *var) {
-    unsigned long int milli_seconds_now = getMilliSecondsSinceEpoch();
+    unsigned long int milli_seconds_now;
+    unsigned int coupler_id;
 
     // filter out ID from Data Set
+    /*
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_UINT32])) {
-        unsigned int coupler_id = *(UA_UInt32*) var->value.data;
+        coupler_id = *(UA_UInt32*) var->value.data;
         // care for other coupler_id NOT ourselves
         if (coupler_id!=COUPLER_ID) {
-          //UA_LOG_INFO(UA_Log_Stdout, \
-          //           UA_LOGCATEGORY_USERLAND, \
-          //           "HEART BEAT: %d", coupler_id);
+          UA_LOG_INFO(UA_Log_Stdout, \
+                     UA_LOGCATEGORY_USERLAND, \
+                     "HEART BEAT: %d", coupler_id);
 
           // convert coupler_id to str
           char* coupler_id_str = convertInt2Str(coupler_id);
@@ -44,14 +46,31 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
 
           // Add to our local linked list
           addItem(&SUBSCRIBER_DICT, coupler_id_str, milli_seconds_now_str);
-
+         
         }
     }
+    */
 
     // filter out heart_beat from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_FLOAT])) {
         float heart_beat = *(UA_Float*) var->value.data;
-        //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat = %f", heart_beat);
+        milli_seconds_now = getMilliSecondsSinceEpoch();
+        // split <ID>.<heart_beats>, just converting to int is enough
+        coupler_id = (int) heart_beat;
+        if (coupler_id!=COUPLER_ID) {
+          UA_LOG_INFO(UA_Log_Stdout, \
+                     UA_LOGCATEGORY_USERLAND, \
+                     "HEART BEAT: %d", coupler_id);
+
+	  // convert coupler_id to str
+          char* coupler_id_str = convertInt2Str(coupler_id);
+
+          // convert micro seconds to str
+          char* milli_seconds_now_str = convertLongInt2Str(milli_seconds_now);
+
+          // Add to our local linked list
+          addItem(&SUBSCRIBER_DICT, coupler_id_str, milli_seconds_now_str);
+	}
     }
 }
 
@@ -198,7 +217,8 @@ static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSet
         /*monitor variable*/
         if (ENABLE_HEART_BEAT_CHECK) {
           UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(newNode);
-          UA_Server_createDataChangeMonitoredItem(server, UA_TIMESTAMPSTORETURN_SOURCE,
+          //monRequest.requestedParameters.samplingInterval = 100.0; /* 100 ms interval */
+          UA_Server_createDataChangeMonitoredItem(server, UA_TIMESTAMPSTORETURN_NEITHER,
                                                   monRequest, NULL, dataChangeNotificationCallback);
         }
         /* For creating Targetvariables */

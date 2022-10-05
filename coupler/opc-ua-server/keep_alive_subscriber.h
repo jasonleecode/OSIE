@@ -57,14 +57,16 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
         // split <ID>.<heart_beats>, just converting to int is enough
 	coupler_id = (int) heart_beat;
         UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat = %f, id=%d", heart_beat, coupler_id);
-	// convert coupler_id to str
-        char* coupler_id_str = convertInt2Str(coupler_id);
+        if (coupler_id!=COUPLER_ID) {
+	  // convert coupler_id to str
+          char* coupler_id_str = convertInt2Str(coupler_id);
 
-        // convert micro seconds to str
-        char* milli_seconds_now_str = convertLongInt2Str(milli_seconds_now);
+          // convert micro seconds to str
+          char* milli_seconds_now_str = convertLongInt2Str(milli_seconds_now);
 
-        // Add to our local linked list
-        addItem(&SUBSCRIBER_DICT, coupler_id_str, milli_seconds_now_str);
+          // Add to our local linked list
+          addItem(&SUBSCRIBER_DICT, coupler_id_str, milli_seconds_now_str);
+	}
     }
 }
 

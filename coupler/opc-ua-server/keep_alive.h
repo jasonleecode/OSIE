@@ -18,7 +18,7 @@ static int HEART_BEAT_TIMEOUT_INTERVAL = DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL;
 unsigned int HEART_BEAT_ID_LIST[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
 // the interval for publishing messages$
-const int PUBLISHING_INTERVAL = 100;
+const int PUBLISHING_INTERVAL = 1000;
 
 // a hard coded writer group, data set and publisher ID$
 // (should be same for publisher / subscriber)$

@@ -53,6 +53,7 @@ static void addWriterGroup(UA_Server *server) {
     memset(&writerGroupConfig, 0, sizeof(UA_WriterGroupConfig));
     writerGroupConfig.name = UA_STRING("Demo WriterGroup");
     writerGroupConfig.publishingInterval = PUBLISHING_INTERVAL;
+    writerGroupConfig.keepAliveTime = PUBLISHING_INTERVAL;
     writerGroupConfig.enabled = UA_FALSE;
     writerGroupConfig.writerGroupId = WRITER_GROUP_ID;
     writerGroupConfig.encodingMimeType = UA_PUBSUB_ENCODING_UADP;

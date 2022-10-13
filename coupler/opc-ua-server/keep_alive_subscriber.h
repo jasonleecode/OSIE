@@ -300,15 +300,25 @@ void callbackCheckHeartBeat() {
         timestamp_delta = milli_seconds - last_seen_timestamp_int;
         is_down = (timestamp_delta > HEART_BEAT_TIMEOUT_INTERVAL);
         if (is_down) {
-          UA_LOG_INFO(UA_Log_Stdout, \
-                      UA_LOGCATEGORY_USERLAND, \
-                      "DOWN: %s (delta=%d)", coupler_id_str, timestamp_delta);
-        // go to safe mode as a dependant coupler is DOWN.
-        gotoSafeMode();
+          // count for stats the switch to SAFE mode
+          if (CURRENT_STATE != STATE_DOWN) {
+            CURRENT_STATE = STATE_DOWN;
+            SAFE_MODE_STATE_COUNTER += 1;
+            UA_LOG_INFO(UA_Log_Stdout, \
+                        UA_LOGCATEGORY_USERLAND, \
+                        "DOWN: %s (delta=%d)", coupler_id_str, timestamp_delta);
+            // go to safe mode as a dependant coupler is DOWN.
+            gotoSafeMode();
+          }
+        }
+        else {
+          // all good, we received a keep alive in time
+          CURRENT_STATE = STATE_UP;
         }
       }
       else {
         // still no hear beat from this coupler ...
+        CURRENT_STATE = STATE_NO_INITIAL_HEART_BEAT;
         UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "NO INITIAL HEART BEAT: %s", coupler_id_str);
       }
     }

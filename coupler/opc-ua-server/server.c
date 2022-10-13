@@ -185,5 +185,10 @@ int main(int argc, char **argv)
   // always leave attached slaves to a known safe shutdown state
   safeShutdownI2CSlaveList();
 
+  // print statistics
+  UA_LOG_INFO(UA_Log_Stdout, \
+              UA_LOGCATEGORY_USERLAND, \
+              "SAFE mode counter=%d", SAFE_MODE_STATE_COUNTER);
+ 
   return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
 }

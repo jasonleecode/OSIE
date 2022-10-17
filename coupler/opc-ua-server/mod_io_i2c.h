@@ -90,6 +90,12 @@ static int getDigitalInputState(int i2c_addr, char **digital_input)
      */
     int file;
     char filename[20];
+    if (I2C_VIRTUAL_MODE)
+    {
+        // we're in a virtual mode, likely on x86 platform or without I2C support
+        // simply do nothing
+        return 0;
+    }
 
     // step 1: open device
     file = open(I2C_BLOCK_DEVICE_NAME, O_RDWR);
@@ -137,6 +143,12 @@ static int getAnalogInputStateAIN(int i2c_addr, int **analog_input, uint8_t read
      */
     int file;
     char filename[20];
+    if (I2C_VIRTUAL_MODE)
+    {
+        // we're in a virtual mode, likely on x86 platform or without I2C support
+        // simply do nothing
+        return 0;
+    }
 
     // step 1: open device
     file = open(I2C_BLOCK_DEVICE_NAME, O_RDWR);

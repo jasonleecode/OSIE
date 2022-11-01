@@ -91,7 +91,9 @@ int main(int argc, char **argv)
   char serverUrlBuffer[1][512];
 
   server = UA_Server_new();
-  UA_ServerConfig_setMinimal(UA_Server_getConfig(server), OPC_UA_PORT, NULL);
+  if (!ENABLE_X509){
+    UA_ServerConfig_setMinimal(UA_Server_getConfig(server), OPC_UA_PORT, NULL);
+  }
   UA_ServerConfig *config = UA_Server_getConfig(server);
 
   /*  Disable binding to all specified interface until this feature(open62541 commit:16467fb5a9d2f9458e55071a2ec07bc68e1b960e)
@@ -157,7 +159,7 @@ int main(int argc, char **argv)
     UA_ByteString *revocationList = NULL;
     size_t revocationListSize = 0;
     UA_StatusCode retval =
-      UA_ServerConfig_setDefaultWithSecurityPolicies(config, 4841, // XXX: why not use 4840 ?
+      UA_ServerConfig_setDefaultWithSecurityPolicies(config, OPC_UA_PORT,
                                                       &certificate, &privateKey,
                                                       trustList, trustListSize,
                                                       issuerList, issuerListSize,

@@ -1,0 +1,8 @@
+input,"LocalizedText(Encoding:3, Locale:en-US, Text:I2C0 / Relay 0)",1,str,i2c0.relay0,Int32,0
+input,"LocalizedText(Encoding:3, Locale:en-US, Text:I2C0 / Relay 1)",1,str,i2c0.relay1,Int32,1
+input,"LocalizedText(Encoding:3, Locale:en-US, Text:I2C0 / Relay 2)",1,str,i2c0.relay2,Int32,2
+input,"LocalizedText(Encoding:3, Locale:en-US, Text:I2C0 / Relay 3)",1,str,i2c0.relay3,Int32,3
+output,"LocalizedText(Encoding:3, Locale:en-US, Text:I2C0 / Relay 0)",1,str,i2c0.relay0,Int32,0
+output,"LocalizedText(Encoding:3, Locale:en-US, Text:I2C0 / Relay 1)",1,str,i2c0.relay1,Int32,1
+output,"LocalizedText(Encoding:3, Locale:en-US, Text:I2C0 / Relay 2)",1,str,i2c0.relay2,Int32,2
+output,"LocalizedText(Encoding:3, Locale:en-US, Text:I2C0 / Relay 3)",1,str,i2c0.relay3,Int32,3

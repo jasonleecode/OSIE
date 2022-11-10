@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<OPCUAClient xmlns:xsd="http://www.w3.org/2001/XMLSchema" Server_URI="opc.tcp://192.168.0.61:4840">
+  <AuthType>
+    <x509 Certificate="client_cert.der" PrivateKey="client_key.der">
+      <Policy>
+        <Basic256Sha256/>
+      </Policy>
+      <Mode>
+        <SignAndEncrypt/>
+      </Mode>
+    </x509>
+  </AuthType>
+</OPCUAClient>

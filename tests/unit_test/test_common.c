@@ -1,6 +1,5 @@
 /* ================ Includes ===================== */
 #include <criterion/criterion.h>
-#include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
 

@@ -1,11 +1,6 @@
 /* ================ Includes ===================== */
 #include <criterion/criterion.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
 #include <linux/i2c-dev.h>
-#include <fcntl.h>
-#include <string.h>
 #include <open62541/plugin/log_stdout.h>
 
 #include "../../coupler/opc-ua-server/mod_io_i2c.h"
@@ -14,7 +9,7 @@
 
 /* ================ Function Tests =============== */
 
-// ############# get I2C Slave List Length ##############
+// ############# test safe mode ##############
 
 Test(keepalive, gotoSafeMode) {
     int result = 1;
@@ -24,7 +19,7 @@ Test(keepalive, gotoSafeMode) {
     cr_expect_eq(I2C_VIRTUAL_MODE, result);
 }
 
-// ############# Set Relay State (only virtual mode) ##############
+// ############# test normal mode ##############
 
 Test(keepalive, gotoNormalMode) {
     int result = 0;

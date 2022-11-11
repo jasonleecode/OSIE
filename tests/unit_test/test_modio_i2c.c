@@ -1,11 +1,8 @@
 /* ================ Includes ===================== */
 #include <criterion/criterion.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <stdint.h>
 #include <linux/i2c-dev.h>
 #include <fcntl.h>
-#include <string.h>
 
 #include "../../coupler/opc-ua-server/mod_io_i2c.h"
 

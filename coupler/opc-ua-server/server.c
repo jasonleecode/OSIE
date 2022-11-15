@@ -70,7 +70,7 @@ static void stopHandler(int sign)
     running = false;
 }
 
-
+#ifndef DOING_UNIT_TESTS
 int main(int argc, char **argv)
 {
   // init dictionary only once$
@@ -194,3 +194,4 @@ int main(int argc, char **argv)
  
   return retval == UA_STATUSCODE_GOOD ? EXIT_SUCCESS : EXIT_FAILURE;
 }
+#endif

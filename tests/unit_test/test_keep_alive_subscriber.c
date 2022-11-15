@@ -9,11 +9,11 @@
 // ############# check heart beats of the server ##############
 
 Test(keepalivepublisher, callbackTicHeartBeat) {
-    int result = 1;
+    int result = 0;
 
     server = UA_Server_new();
-    callbackTicHeartBeat();
+    callbackCheckHeartBeat();
     UA_Server_delete(server);
     
-    cr_expect_geq(HEART_BEATS, result);
+    cr_expect_geq(HEART_BEAT_ID_LIST[0], result);
 }

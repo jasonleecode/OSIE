@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS= -l:libopen62541.so -L/usr/local/lib -Wall -Wno-missing-braces -ggdb `pkg-config --cflags criterion` -I /usr/local/include/ -I ~/git/open62541/src/pubsub/ -I ~/git/open62541/deps/
+CFLAGS= -l:libopen62541.so -L/usr/local/lib -Wall -Wno-missing-braces -ggdb `pkg-config --cflags criterion` -I /usr/local/include/ -I ~/open62541/src/pubsub/ -I ~/open62541/deps/
 LDFLAGS= `pkg-config --libs criterion` -lmbedcrypto  -lmbedx509
 OUT_DIR=build/
 

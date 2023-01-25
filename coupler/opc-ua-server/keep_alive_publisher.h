@@ -143,7 +143,7 @@ void callbackTicHeartBeat()
     // set OPC UA's heat_beat node value
     UA_NodeId myFloatNodeId = UA_NODEID_STRING(1, "heart_beat");
     
-    // XXX: implement heart_beat like <ID>.<heart_beats>
+    // heart_beat format is <ID_of_coupler>.<heart_beats>
     int len = snprintf(NULL, 0, "%d", HEART_BEATS);
     char *result1 = malloc(len + 1);
     snprintf(result1, len + 1, "%d", HEART_BEATS);
@@ -186,12 +186,12 @@ static void enablePublishHeartBeat(UA_Server *server, UA_ServerConfig *config){
             .type = UA_TYPES_FLOAT
         },
         // representing the ID of the coupler
-        {
-            .name = "id",
-            .description = "ID",
-            .pdefaultValue = &couplerID,
-            .type = UA_TYPES_UINT32
-        }
+        //{
+        //    .name = "id",
+        //    .description = "ID",
+        //    .pdefaultValue = &couplerID,
+        //    .type = UA_TYPES_UINT32
+        //}
     };
 
     UA_String transportProfile = UA_STRING(DEFAULT_TRANSPORT_PROFILE);

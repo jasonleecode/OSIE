@@ -138,7 +138,7 @@ void callbackTicHeartBeat()
 {
     /* Increase periodically heart beats of the server */
     HEART_BEATS += 1;
-    //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "heart_beat %d", HEART_BEATS);
+    UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "\theart_beat %d", HEART_BEATS);
 
     // set OPC UA's heat_beat node value
     UA_NodeId myFloatNodeId = UA_NODEID_STRING(1, "heart_beat");
@@ -158,7 +158,6 @@ void callbackTicHeartBeat()
    
     char * end_ptr;
     float final_result = strtof(result2, &end_ptr );
-    //printf( "final_result: %f\n", final_result );
 
     UA_Float myFloat = final_result;
     UA_Variant myVar;

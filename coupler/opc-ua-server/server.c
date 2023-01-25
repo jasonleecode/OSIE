@@ -178,7 +178,9 @@ int main(int argc, char **argv)
   }
 
   // enable subscribe to keep-alive messages
-  enableSubscribeToHeartBeat(server, config);
+  if (ENABLE_HEART_BEAT_CHECK) {
+    enableSubscribeToHeartBeat(server, config);
+  }
 
   // run server
   UA_StatusCode retval = UA_Server_run(server, &running);

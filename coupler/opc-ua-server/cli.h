@@ -184,5 +184,7 @@ void handleCLI(int argc, char **argv) {
       ENABLE_HEART_BEAT_CHECK = true;
       tk = strtok(NULL, ",");
       }
+
+    printf("Heart beat check=%d\n", ENABLE_HEART_BEAT_CHECK);
 }
 

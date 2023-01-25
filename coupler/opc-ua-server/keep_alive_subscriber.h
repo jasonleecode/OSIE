@@ -60,7 +60,7 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
         if (coupler_id!=COUPLER_ID) {
           UA_LOG_INFO(UA_Log_Stdout, \
                      UA_LOGCATEGORY_USERLAND, \
-                     "HEART BEAT: %d", coupler_id);
+                     "HEART BEAT: %d (%ld)", coupler_id, milli_seconds_now);
 
 	  // convert coupler_id to str
           char* coupler_id_str = convertInt2Str(coupler_id);

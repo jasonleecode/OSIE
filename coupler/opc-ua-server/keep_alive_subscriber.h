@@ -252,11 +252,7 @@ static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData) {
 
     UA_DataSetMetaDataType_init (pMetaData);
     pMetaData->name = UA_STRING ("DataSet 1 (subscribed)");
-
-    /* Static definition of number of fields size to 2 to create four different
-     * targetVariables of distinct datatype
-    */
-    pMetaData->fieldsSize = 2;
+    pMetaData->fieldsSize = 1;
     pMetaData->fields = (UA_FieldMetaData*)UA_Array_new (pMetaData->fieldsSize,
                          &UA_TYPES[UA_TYPES_FIELDMETADATA]);
 

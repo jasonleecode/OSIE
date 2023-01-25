@@ -269,12 +269,12 @@ static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData) {
     pMetaData->fields[0].valueRank = -1; /* scalar */
 
     // ID
-    UA_FieldMetaData_init (&pMetaData->fields[1]);
-    UA_NodeId_copy (&UA_TYPES[UA_TYPES_UINT32].typeId,
-                    &pMetaData->fields[1].dataType);
-    pMetaData->fields[1].builtInType = UA_NS0ID_UINT32;
-    pMetaData->fields[1].name =  UA_STRING ("ID (subscribed)");
-    pMetaData->fields[1].valueRank = -1; /* scalar */
+    //UA_FieldMetaData_init (&pMetaData->fields[1]);
+    //UA_NodeId_copy (&UA_TYPES[UA_TYPES_UINT32].typeId,
+    //                &pMetaData->fields[1].dataType);
+    //pMetaData->fields[1].builtInType = UA_NS0ID_UINT32;
+    //pMetaData->fields[1].name =  UA_STRING ("ID (subscribed)");
+    //pMetaData->fields[1].valueRank = -1; /* scalar */
 }
 
 

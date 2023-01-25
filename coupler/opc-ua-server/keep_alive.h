@@ -7,7 +7,7 @@ static unsigned int HEART_BEATS = 0;
 
 // handling coupler's state
 static unsigned int CURRENT_STATE;
-const int STATE_UP =1;
+const int STATE_UP = 1;
 const int STATE_DOWN = 0;
 const int STATE_NO_INITIAL_HEART_BEAT = 2;
 

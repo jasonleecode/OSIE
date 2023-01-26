@@ -217,7 +217,7 @@ static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSet
         /*monitor variable*/
         if (ENABLE_HEART_BEAT_CHECK) {
           UA_MonitoredItemCreateRequest monRequest = UA_MonitoredItemCreateRequest_default(newNode);
-          //monRequest.requestedParameters.samplingInterval = 100.0; /* 100 ms interval */
+          monRequest.requestedParameters.samplingInterval = PUBLISHING_INTERVAL;
           UA_Server_createDataChangeMonitoredItem(server, UA_TIMESTAMPSTORETURN_NEITHER,
                                                   monRequest, NULL, dataChangeNotificationCallback);
         }

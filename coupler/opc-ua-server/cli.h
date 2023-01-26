@@ -149,6 +149,7 @@ void handleCLI(int argc, char **argv) {
     I2C_VIRTUAL_MODE = arguments.mode;
     I2C_BLOCK_DEVICE_NAME = arguments.device;
     HEART_BEAT_INTERVAL = arguments.heart_beat_interval;
+    PUBLISHING_INTERVAL = HEART_BEAT_INTERVAL; // we assume that each heart_beat leads to a publish event
     HEART_BEAT_TIMEOUT_INTERVAL = arguments.heart_beat_timeout_interval;
     NETWORK_ADDRESS_URL_DATA_TYPE = arguments.network_address_url_data_type;
     USERNAME = arguments.username;

@@ -58,9 +58,9 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
         // split <ID>.<heart_beats>, just converting to int is enough
         coupler_id = (int) heart_beat;
         if (coupler_id!=COUPLER_ID) {
-          UA_LOG_INFO(UA_Log_Stdout, \
-                     UA_LOGCATEGORY_USERLAND, \
-                     "HEART BEAT: %d (%ld)", coupler_id, milli_seconds_now);
+          //UA_LOG_INFO(UA_Log_Stdout, \
+          //           UA_LOGCATEGORY_USERLAND, \
+          //           "HEART BEAT: %d (%ld)", coupler_id, milli_seconds_now);
 
 	  // convert coupler_id to str
           char* coupler_id_str = convertInt2Str(coupler_id);
@@ -309,6 +309,10 @@ void callbackCheckHeartBeat() {
         }
         else {
           // all good, we received a keep alive in time
+          if (CURRENT_STATE == STATE_NO_INITIAL_HEART_BEAT) {
+            // initial keep alive received, printout
+            UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "INITIAL HEART BEAT received: %s", coupler_id_str);
+          }
           CURRENT_STATE = STATE_UP;
         }
       }

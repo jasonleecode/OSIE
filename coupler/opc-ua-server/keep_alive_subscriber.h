@@ -323,8 +323,10 @@ void callbackCheckHeartBeat() {
       }
       else {
         // still no hear beat from this coupler ...
-        CURRENT_STATE = STATE_NO_INITIAL_HEART_BEAT;
-        UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "NO INITIAL HEART BEAT: %s", coupler_id_str);
+        if (CURRENT_STATE != STATE_NO_INITIAL_HEART_BEAT){
+          CURRENT_STATE = STATE_NO_INITIAL_HEART_BEAT;
+          UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, "NO INITIAL HEART BEAT: %s", coupler_id_str);
+        }
       }
     }
   }

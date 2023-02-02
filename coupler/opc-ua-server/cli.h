@@ -22,7 +22,7 @@ static struct argp_option options[] = {
   {"heart-beat-timeout-interval",  'o', "2000", 0, "Heart beat timeout interval in ms."},
   {"heart-beat-id-list",  'l', "", 0, "Comma separated list of IDs of couplers to watch for heart beats. \
                    If a heart beat is missing coupler goes to safe mode."},
-  {"network-address-url-data-type", 'n', "opc.udp://224.0.0.22:4840/", 0, "Netwrok address URL type used for Pub/Sub."},
+  {"network-address-url-data-type", 'n', "opc.udp://224.0.0.22:4840/", 0, "Network address URL type used for Pub/Sub."},
 
   {0}
 };

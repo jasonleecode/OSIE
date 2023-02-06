@@ -2,7 +2,7 @@
  *  Command Line Interface handling.
  */
 const char *argp_program_version = "OSIE OPC-UA coupler 0.0.1";
-const char *argp_program_bug_address = "ivan@nexedi.com";
+const char *argp_program_bug_address = "info@nexedi.com";
 static char doc[] = "OPC-UA server which controls MOD-IO's relays' state over OPC-UA protocol.";
 static char args_doc[] = "...";
 static struct argp_option options[] = {

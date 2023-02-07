@@ -39,7 +39,7 @@ Request a Beremiz IDE instance via SlapOS
 ### Building your OPC UA server (Cross compilation to ARM architecture from Ubuntu)
 
     # compile coupler application with a shared library and UA_ENABLE_AMALGAMATION=OFF
-    ivan@k2-osie:~/open62541/build$ gcc -I /usr/local/include/ -std=c99 ~/osie/coupler/opc-ua-server/server.c -o server -l:libopen62541.so -L/usr/local/lib -lmbedcrypto  -lmbedx509
+    ivan@k2-osie:~/open62541/build$ gcc -I /usr/local/include/ -std=c99 ~/osie/coupler/server.c -o server -l:libopen62541.so -L/usr/local/lib -lmbedcrypto  -lmbedx509
 
 ### If one wants to run coupler on a x86 platform then one needs to run server in virtual environment
 

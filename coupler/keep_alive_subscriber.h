@@ -89,6 +89,10 @@ static UA_StatusCode addPubSubConnectionSubscriber(UA_Server *server, UA_String 
     connectionConfig.name = UA_STRING("UDPMC Connection 1");
     connectionConfig.transportProfileUri = *transportProfile;
     connectionConfig.enabled = UA_TRUE;
+    if (strlen(NETWORK_INTERFACE) > 0){
+        // set preferred network interface for Pub / Sub
+        networkAddressUrl->networkInterface = UA_STRING(NETWORK_INTERFACE);
+    }
     UA_Variant_setScalar(&connectionConfig.address, networkAddressUrl,
                          &UA_TYPES[UA_TYPES_NETWORKADDRESSURLDATATYPE]);
     connectionConfig.publisherId.numeric = UA_UInt32_random ();

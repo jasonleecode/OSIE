@@ -23,7 +23,7 @@ static struct argp_option options[] = {
   {"heart-beat-id-list",  'l', "", 0, "Comma separated list of IDs of couplers to watch for heart beats. \
                    If a heart beat is missing coupler goes to safe mode."},
   {"network-address-url-data-type", 'n', "opc.udp://224.0.0.22:4840/", 0, "Network address URL type used for Pub/Sub."},
-
+  {"network-interface", 'j', "", 0, "Network interface to use for Pub/Sub."},
   {0}
 };
 
@@ -44,6 +44,7 @@ struct arguments
     int heart_beat_timeout_interval;
     char *heart_beat_id_list;
     char *network_address_url_data_type;
+    char *network_interface;
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
@@ -95,6 +96,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     case 'n':
       arguments->network_address_url_data_type = arg;
       break;
+    case 'j':
+      arguments->network_interface = arg;
+      break;
     case ARGP_KEY_ARG:
       return 0;
     default: 
@@ -128,6 +132,7 @@ void handleCLI(int argc, char **argv) {
     arguments.heart_beat_timeout_interval = DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL;
     arguments.heart_beat_id_list = "";
     arguments.network_address_url_data_type = NETWORK_ADDRESS_URL_DATA_TYPE;
+    arguments.network_interface = "";
     argp_parse(&argp, argc, argv, 0, 0, &arguments);
 
     printf("Mode=%d\n", arguments.mode);
@@ -143,6 +148,7 @@ void handleCLI(int argc, char **argv) {
     printf("Heart beat timeout interval=%d ms\n", arguments.heart_beat_timeout_interval);
     printf("Heart beat ID list=%s\n", arguments.heart_beat_id_list);
     printf("Network address URL data type=%s\n", arguments.network_address_url_data_type);
+    printf("Network interface=%s\n", arguments.network_interface);
 
     // transfer to global variables (CLI input)
     COUPLER_ID = arguments.id;
@@ -152,6 +158,7 @@ void handleCLI(int argc, char **argv) {
     PUBLISHING_INTERVAL = HEART_BEAT_INTERVAL; // we assume that each heart_beat leads to a publish event
     HEART_BEAT_TIMEOUT_INTERVAL = arguments.heart_beat_timeout_interval;
     NETWORK_ADDRESS_URL_DATA_TYPE = arguments.network_address_url_data_type;
+    NETWORK_INTERFACE = arguments.network_interface;
     USERNAME = arguments.username;
     PASSWORD = arguments.password;
     OPC_UA_PORT = arguments.port;

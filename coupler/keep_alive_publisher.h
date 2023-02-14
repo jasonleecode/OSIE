@@ -184,7 +184,7 @@ static void enablePublishHeartBeat(UA_Server *server, UA_ServerConfig *config){
         // representing time in millis since start of process
         {
             .name = "heart_beat",
-            .description = "Heart beat",
+            .description = "Heartbeat",
             .pdefaultValue = &defaultFloat,
             .type = UA_TYPES_FLOAT
         },

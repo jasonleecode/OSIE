@@ -6,10 +6,6 @@
  *   - i2c0.relay0..3
  *   - i2c0.in0..3
  *   - i2c0.ain0..3
- * Based on 
- *   https://www.kernel.org/doc/Documentation/i2c/dev-interface
- *   https://github.com/open62541/open62541/blob/master/examples/tutorial_server_variable.c
- *   https://stackoverflow.com/questions/9642732/parsing-command-line-arguments-in-c
  */
 
 #include <stdio.h>

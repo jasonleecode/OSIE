@@ -31,7 +31,7 @@ static void addPublishedDataSet(UA_Server *server) {
     UA_PublishedDataSetConfig publishedDataSetConfig;
     memset(&publishedDataSetConfig, 0, sizeof(UA_PublishedDataSetConfig));
     publishedDataSetConfig.publishedDataSetType = UA_PUBSUB_DATASET_PUBLISHEDITEMS;
-    publishedDataSetConfig.name = UA_STRING("Demo PDS");
+    publishedDataSetConfig.name = UA_STRING("Heartbeat PDS");
     /* Create new PublishedDataSet based on the PublishedDataSetConfig. */
     UA_Server_addPublishedDataSet(server, &publishedDataSetConfig, &publishedDataSetIdent);
 }
@@ -41,7 +41,7 @@ static void addWriterGroup(UA_Server *server) {
      * PubSubConnection. */
     UA_WriterGroupConfig writerGroupConfig;
     memset(&writerGroupConfig, 0, sizeof(UA_WriterGroupConfig));
-    writerGroupConfig.name = UA_STRING("Demo WriterGroup");
+    writerGroupConfig.name = UA_STRING("Heartbeat WriterGroup");
     writerGroupConfig.publishingInterval = PUBLISHING_INTERVAL;
     writerGroupConfig.keepAliveTime = PUBLISHING_INTERVAL;
     writerGroupConfig.enabled = UA_FALSE;
@@ -73,7 +73,7 @@ static void addDataSetWriter(UA_Server *server) {
     UA_NodeId dataSetWriterIdent;
     UA_DataSetWriterConfig dataSetWriterConfig;
     memset(&dataSetWriterConfig, 0, sizeof(UA_DataSetWriterConfig));
-    dataSetWriterConfig.name = UA_STRING("Demo DataSetWriter");
+    dataSetWriterConfig.name = UA_STRING("Heartbeat DataSetWriter");
     dataSetWriterConfig.dataSetWriterId = DATASET_WRITER_ID;
     dataSetWriterConfig.keyFrameCount = 10;
     UA_Server_addDataSetWriter(server, writerGroupIdent, publishedDataSetIdent,

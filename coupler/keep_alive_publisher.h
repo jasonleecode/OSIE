@@ -167,14 +167,7 @@ static void enablePublishHeartBeat(UA_Server *server, UA_ServerConfig *config){
             .description = "Heartbeat",
             .pdefaultValue = &defaultFloat,
             .type = UA_TYPES_FLOAT
-        },
-        // representing the ID of the coupler
-        //{
-        //    .name = "id",
-        //    .description = "ID",
-        //    .pdefaultValue = &couplerID,
-        //    .type = UA_TYPES_UINT32
-        //}
+        }
     };
 
     UA_String transportProfile = UA_STRING(DEFAULT_TRANSPORT_PROFILE);

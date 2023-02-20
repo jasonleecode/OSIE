@@ -26,29 +26,6 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
     unsigned long int milli_seconds_now;
     unsigned int coupler_id;
 
-    // filter out ID from Data Set
-    /*
-    if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_UINT32])) {
-        coupler_id = *(UA_UInt32*) var->value.data;
-        // care for other coupler_id NOT ourselves
-        if (coupler_id!=COUPLER_ID) {
-          UA_LOG_INFO(UA_Log_Stdout, \
-                     UA_LOGCATEGORY_USERLAND, \
-                     "HEART BEAT: %d", coupler_id);
-
-          // convert coupler_id to str
-          char* coupler_id_str = convertInt2Str(coupler_id);
-
-          // convert micro seconds to str
-          char* milli_seconds_now_str = convertLongInt2Str(milli_seconds_now);
-
-          // Add to our local linked list
-          addItem(&SUBSCRIBER_DICT, coupler_id_str, milli_seconds_now_str);
-         
-        }
-    }
-    */
-
     // filter out heart_beat from Data Set
     if(UA_Variant_hasScalarType(&var->value, &UA_TYPES[UA_TYPES_FLOAT])) {
         float heart_beat = *(UA_Float*) var->value.data;
@@ -226,13 +203,6 @@ static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData) {
     pMetaData->fields[0].name =  UA_STRING ("Heartbeat (subscribed)");
     pMetaData->fields[0].valueRank = -1; /* scalar */
 
-    // ID
-    //UA_FieldMetaData_init (&pMetaData->fields[1]);
-    //UA_NodeId_copy (&UA_TYPES[UA_TYPES_UINT32].typeId,
-    //                &pMetaData->fields[1].dataType);
-    //pMetaData->fields[1].builtInType = UA_NS0ID_UINT32;
-    //pMetaData->fields[1].name =  UA_STRING ("ID (subscribed)");
-    //pMetaData->fields[1].valueRank = -1; /* scalar */
 }
 
 

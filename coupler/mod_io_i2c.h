@@ -8,8 +8,8 @@ static char *DEFAULT_I2C_0_ADDR = "0x58";
 // the list of attached I2C slaves
 const int DEFAULT_I2C_SLAVE_ADDR = 0x58;
 
-// XXX:code assumes only 8 I2C slaves but it can be more
-int I2C_SLAVE_ADDR_LIST[] = {0, 0, 0, 0, 0, 0, 0, 0};
+// XXX:code assumes only 2 I2C slaves but it can be more
+int I2C_SLAVE_ADDR_LIST[] = {0, 0};
 
 // the block device at host machine
 static char *DEFAULT_I2C_BLOCK_DEVICE_NAME = "/dev/i2c-1";

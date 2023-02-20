@@ -25,9 +25,9 @@ static int HEART_BEAT_INTERVAL = DEFAULT_HEART_BEAT_INTERVAL;
 const int DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL = 4 * DEFAULT_HEART_BEAT_INTERVAL;
 static int HEART_BEAT_TIMEOUT_INTERVAL = DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL;
 
-// the list of couplers onto which we depend for properly running$
-// XXX: assume ONLY 8 couplers!
-unsigned int HEART_BEAT_ID_LIST[] = {0, 0, 0, 0, 0, 0, 0, 0};
+// the list of couplers onto which we depend for properly running
+// XXX: assume ONLY 2 couplers as this is what we expose in OPA UA model anyway!
+unsigned int HEART_BEAT_ID_LIST[] = {0, 0};
 
 // the interval for publishing messages$
 static int PUBLISHING_INTERVAL = 10;

@@ -8,8 +8,6 @@ UA_NodeId connectionIdent, publishedDataSetIdent, writerGroupIdent;
 
 static void addPubSubConnection(UA_Server *server, UA_String *transportProfile,
                     UA_NetworkAddressUrlDataType *networkAddressUrl){
-    /* Details about the connection configuration and handling are located
-     * in the pubsub connection tutorial */
     UA_PubSubConnectionConfig connectionConfig;
     memset(&connectionConfig, 0, sizeof(connectionConfig));
     connectionConfig.name = UA_STRING("UADP Connection 1");
@@ -27,13 +25,6 @@ static void addPubSubConnection(UA_Server *server, UA_String *transportProfile,
     UA_Server_addPubSubConnection(server, &connectionConfig, &connectionIdent);
 }
 
-/**
- * **PublishedDataSet handling**
- *
- * The PublishedDataSet (PDS) and PubSubConnection are the toplevel entities and
- * can exist alone. The PDS contains the collection of the published fields. All
- * other PubSub elements are directly or indirectly linked with the PDS or
- * connection. */
 static void addPublishedDataSet(UA_Server *server) {
     /* The PublishedDataSetConfig contains all necessary public
     * information for the creation of a new PublishedDataSet */
@@ -45,11 +36,6 @@ static void addPublishedDataSet(UA_Server *server) {
     UA_Server_addPublishedDataSet(server, &publishedDataSetConfig, &publishedDataSetIdent);
 }
 
-/**
- * **WriterGroup handling**
- *
- * The WriterGroup (WG) is part of the connection and contains the primary
- * configuration parameters for the message creation. */
 static void addWriterGroup(UA_Server *server) {
     /* Now we create a new WriterGroupConfig and add the group to the existing
      * PubSubConnection. */
@@ -81,12 +67,6 @@ static void addWriterGroup(UA_Server *server) {
     UA_UadpWriterGroupMessageDataType_delete(writerGroupMessage);
 }
 
-/**
- * **DataSetWriter handling**
- *
- * A DataSetWriter (DSW) is the glue between the WG and the PDS. The DSW is
- * linked to exactly one PDS and contains additional information for the
- * message generation. */
 static void addDataSetWriter(UA_Server *server) {
     /* We need now a DataSetWriter within the WriterGroup. This means we must
      * create a new DataSetWriterConfig and add call the addWriterGroup function. */

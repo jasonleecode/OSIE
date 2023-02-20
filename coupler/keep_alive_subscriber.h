@@ -4,9 +4,7 @@
 #include <open62541/server.h>
 #include <open62541/server_config_default.h>
 #include <open62541/types_generated.h>
-
 #include "ua_pubsub.h"
-
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
@@ -104,13 +102,6 @@ static UA_StatusCode addPubSubConnectionSubscriber(UA_Server *server, UA_String 
     return retval;
 }
 
-/**
- * **ReaderGroup**
- *
- * ReaderGroup is used to group a list of DataSetReaders. All ReaderGroups are
- * created within a PubSubConnection and automatically deleted if the connection
- * is removed. All network message related filters are only available in the DataSetReader. */
-/* Add ReaderGroup to the created connection */
 static UA_StatusCode addReaderGroup(UA_Server *server) {
     if(server == NULL) {
         return UA_STATUSCODE_BADINTERNALERROR;
@@ -126,15 +117,6 @@ static UA_StatusCode addReaderGroup(UA_Server *server) {
     return retval;
 }
 
-/**
- * **DataSetReader**
- *
- * DataSetReader can receive NetworkMessages with the DataSetMessage
- * of interest sent by the Publisher. DataSetReader provides
- * the configuration necessary to receive and process DataSetMessages
- * on the Subscriber side. DataSetReader must be linked with a
- * SubscribedDataSet and be contained within a ReaderGroup. */
-/* Add DataSetReader to the ReaderGroup */
 static UA_StatusCode addDataSetReader(UA_Server *server) {
     if(server == NULL) {
         return UA_STATUSCODE_BADINTERNALERROR;
@@ -143,11 +125,6 @@ static UA_StatusCode addDataSetReader(UA_Server *server) {
     UA_StatusCode retval = UA_STATUSCODE_GOOD;
     memset (&readerConfig, 0, sizeof(UA_DataSetReaderConfig));
     readerConfig.name = UA_STRING("DataSet Reader 1");
-    /* Parameters to filter which DataSetMessage has to be processed
-     * by the DataSetReader */
-    /* The following parameters are used to show that the data published by
-     * tutorial_pubsub_publish.c is being subscribed and is being updated in
-     * the information model */
     UA_UInt16 publisherIdentifier = PUBLISHER_ID;
     readerConfig.publisherId.type = &UA_TYPES[UA_TYPES_UINT16];
     readerConfig.publisherId.data = &publisherIdentifier;
@@ -162,11 +139,6 @@ static UA_StatusCode addDataSetReader(UA_Server *server) {
     return retval;
 }
 
-/**
- * **SubscribedDataSet**
- *
- * Set SubscribedDataSet type to TargetVariables data type.
- * Add subscribedvariables to the DataSetReader */
 static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSetReaderId) {
     if(server == NULL)
         return UA_STATUSCODE_BADINTERNALERROR;
@@ -193,12 +165,6 @@ static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSet
                              folderBrowseName, UA_NODEID_NUMERIC (0,
                              UA_NS0ID_BASEOBJECTTYPE), oAttr, NULL, &folderId);
 
-/**
- * **TargetVariables**
- *
- * The SubscribedDataSet option TargetVariables defines a list of Variable mappings between
- * received DataSet fields and target Variables in the Subscriber AddressSpace.
- * The values subscribed from the Publisher are updated in the value field of these variables */
     /* Create the TargetVariables with respect to DataSetMetaData fields */
     UA_FieldTargetVariable *targetVars = (UA_FieldTargetVariable *)
             UA_calloc(readerConfig.dataSetMetaData.fieldsSize, sizeof(UA_FieldTargetVariable));
@@ -241,14 +207,6 @@ static UA_StatusCode addSubscribedVariables(UA_Server *server, UA_NodeId dataSet
     return retval;
 }
 
-/**
- * **DataSetMetaData**
- *
- * The DataSetMetaData describes the content of a DataSet. It provides the information necessary to decode
- * DataSetMessages on the Subscriber side. DataSetMessages received from the Publisher are decoded into
- * DataSet and each field is updated in the Subscriber based on datatype match of TargetVariable fields of Subscriber
- * and PublishedDataSetFields of Publisher */
-/* Define MetaData for TargetVariables */
 static void fillTestDataSetMetaData(UA_DataSetMetaDataType *pMetaData) {
     if(pMetaData == NULL) {
         return;

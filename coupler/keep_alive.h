@@ -17,6 +17,12 @@ const int STATE_NO_INITIAL_HEART_BEAT = 2;
 // number of times the coupler was in SAFE mode 
 static unsigned int SAFE_MODE_STATE_COUNTER = 0;
 
+// the current GPI state (used for debuging)
+static unsigned int CURRENT_GPIO_STATE = 0;
+
+// variable representing the measurement over GPIO
+static unsigned int CURRENT_GPIO_MODE = 0;
+
 // the heart beat interval (in ms)
 const int DEFAULT_HEART_BEAT_INTERVAL = 250;
 static int HEART_BEAT_INTERVAL = DEFAULT_HEART_BEAT_INTERVAL;

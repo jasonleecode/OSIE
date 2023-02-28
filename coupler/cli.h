@@ -196,5 +196,11 @@ void handleCLI(int argc, char **argv) {
       }
 
     printf("Heart beat check=%d\n", ENABLE_HEART_BEAT_CHECK);
+
+    // update current measurement mode
+    const char* s = getenv("CURRENT_GPIO_MODE");
+    if (s != NULL) CURRENT_GPIO_MODE = 1;
+    printf("GPIO measurement mode = %d\n", CURRENT_GPIO_MODE);
 }
+
 

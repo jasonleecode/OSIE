@@ -56,6 +56,8 @@ static int setGPIO() {
   if (CURRENT_GPIO_STATE) CURRENT_GPIO_STATE = 0;
   else CURRENT_GPIO_STATE = 1;
 
+  // set actual GPI value
+  data.values[0] = CURRENT_GPIO_STATE;
   if(ioctl(led.fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) < 0)
     perror("Error setting GPIO to 1");
 

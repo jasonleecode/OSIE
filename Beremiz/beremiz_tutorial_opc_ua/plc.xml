@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2021-12-02T17:46:43">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2022-12-13T16:54:22">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -83,14 +83,14 @@
                 </variable>
               </outputVariables>
             </block>
-            <inVariable localId="3" executionOrderId="0" height="24" width="50" negated="false">
+            <inVariable localId="3" executionOrderId="0" height="25" width="50" negated="false">
               <position x="181" y="206"/>
               <connectionPointOut>
                 <relPosition x="50" y="12"/>
               </connectionPointOut>
               <expression>Reset</expression>
             </inVariable>
-            <outVariable localId="4" executionOrderId="0" height="24" width="42" negated="false">
+            <outVariable localId="4" executionOrderId="0" height="25" width="42" negated="false">
               <position x="433" y="266"/>
               <connectionPointIn>
                 <relPosition x="0" y="12"/>
@@ -101,7 +101,7 @@
               </connectionPointIn>
               <expression>Cnt0</expression>
             </outVariable>
-            <outVariable localId="6" executionOrderId="0" height="24" width="42" negated="false">
+            <outVariable localId="6" executionOrderId="0" height="25" width="42" negated="false">
               <position x="435" y="222"/>
               <connectionPointIn>
                 <relPosition x="0" y="12"/>
@@ -186,16 +186,16 @@ ELSE
   Cnt0 := Cnt0 + 1;
   Cnt1 := Cnt1 + 1;
   IF Cnt1 = 50 THEN
-    Relay0 := 1;
+    Relay0 := 0;
     Relay1 := 1; 
-    Relay2 := 1;
+    Relay2 := 0;
     Relay3 := 1;
   END_IF;
   
   IF Cnt1 = 100 THEN
-    Relay0 := 0;
+    Relay0 := 1;
     Relay1 := 0;
-    Relay2 := 0;
+    Relay2 := 1;
     Relay3 := 0;
     Cnt1 := 0;
   END_IF;
@@ -213,7 +213,7 @@ Out0 := Cnt0;]]></xhtml:p>
     <configurations>
       <configuration name="config">
         <resource name="resource1">
-          <task name="task0" priority="0" interval="T#20ms">
+          <task name="task0" priority="0" interval="T#2ms">
             <pouInstance name="instance0" typeName="plc_prg"/>
           </task>
         </resource>

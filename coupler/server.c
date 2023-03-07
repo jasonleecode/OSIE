@@ -168,6 +168,12 @@ int main(int argc, char **argv)
   // enable protocol for Pub/Sub
   UA_ServerConfig_addPubSubTransportLayer(config, UA_PubSubTransportLayerUDPMP());
 
+  // set for Pub / Sub the minimal and maximal sampling and publishing intervals
+  UA_DurationRange rangePublishing = {PUBLISHING_INTERVAL, 3600.0 * 1000.0};
+  UA_DurationRange rangeSampling = {PUBLISHING_INTERVAL, 24.0 * 3600.0 * 1000.0};
+  config->publishingIntervalLimits = rangePublishing;
+  config->samplingIntervalLimits = rangeSampling;
+
   // enable publish keep-alive messages
   if (ENABLE_HEART_BEAT) {
     enablePublishHeartBeat(server, config);

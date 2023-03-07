@@ -170,6 +170,7 @@ void handleCLI(int argc, char **argv) {
     ENABLE_HEART_BEAT = arguments.heart_beat;
     X509_KEY_FILENAME = arguments.key;
     X509_CERTIFICATE_FILENAME = arguments.certificate;
+    printf("PUBLISHING_INTERVAL=%d\n", PUBLISHING_INTERVAL);
 
     // convert arguments.slave_address_list -> I2C_SLAVE_ADDR_LIST
     i = 0;

@@ -18,9 +18,9 @@ static struct argp_option options[] = {
   {"certificate",           'c', "",           0, "X509 certificate."},
   {"id",                    'i', "0",          0, "ID of coupler."},
   {"heart-beat",            'b', "0",          0, "Publish heart beat to other couplers."},
-  {"heart-beat-interval",   't', "500",        0, "Heart beat interval in ms."},
+  {"heart-beat-interval",   't', "50",         0, "Heart beat interval in ms."},
   {"heart-beat-timeout-interval",
-                            'o', "2000",       0, "Heart beat timeout interval in ms."},
+                            'o', "100",        0, "Heart beat timeout interval in ms."},
   {"heart-beat-id-list",    'l', "",           0, "Comma separated list of IDs of couplers to watch for heart beats. \
                                                    If a heart beat is missing coupler goes to safe mode."},
   {"network-address-url-data-type",

@@ -306,6 +306,8 @@ void callbackCheckHeartBeat() {
             // initial keep alive received, printout
             UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, 
                         "UP (recovered %d times): %s", SAFE_MODE_STATE_COUNTER, coupler_id_str);
+	    // go to normal operational mode
+	    gotoNormalMode();
           }
           CURRENT_STATE = STATE_UP;
         }

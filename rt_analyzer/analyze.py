@@ -1,4 +1,12 @@
-f = open("digital.csv", "r")
+"""
+    Parse logical analyzer logs. Used together with test_latency.c as generator.
+    Usage: python2 analyze.py digital.csv
+"""
+import sys
+import statistics
+
+file_name = sys.argv[1]
+f = open(file_name, "r")
 
 # assume it's 0 by default even if in measurement file it can start with 1
 # then we simple loose few records but that's acceptable.
@@ -12,7 +20,8 @@ last_channel1_timestamp = 0.0
 timestamp_channel0_delta_list = []
 timestamp_channel1_delta_list = []
 
-for line in  f.readlines()[1:4000]:
+lines_list = f.readlines()
+for line in lines_list[1:]:
     timestamp, channel0, channel1 = line.split(",")
     timestamp = float(timestamp)
     channel0 = int(channel0)
@@ -51,9 +60,40 @@ for line in  f.readlines()[1:4000]:
     last_channel0_value = channel0
     last_channel1_value = channel1
 
-# XXX: find average, mean, standard deviation, etc on these lists of deltas
+# find average, mean, standard deviation, etc on these lists of deltas
+channel0_mean = statistics.mean(timestamp_channel0_delta_list) * 1000000
+channel0_median = statistics.median(timestamp_channel0_delta_list) * 1000000
+channel0_stdev = statistics.stdev(timestamp_channel0_delta_list) * 1000000
+channel0_min = min(timestamp_channel0_delta_list) * 1000000
+channel0_max = max(timestamp_channel0_delta_list) * 1000000
 
-# convert to nanoseconds
-print "Channel0 deltas (in nanoseconds)", [round(x*1000000, 2) for x in timestamp_channel0_delta_list]
-print "\nChannel1 deltas (in nanoseconds)", [round(x*1000000, 2) for x in timestamp_channel1_delta_list]
+channel1_mean = statistics.mean(timestamp_channel1_delta_list) * 1000000
+channel1_median = statistics.median(timestamp_channel1_delta_list) * 1000000
+channel1_stdev = statistics.stdev(timestamp_channel1_delta_list) * 1000000
+channel1_min = min(timestamp_channel1_delta_list) * 1000000
+channel1_max = max(timestamp_channel1_delta_list) * 1000000
+
+stop_time = lines_list[-1].split(",")[0]
+print "Timestamp records = ", len(lines_list)
+print "Duration (seconds) = ", stop_time
+
+print "Channel0 (stm32mp1-2, PREEMPT, isolcpus=0, in nanoseconds):"
+print "\tMean = ", channel0_mean
+print "\tMedian = ", channel0_median
+print "\tMin = ", channel0_min
+print "\tMax = ", channel0_max
+print "\tStandart deviation = ", channel0_stdev
+
+print
+print "Channel1 (stm32mp1-3, PREEMPT, isolcpus=1, in nanoseconds):"
+print "\tMean = ", channel1_mean
+print "\tMedian = ", channel1_median
+print "\tMin = ", channel1_min
+print "\tMax = ", channel1_max
+print "\tStandart deviation = ", channel1_stdev
+
+
+
+
+
 f.close()

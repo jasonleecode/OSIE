@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2023-03-10T15:13:15">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2023-04-10T11:35:47">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -194,11 +194,6 @@
                 <DINT/>
               </type>
             </variable>
-            <variable name="Coupler2_Relay0">
-              <type>
-                <DINT/>
-              </type>
-            </variable>
           </externalVars>
         </interface>
         <body>
@@ -210,30 +205,15 @@
 ELSE
   Cnt0 := Cnt0 + 1;
   Cnt1 := Cnt1 + 1;
-  Coupler2_Relay0 := Coupler2_Relay0 + 1;
-  IF Cnt1 = 50 THEN
+  IF Cnt1 = 5 THEN
     Coupler0_Relay0 := 1;
-    Coupler0_Relay1 := 1; 
-    Coupler0_Relay2 := 1;
-    Coupler0_Relay3 := 1;
-    Coupler1_Relay0 := 0;
-    Coupler1_Relay1 := 0; 
-    Coupler1_Relay2 := 0;
-    Coupler1_Relay3 := 0;
-  END_IF;
-  
-  IF Cnt1 = 100 THEN
-    Coupler0_Relay0 := 0;
-    Coupler0_Relay1 := 0;
-    Coupler0_Relay2 := 0;
-    Coupler0_Relay3 := 0;
     Coupler1_Relay0 := 1;
-    Coupler1_Relay1 := 1; 
-    Coupler1_Relay2 := 1;
-    Coupler1_Relay3 := 1;
+  END_IF;
+  IF Cnt1 = 10 THEN
+    Coupler0_Relay0 := 0;
+    Coupler1_Relay0 := 0;
     Cnt1 := 0;
   END_IF;
-  
 END_IF;
 
 Out1 := Cnt1;
@@ -247,7 +227,7 @@ Out0 := Cnt0;]]></xhtml:p>
     <configurations>
       <configuration name="config">
         <resource name="resource1">
-          <task name="task0" priority="0" interval="T#0.01ms">
+          <task name="task0" priority="0" interval="T#10ms">
             <pouInstance name="instance0" typeName="plc_prg"/>
           </task>
         </resource>
@@ -338,17 +318,6 @@ Out0 := Cnt0;]]></xhtml:p>
             </documentation>
           </variable>
           <variable name="Coupler1_Relay3" address="%QD0.3">
-            <type>
-              <DINT/>
-            </type>
-            <initialValue>
-              <simpleValue value="0"/>
-            </initialValue>
-            <documentation>
-              <xhtml:p><![CDATA[OPC-UA relay 2]]></xhtml:p>
-            </documentation>
-          </variable>
-          <variable name="Coupler2_Relay0" address="%QD2.0">
             <type>
               <DINT/>
             </type>

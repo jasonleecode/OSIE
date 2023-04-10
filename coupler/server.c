@@ -20,7 +20,6 @@
 #include <string.h>
 #include "common.h"
 #include "mod_io_i2c.h"
-#include "mod_io_opc_ua.h"
 #include <time.h>
 #include <open62541/plugin/log_stdout.h>
 #include <open62541/server.h>
@@ -57,6 +56,7 @@ char *X509_CERTIFICATE_FILENAME;
 #include "keep_alive_publisher.h"
 #include "keep_alive_subscriber.h"
 #include "cli.h"
+#include "mod_io_opc_ua.h"
 
 static volatile UA_Boolean running = true;
 

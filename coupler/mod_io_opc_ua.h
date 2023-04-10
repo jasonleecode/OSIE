@@ -470,6 +470,9 @@ static void afterWriteTimeI2C0_0(UA_Server *server,
     if (data->value.type == &UA_TYPES[UA_TYPES_INT32])
     {
         UA_Int32 hrValue = *(UA_Int32 *)data->value.data;
+        // used only for debuging with logical analyzer
+        if (CURRENT_GPIO_MODE == 2) setGPIO();
+
         int addr = I2C_SLAVE_ADDR_LIST[0];
         if (hrValue > 0)
         {

@@ -20,7 +20,12 @@ static unsigned int SAFE_MODE_STATE_COUNTER = 0;
 // the current GPI state (used for debuging)
 static unsigned int CURRENT_GPIO_STATE = 0;
 
-// variable representing the measurement over GPIO
+/*
+*  variable representing the measurement mode over GPIO
+*  0: disabled
+*  1: enabled for keep-alive subsystem
+*  2: enabled for first i2c0.relay0
+*/
 static unsigned int CURRENT_GPIO_MODE = 0;
 
 // the heart beat interval (in ms)

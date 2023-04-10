@@ -199,7 +199,7 @@ void handleCLI(int argc, char **argv) {
 
     // update current measurement mode
     const char* s = getenv("CURRENT_GPIO_MODE");
-    if (s != NULL) CURRENT_GPIO_MODE = 1;
+    if (s != NULL) CURRENT_GPIO_MODE = atoi(s);
     printf("GPIO measurement mode = %d\n", CURRENT_GPIO_MODE);
 }
 

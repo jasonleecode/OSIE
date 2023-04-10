@@ -61,10 +61,6 @@ static int setGPIO() {
   if(ioctl(led.fd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) < 0)
     perror("Error setting GPIO to 1");
 
-  // debug
-  //UA_LOG_INFO(UA_Log_Stdout, UA_LOGCATEGORY_USERLAND, \
-  //            "GPIO = %d",  CURRENT_GPIO_STATE);
-
   close(fd);
   close(led.fd);
   return 0;
@@ -100,7 +96,7 @@ static void dataChangeNotificationCallback(UA_Server *server, UA_UInt32 monitore
 
 	  // set GPIO so we can monitor using logical analyzer the work of
 	  // keep-alive network system
-	  if (CURRENT_GPIO_MODE) setGPIO();
+	  if (CURRENT_GPIO_MODE == 1) setGPIO();
 
 	}
     }

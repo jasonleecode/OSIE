@@ -61,23 +61,23 @@ for line in lines_list[1:]:
     last_channel1_value = channel1
 
 # find average, mean, standard deviation, etc on these lists of deltas
-channel0_mean = statistics.mean(timestamp_channel0_delta_list) * 1000000
-channel0_median = statistics.median(timestamp_channel0_delta_list) * 1000000
-channel0_stdev = statistics.stdev(timestamp_channel0_delta_list) * 1000000
-channel0_min = min(timestamp_channel0_delta_list) * 1000000
-channel0_max = max(timestamp_channel0_delta_list) * 1000000
+channel0_mean = statistics.mean(timestamp_channel0_delta_list)
+channel0_median = statistics.median(timestamp_channel0_delta_list)
+channel0_stdev = statistics.stdev(timestamp_channel0_delta_list)
+channel0_min = min(timestamp_channel0_delta_list)
+channel0_max = max(timestamp_channel0_delta_list)
 
-channel1_mean = statistics.mean(timestamp_channel1_delta_list) * 1000000
-channel1_median = statistics.median(timestamp_channel1_delta_list) * 1000000
-channel1_stdev = statistics.stdev(timestamp_channel1_delta_list) * 1000000
-channel1_min = min(timestamp_channel1_delta_list) * 1000000
-channel1_max = max(timestamp_channel1_delta_list) * 1000000
+channel1_mean = statistics.mean(timestamp_channel1_delta_list)
+channel1_median = statistics.median(timestamp_channel1_delta_list)
+channel1_stdev = statistics.stdev(timestamp_channel1_delta_list)
+channel1_min = min(timestamp_channel1_delta_list)
+channel1_max = max(timestamp_channel1_delta_list)
 
 stop_time = lines_list[-1].split(",")[0]
 print "Timestamp records = ", len(lines_list)
 print "Duration (seconds) = ", stop_time
 
-print "Channel0 (stm32mp1-2, PREEMPT, isolcpus=0, in nanoseconds):"
+print "Channel0 (in seconds):"
 print "\tMean = ", channel0_mean
 print "\tMedian = ", channel0_median
 print "\tMin = ", channel0_min
@@ -85,7 +85,7 @@ print "\tMax = ", channel0_max
 print "\tStandart deviation = ", channel0_stdev
 
 print
-print "Channel1 (stm32mp1-3, PREEMPT, isolcpus=1, in nanoseconds):"
+print "Channel1 (in seconds):"
 print "\tMean = ", channel1_mean
 print "\tMedian = ", channel1_median
 print "\tMin = ", channel1_min

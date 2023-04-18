@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <project xmlns:ns1="http://www.plcopen.org/xml/tc6_0201" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.plcopen.org/xml/tc6_0201">
   <fileHeader companyName="Unknown" productName="Unnamed" productVersion="1" creationDateTime="2021-05-14T14:33:11"/>
-  <contentHeader name="Counter (OSIE)" modificationDateTime="2023-04-13T09:13:59">
+  <contentHeader name="Counter (OSIE)" modificationDateTime="2023-04-13T15:58:36">
     <coordinateInfo>
       <fbd>
         <scaling x="0" y="0"/>
@@ -158,7 +158,7 @@ Cnt0 := Cnt0 + 1;
     <configurations>
       <configuration name="config">
         <resource name="resource1">
-          <task name="task0" priority="0" interval="T#150ms">
+          <task name="task0" priority="0" interval="T#50ms">
             <pouInstance name="instance0" typeName="plc_prg"/>
           </task>
         </resource>

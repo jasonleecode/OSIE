@@ -64,14 +64,20 @@ for line in lines_list[1:]:
 channel0_mean = statistics.mean(timestamp_channel0_delta_list)
 channel0_median = statistics.median(timestamp_channel0_delta_list)
 channel0_stdev = statistics.stdev(timestamp_channel0_delta_list)
-channel0_mode = statistics.mode(timestamp_channel0_delta_list)
+try:
+  channel0_mode = statistics.mode(timestamp_channel0_delta_list)
+except statistics.StatisticsError:
+  channel0_mode = None
 channel0_min = min(timestamp_channel0_delta_list)
 channel0_max = max(timestamp_channel0_delta_list)
 
 channel1_mean = statistics.mean(timestamp_channel1_delta_list)
 channel1_median = statistics.median(timestamp_channel1_delta_list)
 channel1_stdev = statistics.stdev(timestamp_channel1_delta_list)
-channel1_mode = statistics.mode(timestamp_channel1_delta_list)
+try:
+  channel1_mode = statistics.mode(timestamp_channel1_delta_list)
+except statistics.StatisticsError:
+  channel1_mode = None
 channel1_min = min(timestamp_channel1_delta_list)
 channel1_max = max(timestamp_channel1_delta_list)
 

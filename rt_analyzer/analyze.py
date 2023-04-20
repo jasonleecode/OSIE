@@ -64,12 +64,14 @@ for line in lines_list[1:]:
 channel0_mean = statistics.mean(timestamp_channel0_delta_list)
 channel0_median = statistics.median(timestamp_channel0_delta_list)
 channel0_stdev = statistics.stdev(timestamp_channel0_delta_list)
+channel0_mode = statistics.mode(timestamp_channel0_delta_list)
 channel0_min = min(timestamp_channel0_delta_list)
 channel0_max = max(timestamp_channel0_delta_list)
 
 channel1_mean = statistics.mean(timestamp_channel1_delta_list)
 channel1_median = statistics.median(timestamp_channel1_delta_list)
 channel1_stdev = statistics.stdev(timestamp_channel1_delta_list)
+channel1_mode = statistics.mode(timestamp_channel1_delta_list)
 channel1_min = min(timestamp_channel1_delta_list)
 channel1_max = max(timestamp_channel1_delta_list)
 
@@ -83,14 +85,15 @@ print "\tMedian = ", channel0_median
 print "\tMin = ", channel0_min
 print "\tMax = ", channel0_max
 print "\tStandart deviation = ", channel0_stdev
+print "\tMode (most occurencies) = ", channel0_mode
 
-print
-print "Channel1 (in seconds):"
+print "\nChannel1 (in seconds):"
 print "\tMean = ", channel1_mean
 print "\tMedian = ", channel1_median
 print "\tMin = ", channel1_min
 print "\tMax = ", channel1_max
 print "\tStandart deviation = ", channel1_stdev
+print "\tMode (most occurencies) = ", channel1_mode
 
 
 

@@ -1,6 +1,6 @@
 """
     Parse logical analyzer logs. Used together with test_latency.c as generator.
-    Usage: python2 analyze.py digital.csv
+    Usage: python3 analyze.py digital.csv
 """
 import sys
 import statistics
@@ -82,24 +82,24 @@ channel1_min = min(timestamp_channel1_delta_list)
 channel1_max = max(timestamp_channel1_delta_list)
 
 stop_time = lines_list[-1].split(",")[0]
-print "Timestamp records = ", len(lines_list)
-print "Duration (seconds) = ", stop_time
+print("Timestamp records = ", len(lines_list))
+print("Duration (seconds) = ", stop_time)
 
-print "Channel0 (in seconds):"
-print "\tMean = ", channel0_mean
-print "\tMedian = ", channel0_median
-print "\tMin = ", channel0_min
-print "\tMax = ", channel0_max
-print "\tStandart deviation = ", channel0_stdev
-print "\tMode (most occurencies) = ", channel0_mode
+print("Channel0 (in seconds):")
+print("\tMean = ", channel0_mean)
+print("\tMedian = ", channel0_median)
+print("\tMin = ", channel0_min)
+print("\tMax = ", channel0_max)
+print("\tStandart deviation = ", channel0_stdev)
+print("\tMode (most occurencies) = ", channel0_mode)
 
-print "\nChannel1 (in seconds):"
-print "\tMean = ", channel1_mean
-print "\tMedian = ", channel1_median
-print "\tMin = ", channel1_min
-print "\tMax = ", channel1_max
-print "\tStandart deviation = ", channel1_stdev
-print "\tMode (most occurencies) = ", channel1_mode
+print("\nChannel1 (in seconds):")
+print("\tMean = ", channel1_mean)
+print("\tMedian = ", channel1_median)
+print("\tMin = ", channel1_min)
+print("\tMax = ", channel1_max)
+print("\tStandart deviation = ", channel1_stdev)
+print("\tMode (most occurencies) = ", channel1_mode)
 
 
 

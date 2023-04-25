@@ -42,8 +42,9 @@ for line in lines_list[1:]:
         else:
             delta = timestamp - last_channel0_timestamp
         last_channel0_timestamp = timestamp
-        # but always add delta
-        timestamp_channel0_delta_list.append(delta)
+        # but always add delta if not 0
+        if delta > 0:
+          timestamp_channel0_delta_list.append(delta)
 
     if channel1 != last_channel1_value:
         # calculate delta
@@ -53,8 +54,9 @@ for line in lines_list[1:]:
         else:
             delta = timestamp - last_channel1_timestamp
         last_channel1_timestamp = timestamp
-        # but always add delta
-        timestamp_channel1_delta_list.append(delta)
+        # but always add delta if not 0
+        if delta > 0:
+          timestamp_channel1_delta_list.append(delta)
 
     # update for next cycle
     last_channel0_value = channel0

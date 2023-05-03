@@ -2,8 +2,6 @@
 Keep alive implementation for couplers based on OPC UA's pub/sub mechanism
 */
 
-#include "keep_alive.h"
-
 UA_NodeId connectionIdent, publishedDataSetIdent, writerGroupIdent;
 
 static void addPubSubConnection(UA_Server *server, UA_String *transportProfile,

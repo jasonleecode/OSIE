@@ -53,6 +53,8 @@ char *PASSWORD;
 char *X509_KEY_FILENAME;
 char *X509_CERTIFICATE_FILENAME;
 
+#include "gpio.h"
+#include "keep_alive.h"
 #include "keep_alive_publisher.h"
 #include "keep_alive_subscriber.h"
 #include "cli.h"

@@ -17,17 +17,6 @@ const int STATE_NO_INITIAL_HEART_BEAT = 2;
 // number of times the coupler was in SAFE mode 
 static unsigned int SAFE_MODE_STATE_COUNTER = 0;
 
-// the current GPI state (used for debuging)
-static unsigned int CURRENT_GPIO_STATE = 0;
-
-/*
-*  variable representing the measurement mode over GPIO
-*  0: disabled
-*  1: enabled for keep-alive subsystem
-*  2: enabled for first i2c0.relay0
-*/
-static unsigned int CURRENT_GPIO_MODE = 0;
-
 // the heart beat interval (in ms)
 const int DEFAULT_HEART_BEAT_INTERVAL = 250;
 static int HEART_BEAT_INTERVAL = DEFAULT_HEART_BEAT_INTERVAL;
@@ -36,7 +25,7 @@ static int HEART_BEAT_INTERVAL = DEFAULT_HEART_BEAT_INTERVAL;
 const int DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL = 4 * DEFAULT_HEART_BEAT_INTERVAL;
 static int HEART_BEAT_TIMEOUT_INTERVAL = DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL;
 
-// the list of couplers onto which we depend for properly running$
+// the list of couplers onto which we depend for properly running
 // XXX: assume ONLY 8 couplers!
 unsigned int HEART_BEAT_ID_LIST[] = {0, 0, 0, 0, 0, 0, 0, 0};
 

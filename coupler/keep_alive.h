@@ -43,7 +43,7 @@ void gotoSafeMode() {
    * In this mode coupler will shutdown all
    * relays of attached I2C slaves
    */
-   if (!I2C_VIRTUAL_MODE) {
+   if (I2C_VIRTUAL_MODE==0) {
      UA_LOG_INFO(UA_Log_Stdout, \
                  UA_LOGCATEGORY_USERLAND, \
                  "Go to SAFE MODE");

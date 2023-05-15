@@ -39,7 +39,16 @@ dict_t *SUBSCRIBER_DICT;
 
 // The default port of OPC-UA server
 const int DEFAULT_OPC_UA_PORT = 4840;
+
+// The default operation mode of the coupler where
+// 0 - this is normal functional coupler where each request
+//     will lead to proper write to attached I2C MOD-IO
+// 1 - a virtual mode where no write to attached I2C MOD-IO
+//     will be performed
 const int DEFAULT_MODE = 0;
+
+// The default coupler ID which is used for keep-alive
+// Pub / Sub safety network implementation
 const int DEFAULT_COUPLER_ID = 0;
 
 int OPC_UA_PORT;

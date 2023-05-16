@@ -29,11 +29,11 @@ static int HEART_BEAT_TIMEOUT_INTERVAL = DEFAULT_HEART_BEAT_TIMEOUT_INTERVAL;
 // XXX: assume ONLY 8 couplers!
 unsigned int HEART_BEAT_ID_LIST[] = {0, 0, 0, 0, 0, 0, 0, 0};
 
-// the interval for publishing messages$
+// the interval for publishing messages
 static int PUBLISHING_INTERVAL = 10;
 
-// a hard coded writer group, data set and publisher ID$
-// (should be same for publisher / subscriber)$
+// a hard coded writer group, data set and publisher ID
+// (should be same for publisher / subscriber)
 const int WRITER_GROUP_ID = 100;
 const int DATASET_WRITER_ID = 62541;
 const int PUBLISHER_ID = 2234;
@@ -48,8 +48,12 @@ void gotoSafeMode() {
                  UA_LOGCATEGORY_USERLAND, \
                  "Go to SAFE MODE");
 
-    // do shutdown all attached I2C slaves (MOD-IO's relays).
-    safeShutdownI2CSlaveList();
+    if (OPERATIONAL_MODE==0) {
+      // do shutdown all attached I2C slaves (MOD-IO's relays).
+      // only if initial operational mode is appropriate.
+      safeShutdownI2CSlaveList();
+    }
+
     // set to virtual mode which means that coupler will mimic working but
     // not set any related relays' state
     I2C_VIRTUAL_MODE = 1;

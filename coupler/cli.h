@@ -154,7 +154,8 @@ void handleCLI(int argc, char **argv) {
 
     // transfer to global variables (CLI input)
     COUPLER_ID = arguments.id;
-    I2C_VIRTUAL_MODE = arguments.mode;
+    OPERATIONAL_MODE = arguments.mode;
+    I2C_VIRTUAL_MODE = OPERATIONAL_MODE;
     I2C_BLOCK_DEVICE_NAME = arguments.device;
     HEART_BEAT_INTERVAL = arguments.heart_beat_interval;
     PUBLISHING_INTERVAL = HEART_BEAT_INTERVAL; // we assume that each heart_beat leads to a publish event

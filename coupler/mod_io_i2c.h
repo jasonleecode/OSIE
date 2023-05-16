@@ -15,6 +15,11 @@ int I2C_SLAVE_ADDR_LIST[] = {0, 0};
 static char *DEFAULT_I2C_BLOCK_DEVICE_NAME = "/dev/i2c-1";
 char *I2C_BLOCK_DEVICE_NAME;
 
+// global coupler mode
+// 0 - normal operational mode
+// 1 - virtual operational mode (no real I2C to MOD-IO command issued)
+bool OPERATIONAL_MODE = 0;
+
 // global virtual mode needed for testing on x86 platform
 bool I2C_VIRTUAL_MODE = 0;
 

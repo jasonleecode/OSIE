@@ -21,6 +21,7 @@ timestamp_channel0_delta_list = []
 timestamp_channel1_delta_list = []
 
 lines_list = f.readlines()
+f.close()
 for line in lines_list[1:]:
     timestamp, channel0, channel1 = line.split(",")
     timestamp = float(timestamp)
@@ -63,10 +64,19 @@ for line in lines_list[1:]:
     last_channel1_value = channel1
 
 # find average, mean, standard deviation, etc on these lists of deltas
+# as all data comes in seconds convert to milli seconds by multiplying by denominator
+round_base = 5
+denominator = 1000
+
+# convert lists from seconds -> milli seconds
+timestamp_channel0_delta_list = [x * denominator for x in timestamp_channel0_delta_list]
+timestamp_channel1_delta_list = [x * denominator for x in timestamp_channel1_delta_list]
+
+# calculate it
 channel0_mean = statistics.mean(timestamp_channel0_delta_list)
-channel0_median = statistics.median(timestamp_channel0_delta_list)
+channel0_median =statistics.median(timestamp_channel0_delta_list)
 channel0_stdev = statistics.stdev(timestamp_channel0_delta_list)
-channel0_stdev_percentile = (channel0_stdev*100)/channel0_median
+channel0_stdev_percentile = (channel0_stdev * 100) / channel0_median
 try:
   channel0_mode = statistics.mode(timestamp_channel0_delta_list)
 except statistics.StatisticsError:
@@ -77,7 +87,7 @@ channel0_max = max(timestamp_channel0_delta_list)
 channel1_mean = statistics.mean(timestamp_channel1_delta_list)
 channel1_median = statistics.median(timestamp_channel1_delta_list)
 channel1_stdev = statistics.stdev(timestamp_channel1_delta_list)
-channel1_stdev_percentile = (channel1_stdev*100)/channel1_median
+channel1_stdev_percentile = (channel1_stdev * 100) / channel1_median
 try:
   channel1_mode = statistics.mode(timestamp_channel1_delta_list)
 except statistics.StatisticsError:
@@ -89,26 +99,22 @@ stop_time = lines_list[-1].split(",")[0]
 print("Timestamp records = ", len(lines_list))
 print("Duration (seconds) = ", stop_time)
 
-print("Channel0 (in seconds):")
-print("\tMean =   ", channel0_mean)
-print("\tMedian = ", channel0_median)
-print("\tMin =    ", channel0_min)
-print("\tMax =    ", channel0_max)
-print("\tStandart deviation = ", channel0_stdev)
-print("\tStandart deviation (%) = ", channel0_stdev_percentile)
-print("\tMode (most occurencies) = ", channel0_mode)
+print("Channel0 (in milli seconds):")
+print("\tMean =   ", round(channel0_mean, round_base))
+print("\tMedian = ", round(channel0_median, round_base))
+print("\tMin =    ", round(channel0_min, round_base))
+print("\tMax =    ", round(channel0_max, round_base))
+print("\tStandart deviation = ", round(channel0_stdev, round_base))
+print("\tStandart deviation (%) = ", round(channel0_stdev_percentile, round_base))
+print("\tMode (most occurencies) = ", round(channel0_mode, round_base))
 
-print("\nChannel1 (in seconds):")
-print("\tMean =   ", channel1_mean)
-print("\tMedian = ", channel1_median)
-print("\tMin =    ", channel1_min)
-print("\tMax =    ", channel1_max)
-print("\tStandart deviation = ", channel1_stdev)
-print("\tStandart deviation (%) = ", channel1_stdev_percentile)
-print("\tMode (most occurencies) = ", channel1_mode)
-
-
+print("\nChannel1 (in milli seconds):")
+print("\tMean =   ", round(channel1_mean, round_base))
+print("\tMedian = ", round(channel1_median, round_base))
+print("\tMin =    ", round(channel1_min, round_base))
+print("\tMax =    ", round(channel1_max, round_base))
+print("\tStandart deviation = ", round(channel1_stdev, round_base))
+print("\tStandart deviation (%) = ", round(channel1_stdev_percentile, round_base))
+print("\tMode (most occurencies) = ", round(channel1_mode, round_base))
 
 
-
-f.close()

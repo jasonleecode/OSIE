@@ -98,10 +98,10 @@ channel1_max = max(timestamp_channel1_delta_list)
 # save only Durations for further analyses
 channel_0_text = "\n".join([str(x) for x in timestamp_channel0_delta_list])
 channel_1_text = "\n".join([str(x) for x in timestamp_channel1_delta_list])
-f = open("channel0_duration.txt", "w")
+f = open("coupler0_duration.txt", "w")
 f.write(channel_0_text)
 f.close()
-f = open("channel1_duration.txt", "w")
+f = open("coupler1_duration.txt", "w")
 f.write(channel_1_text)
 f.close()
 

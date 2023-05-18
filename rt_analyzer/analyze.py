@@ -95,6 +95,16 @@ except statistics.StatisticsError:
 channel1_min = min(timestamp_channel1_delta_list)
 channel1_max = max(timestamp_channel1_delta_list)
 
+# save only Durations for further analyses
+channel_0_text = "\n".join([str(x) for x in timestamp_channel0_delta_list])
+channel_1_text = "\n".join([str(x) for x in timestamp_channel1_delta_list])
+f = open("channel0_duration.txt", "w")
+f.write(channel_0_text)
+f.close()
+f = open("channel1_duration.txt", "w")
+f.write(channel_1_text)
+f.close()
+
 stop_time = lines_list[-1].split(",")[0]
 print("Timestamp records = ", len(lines_list))
 print("Duration (seconds) = ", stop_time)
